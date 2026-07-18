@@ -38,3 +38,6 @@ yarn-error.log*
 # Cache
 .cache/
 .parcel-cache/
+
+# Local scripts (for development only)
+scripts/

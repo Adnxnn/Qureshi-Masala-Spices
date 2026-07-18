@@ -6,6 +6,8 @@ import Slideshow from '@/components/site/Slideshow'
 import InfiniteProductCarousel from '@/components/site/InfiniteProductCarousel'
 import type { Product } from '@/types'
 
+export const dynamic = 'force-dynamic'
+
 // Customer reviews data - 20 unique reviews from all over India!
 const reviews = [
   { 
