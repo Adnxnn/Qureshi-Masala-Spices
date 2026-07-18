@@ -275,11 +275,26 @@ export async function updateUserProfile(formData: {
 // ============================================
 // ORDERS
 // ============================================
-export async function placeOrder(formData: PlaceOrderPayload, promoCode: PromoCode | null = null) {
+export async function placeOrder(
+  formData: PlaceOrderPayload,
+  promoCode: PromoCode | null = null
+): Promise<Database['public']['Tables']['orders']['Row']> {
   const user = await getCurrentUser()
 
   const subtotal = formData.items.reduce((s, i) => s + i.variant.price * i.quantity, 0)
   const { total } = calculateOrderTotal(subtotal, promoCode)
+  const orderInsert: Database['public']['Tables']['orders']['Insert'] = {
+    user_id: user?.id || null,
+    customer_name: formData.customer_name,
+    customer_phone: formData.customer_phone,
+    customer_email: formData.customer_email,
+    customer_address: formData.customer_address,
+    customer_city: formData.customer_city,
+    customer_pincode: formData.customer_pincode,
+    notes: formData.notes,
+    total_amount: total,
+    status: 'pending'
+  }
 
   // Use admin client to insert order (bypasses RLS)
   const adminSupabase = createAdminSupabaseClient()
@@ -287,18 +302,7 @@ export async function placeOrder(formData: PlaceOrderPayload, promoCode: PromoCo
   // Insert order
   const { data: order, error: orderError } = await adminSupabase
     .from('orders')
-    .insert({
-      user_id: user?.id || null,
-      customer_name: formData.customer_name,
-      customer_phone: formData.customer_phone,
-      customer_email: formData.customer_email,
-      customer_address: formData.customer_address,
-      customer_city: formData.customer_city,
-      customer_pincode: formData.customer_pincode,
-      notes: formData.notes,
-      total_amount: total,
-      status: 'pending'
-    })
+    .insert(orderInsert as any)
     .select()
     .single()
 
@@ -307,8 +311,12 @@ export async function placeOrder(formData: PlaceOrderPayload, promoCode: PromoCo
     throw new Error(`Could not place order: ${orderError.message}`)
   }
 
+  if (!order) {
+    throw new Error('Could not place order: insert returned no order data')
+  }
+
   // Insert order items
-  const orderItems = formData.items.map(item => ({
+  const orderItems: Database['public']['Tables']['order_items']['Insert'][] = formData.items.map(item => ({
     order_id: order.id,
     product_id: item.product.id,
     product_name: item.product.name,
@@ -317,7 +325,7 @@ export async function placeOrder(formData: PlaceOrderPayload, promoCode: PromoCo
     unit_price: item.variant.price
   }))
 
-  const { error: itemsError } = await adminSupabase.from('order_items').insert(orderItems)
+  const { error: itemsError } = await adminSupabase.from('order_items').insert(orderItems as any)
 
   if (itemsError) {
     console.error('Order items error:', itemsError)
