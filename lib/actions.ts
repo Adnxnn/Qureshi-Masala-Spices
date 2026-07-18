@@ -21,7 +21,12 @@ async function loadPromoCodes() {
 }
 
 async function savePromoCodes(promoCodes: PromoCode[]) {
-  await fs.writeFile(PROMO_CODES_FILE, JSON.stringify(promoCodes, null, 2))
+  try {
+    await fs.writeFile(PROMO_CODES_FILE, JSON.stringify(promoCodes, null, 2))
+  } catch (error) {
+    // On Vercel, filesystem is read-only, so we just log and continue
+    console.warn('Could not save promo codes (filesystem is read-only)', error)
+  }
 }
 
 // ============================================
