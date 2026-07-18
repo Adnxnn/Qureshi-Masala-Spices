@@ -283,13 +283,23 @@ export async function updateUserProfile(formData: {
   city?: string
   pincode?: string
 }) {
-  const user = await getCurrentUser()
-  if (!user) throw new Error('Not logged in')
+  try {
+    const user = await getCurrentUser()
+    if (!user) {
+      console.warn('Cannot update profile: user not logged in')
+      return
+    }
 
-  const supabase = createServerSupabaseClient()
-  await supabase.from('users').update(formData).eq('id', user.id)
+    const supabase = createServerSupabaseClient()
+    const { error } = await supabase.from('users').update(formData).eq('id', user.id)
+    if (error) {
+      console.warn('Error updating user profile:', error)
+    }
 
-  revalidatePath('/account')
+    revalidatePath('/account')
+  } catch (err) {
+    console.error('Unexpected error in updateUserProfile:', err)
+  }
 }
 
 // ============================================
