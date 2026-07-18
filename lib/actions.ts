@@ -300,11 +300,14 @@ export async function placeOrder(
   const adminSupabase = createAdminSupabaseClient()
 
   // Insert order
-  const { data: order, error: orderError } = await adminSupabase
+  const result = await adminSupabase
     .from('orders')
     .insert(orderInsert as any)
     .select()
     .single()
+  
+  const orderError = result.error
+  const order = result.data as Database['public']['Tables']['orders']['Row'] | null
 
   if (orderError) {
     console.error('Order error:', orderError)
