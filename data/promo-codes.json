@@ -6,7 +6,7 @@
     "type": "percentage",
     "isActive": true,
     "usageLimit": 100,
-    "usedCount": 28,
+    "usedCount": 29,
     "usedBy": [
       {
         "customerEmail": "ad@gmail.com",
@@ -22,6 +22,11 @@
         "customerEmail": "mohammedarman185@gmail.com",
         "customerPhone": "9482751364",
         "usedAt": "2026-07-15T18:55:02.520Z"
+      },
+      {
+        "customerEmail": "mohammed@gmail.com",
+        "customerPhone": "9346543650",
+        "usedAt": "2026-07-18T08:20:53.735Z"
       }
     ],
     "createdAt": "2025-01-01T00:00:00.000Z"

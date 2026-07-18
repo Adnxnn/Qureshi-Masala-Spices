@@ -40,22 +40,30 @@ CREATE TABLE public.recipe_products (
   UNIQUE(recipe_id, product_id)
 );
 
+-- Helpful indexes for the junction table
+CREATE INDEX idx_recipe_products_recipe_id ON public.recipe_products(recipe_id);
+CREATE INDEX idx_recipe_products_product_id ON public.recipe_products(product_id);
+
 -- Enable Row Level Security
 ALTER TABLE public.recipes ENABLE ROW LEVEL SECURITY;
 ALTER TABLE public.recipe_products ENABLE ROW LEVEL SECURITY;
 
--- Create policies
+-- ============================================
+-- POLICIES
+-- ============================================
+
 -- Public can read published recipes
 CREATE POLICY "Public can read published recipes"
   ON public.recipes
   FOR SELECT
   USING (is_published = true);
 
--- Admin can manage all recipes
+-- Admin can manage all recipes (select/insert/update/delete)
 CREATE POLICY "Admin can manage recipes"
   ON public.recipes
   FOR ALL
-  USING (public.is_admin_user());
+  USING (public.is_admin_user())
+  WITH CHECK (public.is_admin_user());
 
 -- Public can read recipe_products for published recipes
 CREATE POLICY "Public can read recipe products"
@@ -71,9 +79,13 @@ CREATE POLICY "Public can read recipe products"
 CREATE POLICY "Admin can manage recipe products"
   ON public.recipe_products
   FOR ALL
-  USING (public.is_admin_user());
+  USING (public.is_admin_user())
+  WITH CHECK (public.is_admin_user());
 
--- Create updated_at trigger for recipes
+-- ============================================
+-- updated_at TRIGGER
+-- ============================================
+
 CREATE OR REPLACE FUNCTION public.handle_updated_at()
 RETURNS TRIGGER AS $$
 BEGIN
@@ -85,5 +97,4 @@ $$ LANGUAGE plpgsql;
 CREATE TRIGGER set_recipes_updated_at
   BEFORE UPDATE ON public.recipes
   FOR EACH ROW
-  EXECUTE FUNCTION handle_updated_at();
-
+  EXECUTE FUNCTION public.handle_updated_at();

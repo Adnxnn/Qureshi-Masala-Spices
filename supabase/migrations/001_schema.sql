@@ -18,7 +18,8 @@ create table public.products (
   badge         text,
   image_url     text not null default '',
   is_active     boolean not null default true,
-  created_at    timestamptz not null default now()
+  created_at    timestamptz not null default now(),
+  updated_at    timestamptz not null default now()
 );
 
 -- USERS TABLE (customer profiles)
@@ -31,13 +32,15 @@ create table public.users (
   city          text,
   pincode       text,
   is_admin      boolean not null default false,
-  created_at    timestamptz not null default now()
+  created_at    timestamptz not null default now(),
+  updated_at    timestamptz not null default now()
 );
 
 -- ORDERS TABLE
 create table public.orders (
   id               uuid primary key default gen_random_uuid(),
   created_at       timestamptz not null default now(),
+  updated_at       timestamptz not null default now(),
   user_id          uuid references public.users(id) on delete set null,
   customer_name    text not null,
   customer_phone   text not null,
@@ -63,11 +66,37 @@ create table public.order_items (
 );
 
 -- ============================================
+-- AUTO-UPDATE updated_at ON ROW CHANGES
+-- ============================================
+
+create or replace function public.set_updated_at()
+returns trigger
+language plpgsql
+as $$
+begin
+  new.updated_at = now();
+  return new;
+end;
+$$;
+
+create trigger set_updated_at_products
+  before update on public.products
+  for each row execute function public.set_updated_at();
+
+create trigger set_updated_at_users
+  before update on public.users
+  for each row execute function public.set_updated_at();
+
+create trigger set_updated_at_orders
+  before update on public.orders
+  for each row execute function public.set_updated_at();
+
+-- ============================================
 -- ROW LEVEL SECURITY
 -- ============================================
 
-alter table public.products   enable row level security;
-alter table public.users      enable row level security;
+alter table public.products    enable row level security;
+alter table public.users       enable row level security;
 alter table public.orders      enable row level security;
 alter table public.order_items enable row level security;
 
@@ -91,10 +120,11 @@ create policy "Public can read active products"
   on public.products for select
   using (is_active = true);
 
--- Only admin can manage products
+-- Only admin can manage products (insert/update/delete/select all)
 create policy "Admin can manage products"
   on public.products for all
-  using (public.is_admin_user());
+  using (public.is_admin_user())
+  with check (public.is_admin_user());
 
 -- Users can read their own profile, admins can read all
 create policy "Users can read own profile"
@@ -104,7 +134,8 @@ create policy "Users can read own profile"
 -- Users can update their own profile
 create policy "Users can update own profile"
   on public.users for update
-  using (auth.uid() = id);
+  using (auth.uid() = id)
+  with check (auth.uid() = id);
 
 -- Anyone can insert an order (to place an order)
 create policy "Anyone can place an order"
@@ -119,7 +150,8 @@ create policy "Users can read own orders"
 -- Only admin can update orders
 create policy "Admin can update orders"
   on public.orders for update
-  using (public.is_admin_user());
+  using (public.is_admin_user())
+  with check (public.is_admin_user());
 
 -- Anyone can insert order items
 create policy "Anyone can insert order items"
@@ -136,8 +168,42 @@ create policy "Users can read own order items"
   ));
 
 -- ============================================
+-- STORAGE BUCKET for product images
+-- ============================================
+-- Creates a public bucket so product images can be fetched via public URLs.
+-- Safe to run even if the bucket already exists (on conflict do nothing).
+insert into storage.buckets (id, name, public)
+values ('product-images', 'product-images', true)
+on conflict (id) do nothing;
+
+-- Allow public read access to files in this bucket
+create policy "Public can view product images"
+  on storage.objects for select
+  using (bucket_id = 'product-images');
+
+-- Only admins can upload/update/delete product images
+create policy "Admin can upload product images"
+  on storage.objects for insert
+  with check (bucket_id = 'product-images' and public.is_admin_user());
+
+create policy "Admin can update product images"
+  on storage.objects for update
+  using (bucket_id = 'product-images' and public.is_admin_user())
+  with check (bucket_id = 'product-images' and public.is_admin_user());
+
+create policy "Admin can delete product images"
+  on storage.objects for delete
+  using (bucket_id = 'product-images' and public.is_admin_user());
+
+-- ============================================
 -- SEED DATA — your 4 products
 -- ============================================
+-- NOTE: image_url values below point to Supabase Storage.
+-- Replace <YOUR_PROJECT_REF> with your actual project ref
+-- (e.g. ogdpvdshbkxolgbhyekq), and make sure the filenames
+-- match exactly what you upload to the 'product-images' bucket.
+-- Use hyphenated lowercase filenames (no spaces) to avoid
+-- double-encoding issues in Next.js image URLs.
 
 insert into public.products (name, slug, description, short_description, variants, stock_qty, category, accent_color, tags, badge, image_url) values
 (
@@ -149,7 +215,7 @@ insert into public.products (name, slug, description, short_description, variant
   50, 'chicken', '#C0392B',
   ARRAY['smoky','bold','spicy'],
   'Bestseller',
-  '/images/kebab-masala.jpg'
+  'https://<YOUR_PROJECT_REF>.supabase.co/storage/v1/object/public/product-images/kebab-masala.jpg'
 ),
 (
   'Fish Fry Masala',
@@ -160,7 +226,7 @@ insert into public.products (name, slug, description, short_description, variant
   50, 'seafood', '#1565C0',
   ARRAY['tangy','coastal','crispy'],
   'New',
-  '/images/fish-fry-masala.jpg'
+  'https://<YOUR_PROJECT_REF>.supabase.co/storage/v1/object/public/product-images/fish-fry-masala.jpg'
 ),
 (
   'Fish Curry Masala',
@@ -171,7 +237,7 @@ insert into public.products (name, slug, description, short_description, variant
   50, 'seafood', '#E8730A',
   ARRAY['rich','aromatic','warm'],
   'Fan Favorite',
-  '/images/fish-curry-masala.jpg'
+  'https://<YOUR_PROJECT_REF>.supabase.co/storage/v1/object/public/product-images/fish-curry-masala.jpg'
 ),
 (
   'Biryani Masala',
@@ -182,11 +248,5 @@ insert into public.products (name, slug, description, short_description, variant
   50, 'chicken', '#E8730A',
   ARRAY['complex','fragrant','royal'],
   'Signature',
-  '/images/biryani-masala.jpg'
+  'https://<YOUR_PROJECT_REF>.supabase.co/storage/v1/object/public/product-images/biryani-masala.jpg'
 );
-
--- ============================================
--- STORAGE BUCKET for product images
--- ============================================
--- Run this too:
--- insert into storage.buckets (id, name, public) values ('product-images', 'product-images', true);

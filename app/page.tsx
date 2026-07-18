@@ -1,7 +1,5 @@
-'use client'
 import Link from 'next/link'
 import Image from 'next/image'
-import { useEffect, useState, useRef } from 'react'
 import { getProducts } from '@/lib/actions'
 import HeroSection from '@/components/site/HeroSection'
 import Slideshow from '@/components/site/Slideshow'
@@ -132,21 +130,8 @@ const reviews = [
   },
 ]
 
-export default function HomePage() {
-  const [products, setProducts] = useState<Product[]>([])
-  const [loading, setLoading] = useState(true)
-
-  useEffect(() => {
-    async function loadProducts() {
-      try {
-        const data = await getProducts()
-        setProducts(data)
-      } finally {
-        setLoading(false)
-      }
-    }
-    loadProducts()
-  }, [])
+export default async function HomePage() {
+  const products = await getProducts()
 
   return (
     <>
@@ -197,7 +182,7 @@ export default function HomePage() {
         </div>
 
         {/* INFINITE SCROLLING CAROUSEL - with auto & manual scroll */}
-        {!loading && <InfiniteProductCarousel products={products} />}
+        <InfiniteProductCarousel products={products} />
 
         {/* EXPLORE BUTTON */}
         <div className="text-center mt-12 sm:mt-24">
