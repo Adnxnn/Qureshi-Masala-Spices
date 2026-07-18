@@ -171,30 +171,45 @@ export async function getCurrentUser(): Promise<User | null> {
     return null
   }
 
-  // Get user profile from database
-  const { data: userProfile } = await supabase
-    .from('users')
-    .select('*')
-    .eq('id', user.id)
-    .single()
+  try {
+    // Get user profile from database
+    const { data: userProfile, error: profileError } = await supabase
+      .from('users')
+      .select('*')
+      .eq('id', user.id)
+      .single()
 
-  if (userProfile) {
-    return userProfile
+    if (profileError) {
+      console.warn('Error fetching user profile:', profileError)
+      return null
+    }
+
+    if (userProfile) {
+      return userProfile
+    }
+
+    // Create a profile if none exists
+    const { data: newProfile, error: insertError } = await supabase
+      .from('users')
+      .insert({
+        id: user.id,
+        email: user.email!,
+        full_name: user.user_metadata.full_name || '',
+        phone: user.user_metadata.phone || ''
+      })
+      .select()
+      .single()
+
+    if (insertError) {
+      console.warn('Error creating user profile:', insertError)
+      return null
+    }
+
+    return newProfile
+  } catch (err) {
+    console.error('Unexpected error in getCurrentUser:', err)
+    return null
   }
-
-  // Create a profile if none exists
-  const { data: newProfile } = await supabase
-    .from('users')
-    .insert({
-      id: user.id,
-      email: user.email!,
-      full_name: user.user_metadata.full_name || '',
-      phone: user.user_metadata.phone || ''
-    })
-    .select()
-    .single()
-
-  return newProfile
 }
 
 export async function registerUser(formData: {
