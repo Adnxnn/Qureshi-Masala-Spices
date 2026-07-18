@@ -1,0 +1,683 @@
+[
+  {
+    "id": "1",
+    "name": "Chicken Kebab Masala",
+    "description": "Premium chicken kebab masala blend for juicy, flavorful kebabs",
+    "short_description": "Juicy chicken kebabs",
+    "category": "chicken",
+    "accent_color": "#C0392B",
+    "tags": [
+      "chicken",
+      "kebab",
+      "grill"
+    ],
+    "badge": "Best Seller",
+    "image_url": "/images/Kebab Masala.png",
+    "stock_qty": 100,
+    "is_active": true,
+    "variants": [
+      {
+        "weight_grams": 200,
+        "original_price": 150,
+        "price": 120
+      },
+      {
+        "weight_grams": 500,
+        "original_price": 312,
+        "price": 250
+      },
+      {
+        "weight_grams": 1000,
+        "original_price": 625,
+        "price": 500
+      }
+    ]
+  },
+  {
+    "id": "2",
+    "name": "Green Chicken Kebab Masala",
+    "description": "Refreshing green masala blend for chicken kebabs",
+    "short_description": "Refreshing green kebabs",
+    "category": "chicken",
+    "accent_color": "#28A745",
+    "tags": [
+      "chicken",
+      "green",
+      "kebab"
+    ],
+    "badge": "New",
+    "image_url": "/images/Green Chicken Masala.png",
+    "stock_qty": 100,
+    "is_active": true,
+    "variants": [
+      {
+        "weight_grams": 200,
+        "original_price": 188,
+        "price": 150
+      },
+      {
+        "weight_grams": 500,
+        "original_price": 400,
+        "price": 320
+      },
+      {
+        "weight_grams": 1000,
+        "original_price": 750,
+        "price": 600
+      }
+    ]
+  },
+  {
+    "id": "3",
+    "name": "Pepper Masala (Chicken/Mutton)",
+    "description": "Spicy pepper masala for chicken and mutton dishes",
+    "short_description": "Fiery pepper flavor",
+    "category": "spice",
+    "accent_color": "#343A40",
+    "tags": [
+      "pepper",
+      "spicy",
+      "chicken",
+      "mutton"
+    ],
+    "badge": "Hot",
+    "image_url": "/images/Pepper Masala.png",
+    "stock_qty": 100,
+    "is_active": true,
+    "variants": [
+      {
+        "weight_grams": 200,
+        "original_price": 375,
+        "price": 300
+      },
+      {
+        "weight_grams": 500,
+        "original_price": 938,
+        "price": 750
+      },
+      {
+        "weight_grams": 1000,
+        "original_price": 1875,
+        "price": 1500
+      }
+    ]
+  },
+  {
+    "id": "4",
+    "name": "Mutton Masala",
+    "description": "Rich, aromatic masala for mutton dishes",
+    "short_description": "Perfect mutton curry",
+    "category": "spice",
+    "accent_color": "#8B4513",
+    "tags": [
+      "mutton",
+      "curry"
+    ],
+    "badge": null,
+    "image_url": "/images/Mutton Masala.png",
+    "stock_qty": 100,
+    "is_active": true,
+    "variants": [
+      {
+        "weight_grams": 200,
+        "original_price": 188,
+        "price": 150
+      },
+      {
+        "weight_grams": 500,
+        "original_price": 400,
+        "price": 320
+      },
+      {
+        "weight_grams": 1000,
+        "original_price": 750,
+        "price": 600
+      }
+    ]
+  },
+  {
+    "id": "5",
+    "name": "Chicken Masala",
+    "description": "All-purpose chicken masala for any chicken dish",
+    "short_description": "Any chicken dish",
+    "category": "chicken",
+    "accent_color": "#DC3545",
+    "tags": [
+      "chicken",
+      "curry"
+    ],
+    "badge": null,
+    "image_url": "/images/Chicken Masala.png",
+    "stock_qty": 100,
+    "is_active": true,
+    "variants": [
+      {
+        "weight_grams": 200,
+        "original_price": 188,
+        "price": 150
+      },
+      {
+        "weight_grams": 500,
+        "original_price": 400,
+        "price": 320
+      },
+      {
+        "weight_grams": 1000,
+        "original_price": 750,
+        "price": 600
+      }
+    ]
+  },
+  {
+    "id": "6",
+    "name": "Korma Masala (Veg/Non-Veg)",
+    "description": "Creamy, aromatic korma masala for veg and non-veg",
+    "short_description": "Creamy korma",
+    "category": "vegetarian",
+    "accent_color": "#FD7E14",
+    "tags": [
+      "korma",
+      "cream",
+      "veg",
+      "non-veg"
+    ],
+    "badge": null,
+    "image_url": "/images/Korma Masala.png",
+    "stock_qty": 100,
+    "is_active": true,
+    "variants": [
+      {
+        "weight_grams": 200,
+        "original_price": 188,
+        "price": 150
+      },
+      {
+        "weight_grams": 500,
+        "original_price": 400,
+        "price": 320
+      },
+      {
+        "weight_grams": 1000,
+        "original_price": 750,
+        "price": 600
+      }
+    ]
+  },
+  {
+    "id": "7",
+    "name": "Biryani Masala (Veg/Non-Veg)",
+    "description": "Authentic Hyderabad-style biryani masala",
+    "short_description": "Delicious biryani",
+    "category": "spice",
+    "accent_color": "#F5C518",
+    "tags": [
+      "biryani",
+      "rice",
+      "veg",
+      "non-veg"
+    ],
+    "badge": "Best Seller",
+    "image_url": "/images/Biryani Masala.png",
+    "stock_qty": 100,
+    "is_active": true,
+    "variants": [
+      {
+        "weight_grams": 200,
+        "original_price": 188,
+        "price": 150
+      },
+      {
+        "weight_grams": 500,
+        "original_price": 400,
+        "price": 320
+      },
+      {
+        "weight_grams": 1000,
+        "original_price": 750,
+        "price": 600
+      }
+    ]
+  },
+  {
+    "id": "8",
+    "name": "Fish Fry Masala",
+    "description": "Crispy and flavorful fish fry masala",
+    "short_description": "Crispy fish fry",
+    "category": "seafood",
+    "accent_color": "#17A2B8",
+    "tags": [
+      "fish",
+      "fry",
+      "seafood"
+    ],
+    "badge": null,
+    "image_url": "/images/Fish Fry Masala.png",
+    "stock_qty": 100,
+    "is_active": true,
+    "variants": [
+      {
+        "weight_grams": 200,
+        "original_price": 188,
+        "price": 150
+      },
+      {
+        "weight_grams": 500,
+        "original_price": 400,
+        "price": 320
+      },
+      {
+        "weight_grams": 1000,
+        "original_price": 750,
+        "price": 600
+      }
+    ]
+  },
+  {
+    "id": "9",
+    "name": "Fish Curry Masala",
+    "description": "Rich South Indian style fish curry masala",
+    "short_description": "Rich fish curry",
+    "category": "seafood",
+    "accent_color": "#20C997",
+    "tags": [
+      "fish",
+      "curry",
+      "seafood"
+    ],
+    "badge": null,
+    "image_url": "/images/Fish Curry Masala.png",
+    "stock_qty": 100,
+    "is_active": true,
+    "variants": [
+      {
+        "weight_grams": 200,
+        "original_price": 188,
+        "price": 150
+      },
+      {
+        "weight_grams": 500,
+        "original_price": 400,
+        "price": 320
+      },
+      {
+        "weight_grams": 1000,
+        "original_price": 750,
+        "price": 600
+      }
+    ]
+  },
+  {
+    "id": "10",
+    "name": "Garam Masala",
+    "description": "Premium all-purpose garam masala blend",
+    "short_description": "All-purpose spice",
+    "category": "spice",
+    "accent_color": "#6F42C1",
+    "tags": [
+      "garam",
+      "all-purpose",
+      "spice"
+    ],
+    "badge": "Essential",
+    "image_url": "/images/Garam Masala.png",
+    "stock_qty": 100,
+    "is_active": true,
+    "variants": [
+      {
+        "weight_grams": 200,
+        "original_price": 188,
+        "price": 150
+      },
+      {
+        "weight_grams": 500,
+        "original_price": 400,
+        "price": 320
+      },
+      {
+        "weight_grams": 1000,
+        "original_price": 750,
+        "price": 600
+      }
+    ]
+  },
+  {
+    "id": "11",
+    "name": "Chicken Barbecue Masala",
+    "description": "Smoky barbecue masala for grilled chicken",
+    "short_description": "Smoky BBQ chicken",
+    "category": "chicken",
+    "accent_color": "#E83E8C",
+    "tags": [
+      "chicken",
+      "barbecue",
+      "grill"
+    ],
+    "badge": "Popular",
+    "image_url": "/images/Chicken Barbecue Masala.png",
+    "stock_qty": 100,
+    "is_active": true,
+    "variants": [
+      {
+        "weight_grams": 200,
+        "original_price": 188,
+        "price": 150
+      },
+      {
+        "weight_grams": 500,
+        "original_price": 400,
+        "price": 320
+      },
+      {
+        "weight_grams": 1000,
+        "original_price": 750,
+        "price": 600
+      }
+    ]
+  },
+  {
+    "id": "12",
+    "name": "Chicken Tandoori Masala",
+    "description": "Classic tandoori masala for perfect tandoori chicken",
+    "short_description": "Classic tandoori",
+    "category": "chicken",
+    "accent_color": "#FFC107",
+    "tags": [
+      "chicken",
+      "tandoori",
+      "grill"
+    ],
+    "badge": "Best Seller",
+    "image_url": "/images/Chicken Tandoor Masala.png",
+    "stock_qty": 100,
+    "is_active": true,
+    "variants": [
+      {
+        "weight_grams": 200,
+        "original_price": 188,
+        "price": 150
+      },
+      {
+        "weight_grams": 500,
+        "original_price": 400,
+        "price": 320
+      },
+      {
+        "weight_grams": 1000,
+        "original_price": 750,
+        "price": 600
+      }
+    ]
+  },
+  {
+    "id": "13",
+    "name": "Sambar Powder",
+    "description": "Traditional South Indian sambar masala",
+    "short_description": "Traditional sambar",
+    "category": "vegetarian",
+    "accent_color": "#868E96",
+    "tags": [
+      "sambar",
+      "south indian",
+      "veg"
+    ],
+    "badge": null,
+    "image_url": "/images/Sambar Masala.png",
+    "stock_qty": 100,
+    "is_active": true,
+    "variants": [
+      {
+        "weight_grams": 200,
+        "original_price": 188,
+        "price": 150
+      },
+      {
+        "weight_grams": 500,
+        "original_price": 400,
+        "price": 320
+      },
+      {
+        "weight_grams": 1000,
+        "original_price": 750,
+        "price": 600
+      }
+    ]
+  },
+  {
+    "id": "14",
+    "name": "Red Chilli Powder",
+    "description": "Premium red chilli powder for a spicy kick",
+    "short_description": "Spicy chilli powder",
+    "category": "spice",
+    "accent_color": "#D63031",
+    "tags": [
+      "chilli",
+      "spicy",
+      "powder"
+    ],
+    "badge": "Hot",
+    "image_url": "/images/red chilly powder'.png",
+    "stock_qty": 100,
+    "is_active": true,
+    "variants": [
+      {
+        "weight_grams": 200,
+        "original_price": 188,
+        "price": 150
+      },
+      {
+        "weight_grams": 500,
+        "original_price": 400,
+        "price": 320
+      },
+      {
+        "weight_grams": 1000,
+        "original_price": 750,
+        "price": 600
+      }
+    ]
+  },
+  {
+    "id": "15",
+    "name": "Rasam Masala",
+    "description": "Traditional South Indian rasam masala",
+    "short_description": "Traditional rasam",
+    "category": "vegetarian",
+    "accent_color": "#E17055",
+    "tags": [
+      "rasam",
+      "south indian",
+      "veg"
+    ],
+    "badge": null,
+    "image_url": "/images/Rasam Masala.png",
+    "stock_qty": 100,
+    "is_active": true,
+    "variants": [
+      {
+        "weight_grams": 200,
+        "original_price": 188,
+        "price": 150
+      },
+      {
+        "weight_grams": 500,
+        "original_price": 400,
+        "price": 320
+      },
+      {
+        "weight_grams": 1000,
+        "original_price": 750,
+        "price": 600
+      }
+    ]
+  },
+  {
+    "id": "16",
+    "name": "Jeera Powder",
+    "description": "Aromatic jeera (cumin) powder for all dishes",
+    "short_description": "Aromatic cumin powder",
+    "category": "spice",
+    "accent_color": "#A16946",
+    "tags": [
+      "jeera",
+      "cumin",
+      "powder"
+    ],
+    "badge": "Essential",
+    "image_url": "/images/Jeera Powder.png",
+    "stock_qty": 100,
+    "is_active": true,
+    "variants": [
+      {
+        "weight_grams": 200,
+        "original_price": 188,
+        "price": 150
+      },
+      {
+        "weight_grams": 500,
+        "original_price": 400,
+        "price": 320
+      },
+      {
+        "weight_grams": 1000,
+        "original_price": 750,
+        "price": 600
+      }
+    ]
+  },
+  {
+    "id": "17",
+    "name": "Turmeric Powder",
+    "description": "Pure turmeric powder for health and flavor",
+    "short_description": "Pure turmeric",
+    "category": "spice",
+    "accent_color": "#FDCB6E",
+    "tags": [
+      "turmeric",
+      "haldi",
+      "powder"
+    ],
+    "badge": "Essential",
+    "image_url": "/images/Turmeric powder.png",
+    "stock_qty": 100,
+    "is_active": true,
+    "variants": [
+      {
+        "weight_grams": 200,
+        "original_price": 150,
+        "price": 120
+      },
+      {
+        "weight_grams": 500,
+        "original_price": 312,
+        "price": 250
+      },
+      {
+        "weight_grams": 1000,
+        "original_price": 625,
+        "price": 500
+      }
+    ]
+  },
+  {
+    "id": "18",
+    "name": "Coriander Powder",
+    "description": "Fresh coriander (dhania) powder",
+    "short_description": "Fresh coriander powder",
+    "category": "spice",
+    "accent_color": "#55EFC4",
+    "tags": [
+      "coriander",
+      "dhania",
+      "powder"
+    ],
+    "badge": "Essential",
+    "image_url": "/images/Coriander Powder.png",
+    "stock_qty": 100,
+    "is_active": true,
+    "variants": [
+      {
+        "weight_grams": 200,
+        "original_price": 150,
+        "price": 120
+      },
+      {
+        "weight_grams": 500,
+        "original_price": 312,
+        "price": 250
+      },
+      {
+        "weight_grams": 1000,
+        "original_price": 625,
+        "price": 500
+      }
+    ]
+  },
+  {
+    "id": "19",
+    "name": "Mutton Fry Masala",
+    "description": "Delicious masala for crispy mutton fry",
+    "short_description": "Crispy mutton fry",
+    "category": "spice",
+    "accent_color": "#B33771",
+    "tags": [
+      "mutton",
+      "fry",
+      "spice"
+    ],
+    "badge": null,
+    "image_url": "/images/Mutton fry masala.png",
+    "stock_qty": 100,
+    "is_active": true,
+    "variants": [
+      {
+        "weight_grams": 200,
+        "original_price": 188,
+        "price": 150
+      },
+      {
+        "weight_grams": 500,
+        "original_price": 400,
+        "price": 320
+      },
+      {
+        "weight_grams": 1000,
+        "original_price": 750,
+        "price": 600
+      }
+    ]
+  },
+  {
+    "id": "20",
+    "name": "Chicken Gravy Masala",
+    "description": "Rich and flavorful chicken gravy masala",
+    "short_description": "Rich chicken gravy",
+    "category": "chicken",
+    "accent_color": "#6C5CE7",
+    "tags": [
+      "chicken",
+      "gravy",
+      "curry"
+    ],
+    "badge": null,
+    "image_url": "/images/Chicken gravy masala.png",
+    "stock_qty": 100,
+    "is_active": true,
+    "variants": [
+      {
+        "weight_grams": 200,
+        "original_price": 188,
+        "price": 150
+      },
+      {
+        "weight_grams": 500,
+        "original_price": 400,
+        "price": 320
+      },
+      {
+        "weight_grams": 1000,
+        "original_price": 750,
+        "price": 600
+      }
+    ]
+  }
+]

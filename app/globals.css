@@ -1,0 +1,199 @@
+@import url('https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Playfair+Display:ital,wght@0,400;0,500;0,600;0,700;1,400;1,500&family=Inter:wght@300;400;500;600;700&display=swap');
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  --black: #0a0a0a;
+  --charcoal: #141414;
+  --dark: #1a1a1a;
+  --gold: #F5C518;
+  --gold-light: #FFD700;
+  --gold-dark: #D4A815;
+  --cream: #F5F0E8;
+  --font-display: 'Bebas Neue', cursive;
+}
+
+html { 
+  scroll-behavior: smooth;
+}
+
+body {
+  background: var(--black);
+  color: white;
+  font-family: 'Inter', system-ui, sans-serif;
+  overflow-x: hidden;
+}
+
+.font-display { font-family: var(--font-display); }
+.font-serif   { font-family: 'Playfair Display', serif; }
+
+/* Premium Text Gradients */
+.text-gradient-gold {
+  background: linear-gradient(135deg, #F5C518 0%, #FFD700 50%, #D4A815 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+/* Custom scrollbar */
+::-webkit-scrollbar { width: 10px; }
+::-webkit-scrollbar-track { background: var(--charcoal); }
+::-webkit-scrollbar-thumb { 
+  background: linear-gradient(180deg, #333 0%, #F5C518 100%); 
+  border-radius: 5px; 
+}
+::-webkit-scrollbar-thumb:hover { 
+  background: linear-gradient(180deg, #444 0%, #FFD700 100%); 
+}
+
+/* Marquee */
+@keyframes marquee {
+  0% { transform: translateX(0); }
+  100% { transform: translateX(-50%); }
+}
+.animate-marquee { 
+  animation: marquee 35s linear infinite; 
+}
+
+@keyframes marquee-reverse {
+  0% { transform: translateX(-50%); }
+  100% { transform: translateX(0); }
+}
+.animate-marquee-reverse { 
+  animation: marquee-reverse 35s linear infinite; 
+}
+
+/* Scrolling Reviews */
+@keyframes scroll {
+  0% { transform: translateX(0); }
+  100% { transform: translateX(-50%); }
+}
+.animate-scroll {
+  display: flex;
+  animation: scroll 8s linear infinite;
+}
+/* Pause animation when user interacts */
+.animate-scroll:hover,
+.animate-scroll:active {
+  animation-play-state: paused;
+}
+
+/* Slow rotate */
+@keyframes spin-slow {
+  to { transform: rotate(360deg); }
+}
+.animate-spin-slow { animation: spin-slow 20s linear infinite; }
+.animate-spin-slow-r { animation: spin-slow 15s linear infinite reverse; }
+
+/* Hide scrollbar but keep scrolling */
+.hide-scrollbar {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
+.hide-scrollbar::-webkit-scrollbar {
+  display: none;
+}
+
+/* Premium Button Glow Effects */
+.glow-gold {
+  box-shadow: 0 0 20px rgba(245, 197, 24, 0.3);
+}
+.glow-gold-hover:hover {
+  box-shadow: 0 0 30px rgba(245, 197, 24, 0.5), 0 0 60px rgba(245, 197, 24, 0.3);
+}
+
+/* Subtle Background Gradient Overlays */
+.bg-gradient-overlay {
+  background: linear-gradient(
+    to bottom,
+    transparent 0%,
+    rgba(10, 10, 10, 0.3) 50%,
+    rgba(10, 10, 10, 0.8) 100%
+  );
+}
+
+/* Glassmorphism */
+.glass {
+  background: rgba(255, 255, 255, 0.05);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+/* Premium Pulse Animation */
+@keyframes pulse-glow {
+  0%, 100% {
+    box-shadow: 0 0 20px rgba(245, 197, 24, 0.3);
+  }
+  50% {
+    box-shadow: 0 0 40px rgba(245, 197, 24, 0.6);
+  }
+}
+.animate-pulse-glow {
+  animation: pulse-glow 3s ease-in-out infinite;
+}
+
+/* Fade In Animation */
+@keyframes fade-in {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+.animate-fade-in {
+  animation: fade-in 0.6s ease-out forwards;
+}
+
+/* Scale In Animation */
+@keyframes scale-in {
+  from { 
+    opacity: 0;
+    transform: scale(0.9);
+  }
+  to { 
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+.animate-scale-in {
+  animation: scale-in 0.5s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+
+/* Fade in up animations */
+@keyframes fade-in-up {
+  from {
+    opacity: 0;
+    transform: translateY(30px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+.animate-fade-in-up {
+  animation: fade-in-up 0.8s ease-out forwards;
+}
+
+/* Text stroke effect */
+.text-stroke {
+  -webkit-text-stroke: 1px rgba(245, 197, 24, 0.5);
+  color: transparent;
+}
+
+/* Premium Link Underline */
+.animated-underline {
+  position: relative;
+}
+.animated-underline::after {
+  content: '';
+  position: absolute;
+  width: 0;
+  height: 2px;
+  bottom: -2px;
+  left: 0;
+  background: linear-gradient(90deg, #F5C518, #FFD700);
+  transition: width 0.3s ease;
+}
+.animated-underline:hover::after {
+  width: 100%;
+}

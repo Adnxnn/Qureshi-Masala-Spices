@@ -1,0 +1,5 @@
+[
+  { "id": "promo-1", "code": "WELCOME10", "discount": 10, "type": "percentage", "isActive": true, "usageLimit": 100, "usedCount": 25 },
+  { "id": "promo-2", "code": "FLAT50", "discount": 50, "type": "fixed", "isActive": true, "usageLimit": 50, "usedCount": 10 },
+  { "id": "promo-3", "code": "SUMMER20", "discount": 20, "type": "percentage", "isActive": false, "usageLimit": 200, "usedCount": 0 }
+]

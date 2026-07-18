@@ -1,0 +1,6 @@
+[
+  { "id": 1, "name": "Biryani Masala", "is_active": true, "stock_qty": 50, "price": 299 },
+  { "id": 2, "name": "Chicken Masala", "is_active": true, "stock_qty": 8, "price": 249 },
+  { "id": 3, "name": "Sambar Powder", "is_active": true, "stock_qty": 120, "price": 199 },
+  { "id": 4, "name": "Garam Masala", "is_active": true, "stock_qty": 35, "price": 279 }
+]
