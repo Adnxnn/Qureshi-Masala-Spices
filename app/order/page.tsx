@@ -189,20 +189,30 @@ Please confirm this order.`
       setLastOrderTotals(orderTotals)
 
       if (appliedPromoCode) {
-        await incrementPromoCodeUsage(appliedPromoCode.code, user, {
-          email: data.customer_email,
-          phone: data.customer_phone
-        })
+        try {
+          await incrementPromoCodeUsage(appliedPromoCode.code, user, {
+            email: data.customer_email,
+            phone: data.customer_phone
+          })
+        } catch (promoError) {
+          console.warn('Failed to increment promo code usage:', promoError)
+          // Don't block order if promo code usage fails
+        }
       }
 
       if (user) {
-        await updateUserProfile({
-          full_name: data.customer_name,
-          phone: data.customer_phone,
-          address: data.customer_address,
-          city: data.customer_city,
-          pincode: data.customer_pincode
-        })
+        try {
+          await updateUserProfile({
+            full_name: data.customer_name,
+            phone: data.customer_phone,
+            address: data.customer_address,
+            city: data.customer_city,
+            pincode: data.customer_pincode
+          })
+        } catch (profileError) {
+          console.warn('Failed to update user profile:', profileError)
+          // Don't block order if updating profile fails
+        }
       }
 
       const payload: PlaceOrderPayload = {
@@ -215,7 +225,9 @@ Please confirm this order.`
         notes: data.notes,
         items: items,
       }
+      console.log('Placing order with payload:', payload)
       const order = await placeOrder(payload, appliedPromoCode)
+      console.log('Order placed successfully:', order)
       const shortOrderId = String(order.id)
       setOrderData(data)
       setOrderId(shortOrderId)
@@ -228,7 +240,9 @@ Please confirm this order.`
         window.location.href = whatsappUrl
       }, 500)
     } catch (e) {
-      toast.error('Something went wrong. Please try again.')
+      console.error('Order failed with error:', e)
+      const errorMessage = e instanceof Error ? e.message : 'Unknown error'
+      toast.error(`Order failed: ${errorMessage}`)
     }
   }
 
