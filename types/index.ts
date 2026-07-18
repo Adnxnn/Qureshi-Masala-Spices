@@ -248,7 +248,7 @@ export type Database = {
         };
       },
       orders: { Row: Omit<Order, 'items'>; Insert: Omit<Order, 'id' | 'created_at' | 'items'>; Update: Partial<Order> },
-      order_items: { Row: OrderItem; Insert: Omit<OrderItem, 'id'>; Update: Partial<OrderItem> },
+      order_items: { Row: OrderItem; Insert: Omit<OrderItem, 'id' | 'subtotal'>; Update: Partial<OrderItem> },
       users: { Row: User; Insert: Omit<User, 'id' | 'created_at'>; Update: Partial<User> }
     }
   }
