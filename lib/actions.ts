@@ -322,7 +322,8 @@ export async function placeOrder(
     product_name: item.product.name,
     variant_weight_grams: item.variant.weight_grams,
     quantity: item.quantity,
-    unit_price: item.variant.price
+    unit_price: item.variant.price,
+    subtotal: item.variant.price * item.quantity
   }))
 
   const { error: itemsError } = await adminSupabase.from('order_items').insert(orderItems as any)
