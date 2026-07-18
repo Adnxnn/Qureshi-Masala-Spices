@@ -1,9 +1,28 @@
 'use server'
 import { revalidatePath } from 'next/cache'
 import { redirect } from 'next/navigation'
+import { promises as fs } from 'fs'
+import path from 'path'
 import { createClient } from '@supabase/supabase-js'
-import type { CartItem, User, OrderWithItems, PlaceOrderPayload, Product, ProductVariant, Database } from '@/types'
+import type { CartItem, User, OrderWithItems, PlaceOrderPayload, Product, ProductVariant, Database, PromoCode } from '@/types'
 import { createServerSupabaseClient } from './supabaseServer'
+import { calculateOrderTotal } from './utils'
+
+// File paths for promo codes
+const PROMO_CODES_FILE = path.join(process.cwd(), 'data', 'promo-codes.json')
+
+async function loadPromoCodes() {
+  try {
+    const data = await fs.readFile(PROMO_CODES_FILE, 'utf8')
+    return JSON.parse(data)
+  } catch {
+    return []
+  }
+}
+
+async function savePromoCodes(promoCodes: PromoCode[]) {
+  await fs.writeFile(PROMO_CODES_FILE, JSON.stringify(promoCodes, null, 2))
+}
 
 // ============================================
 // ADMIN SUPABASE CLIENT (for orders bypassing RLS)
@@ -256,11 +275,11 @@ export async function updateUserProfile(formData: {
 // ============================================
 // ORDERS
 // ============================================
-export async function placeOrder(formData: PlaceOrderPayload) {
+export async function placeOrder(formData: PlaceOrderPayload, promoCode: PromoCode | null = null) {
   const user = await getCurrentUser()
 
-  // Calculate total (simplified, no promo codes for now)
-  const subtotal = formData.items.reduce((sum, item) => sum + item.variant.price * item.quantity, 0)
+  const subtotal = formData.items.reduce((s, i) => s + i.variant.price * i.quantity, 0)
+  const { total } = calculateOrderTotal(subtotal, promoCode)
 
   // Use admin client to insert order (bypasses RLS)
   const adminSupabase = createAdminSupabaseClient()
@@ -277,7 +296,7 @@ export async function placeOrder(formData: PlaceOrderPayload) {
       customer_city: formData.customer_city,
       customer_pincode: formData.customer_pincode,
       notes: formData.notes,
-      total_amount: subtotal,
+      total_amount: total,
       status: 'pending'
     })
     .select()
@@ -308,6 +327,96 @@ export async function placeOrder(formData: PlaceOrderPayload) {
   revalidatePath('/admin/orders')
   revalidatePath('/account')
   return order
+}
+
+// Promo code actions
+export async function getPromoCodes(): Promise<PromoCode[]> {
+  return loadPromoCodes()
+}
+
+export async function addPromoCode(promoCodeData: Omit<PromoCode, 'id' | 'createdAt' | 'usedCount' | 'usedBy'>) {
+  const promoCodes = await loadPromoCodes()
+  const newPromoCode: PromoCode = {
+    ...promoCodeData,
+    id: Date.now().toString(),
+    usedCount: 0,
+    usedBy: [],
+    createdAt: new Date().toISOString()
+  }
+  await savePromoCodes([newPromoCode, ...promoCodes])
+  revalidatePath('/admin/promo-codes')
+}
+
+export async function updatePromoCode(id: string, updates: Partial<PromoCode>) {
+  const promoCodes = await loadPromoCodes()
+  const updatedPromoCodes = promoCodes.map(pc =>
+    pc.id === id ? { ...pc, ...updates } : pc
+  )
+  await savePromoCodes(updatedPromoCodes)
+  revalidatePath('/admin/promo-codes')
+}
+
+export async function deletePromoCode(id: string) {
+  const promoCodes = await loadPromoCodes()
+  await savePromoCodes(promoCodes.filter(pc => pc.id !== id))
+  revalidatePath('/admin/promo-codes')
+}
+
+export async function validateAndApplyPromoCode(
+  code: string,
+  user: User | null,
+  customerData?: { email: string; phone: string }
+): Promise<PromoCode | null> {
+  const promoCodes = await loadPromoCodes()
+  const promoCode = promoCodes.find(pc => pc.code.toUpperCase() === code.toUpperCase())
+
+  if (!promoCode) return null
+  if (!promoCode.isActive) return null
+  if (promoCode.usedCount >= promoCode.usageLimit) return null
+
+  // Check if user has already used this promo code
+  const hasUserUsed = promoCode.usedBy.some(usage => {
+    if (user && usage.userId === user.id) {
+      return true
+    }
+    if (customerData) {
+      if (usage.customerEmail === customerData.email || usage.customerPhone === customerData.phone) {
+        return true
+      }
+    }
+    return false
+  })
+
+  if (hasUserUsed) return null
+
+  return promoCode
+}
+
+export async function incrementPromoCodeUsage(
+  code: string,
+  user: User | null,
+  customerData: { email: string; phone: string }
+) {
+  const promoCodes = await loadPromoCodes()
+  const updatedPromoCodes = promoCodes.map(pc => {
+    if (pc.code.toUpperCase() === code.toUpperCase()) {
+      return {
+        ...pc,
+        usedCount: pc.usedCount + 1,
+        usedBy: [
+          ...pc.usedBy,
+          {
+            userId: user?.id,
+            customerEmail: customerData.email,
+            customerPhone: customerData.phone,
+            usedAt: new Date().toISOString()
+          }
+        ]
+      }
+    }
+    return pc
+  })
+  await savePromoCodes(updatedPromoCodes)
 }
 
 export async function getUserOrders() {
