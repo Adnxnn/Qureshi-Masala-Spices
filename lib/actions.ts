@@ -323,15 +323,10 @@ export async function placeOrder(
   promoCode: PromoCode | null = null
 ): Promise<PlaceOrderResult> {
   try {
-    console.log('placeOrder called with formData:', formData)
-    console.log('promoCode:', promoCode)
-
     const user = await getCurrentUser()
-    console.log('Current user:', user)
 
     const subtotal = formData.items.reduce((s, i) => s + i.variant.price * i.quantity, 0)
     const { total } = calculateOrderTotal(subtotal, promoCode)
-    console.log('Calculated totals: subtotal', subtotal, 'total', total)
 
     const orderInsert: Database['public']['Tables']['orders']['Insert'] = {
       user_id: user?.id || null,
@@ -345,22 +340,18 @@ export async function placeOrder(
       total_amount: total,
       status: 'pending'
     }
-    console.log('Order insert object:', orderInsert)
 
     // Use admin client to insert order (bypasses RLS). This throws if
     // SUPABASE_SERVICE_ROLE_KEY / NEXT_PUBLIC_SUPABASE_URL aren't set on
     // the deployment - that failure is caught below like any other.
-    const adminSupabase = createAdminSupabaseClient()
-    console.log('Created admin Supabase client')
+    const adminSupabase = await createAdminSupabaseClient()
 
     // Insert order
-    console.log('Inserting order into orders table')
     const result = await adminSupabase
       .from('orders')
       .insert(orderInsert as any)
       .select()
       .single()
-    console.log('Order insert result:', result)
 
     const orderError = result.error
     const order = result.data as Database['public']['Tables']['orders']['Row'] | null
@@ -384,7 +375,6 @@ export async function placeOrder(
       quantity: item.quantity,
       unit_price: item.variant.price
     }))
-    console.log('Order items to insert:', orderItems)
 
     const { error: itemsError } = await adminSupabase.from('order_items').insert(orderItems as any)
 
@@ -397,7 +387,6 @@ export async function placeOrder(
 
     revalidatePath('/admin/orders')
     revalidatePath('/account')
-    console.log('Order placed successfully, returning order:', order)
     return { success: true, order }
   } catch (err) {
     // Catches createAdminSupabaseClient() throwing on missing env vars,
