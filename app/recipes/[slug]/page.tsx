@@ -1,4 +1,6 @@
-import { notFound } from 'next/navigation'
+'use client'
+
+import { useEffect, useState } from 'react'
 import Image from 'next/image'
 import Link from 'next/link'
 import { ArrowLeft, Clock, Users, ChefHat, ArrowRight, CheckCircle } from 'lucide-react'
@@ -6,17 +8,63 @@ import { getPublicRecipes } from '@/lib/actions'
 import RecipeAddToCart from '@/components/site/RecipeAddToCart'
 import type { Product, ProductVariant } from '@/types'
 
-export const dynamic = 'force-dynamic'
+export default function RecipeDetailPage({ params }: { params: { slug: string } }) {
+  const [recipe, setRecipe] = useState<any | null>(null)
+  const [allRecipes, setAllRecipes] = useState<any[]>([])
+  const [loading, setLoading] = useState(true)
+  const [loadError, setLoadError] = useState('')
 
-export default async function RecipeDetailPage({ params }: { params: { slug: string } }) {
-  const allRecipes = await getPublicRecipes()
-  const requestedSlug = decodeURIComponent(params.slug).trim().toLowerCase()
-  const recipe = allRecipes.find(
-    (candidate: any) => candidate.slug?.trim().toLowerCase() === requestedSlug
-  )
+  useEffect(() => {
+    let active = true
+
+    async function loadRecipe() {
+      try {
+        setLoading(true)
+        setLoadError('')
+        const recipes = await getPublicRecipes()
+        const requestedSlug = decodeURIComponent(params.slug).trim().toLowerCase()
+        const matchingRecipe = recipes.find(
+          (candidate: any) => candidate.slug?.trim().toLowerCase() === requestedSlug
+        )
+
+        if (active) {
+          setAllRecipes(recipes)
+          setRecipe(matchingRecipe ?? null)
+        }
+      } catch (error) {
+        console.error('Unable to load recipe:', error)
+        if (active) setLoadError('Unable to load this recipe right now.')
+      } finally {
+        if (active) setLoading(false)
+      }
+    }
+
+    void loadRecipe()
+    return () => {
+      active = false
+    }
+  }, [params.slug])
+
+  if (loading) {
+    return (
+      <div className="min-h-screen bg-black pt-32 text-center text-white/50">
+        Loading recipe…
+      </div>
+    )
+  }
 
   if (!recipe) {
-    notFound()
+    return (
+      <div className="min-h-screen bg-black px-4 pt-32 text-center">
+        <h1 className="font-display text-4xl uppercase text-white">Recipe not found</h1>
+        <p className="mt-4 text-white/50">
+          {loadError || 'This recipe is unavailable or has not been published.'}
+        </p>
+        <Link href="/recipes" className="mt-8 inline-flex text-gold hover:text-white">
+          Back to Recipes
+        </Link>
+      </div>
+    )
   }
 
   const relatedRecipes = allRecipes.filter((r: any) => r.id !== recipe.id && r.cuisine_or_category === recipe.cuisine_or_category).slice(0, 3)
