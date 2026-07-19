@@ -2,6 +2,7 @@
 import { useState, useEffect } from 'react'
 import Image from 'next/image'
 import Link from 'next/link'
+import { useRouter } from 'next/navigation'
 import { motion, AnimatePresence } from 'framer-motion'
 import { ShoppingBag, ArrowRight, X, Plus, Eye, Sparkles } from 'lucide-react'
 import { useCart } from '@/lib/cart'
@@ -178,7 +179,7 @@ function QuickViewModal({ product, onClose }: { product: Product; onClose: () =>
                 </motion.button>
 
                 <Link
-                  href={`/product/${generateSlug(product.name)}`}
+                  href={`/product/${product.slug || generateSlug(product.name)}`}
                   onClick={onClose}
                   className="w-full flex items-center justify-center gap-2.5 border border-white/10 text-white/50 hover:text-white hover:border-white/30 hover:bg-white/5 px-6 sm:px-7 py-3.5 sm:py-4 text-[10px] sm:text-xs font-bold tracking-[0.3em] uppercase transition-all duration-300 rounded-xl"
                 >
@@ -195,6 +196,7 @@ function QuickViewModal({ product, onClose }: { product: Product; onClose: () =>
 }
 
 export default function ProductGrid({ products, loading = false }: { products: Product[]; loading?: boolean }) {
+  const router = useRouter()
   const { addItem } = useCart()
   const { addNotification } = useCartNotifications()
   const [selectedVariants, setSelectedVariants] = useState<Record<string, number>>({})
@@ -241,9 +243,19 @@ export default function ProductGrid({ products, loading = false }: { products: P
           const isOutOfStock = p.stock_qty <= 0
 
           return (
-            <Link
-              href={`/product/${generateSlug(p.name)}`}
+            <motion.div
               key={p.id}
+              role="link"
+              tabIndex={0}
+              aria-label={`View ${p.name}`}
+              onClick={() => router.push(`/product/${p.slug || generateSlug(p.name)}`)}
+              onKeyDown={(event) => {
+                if (event.key === 'Enter' || event.key === ' ') {
+                  event.preventDefault()
+                  router.push(`/product/${p.slug || generateSlug(p.name)}`)
+                }
+              }}
+              className="cursor-pointer"
             >
               <motion.div
                 className={`group relative bg-gradient-to-b from-zinc-900/80 to-black border border-white/5 rounded-2xl sm:rounded-3xl overflow-hidden hover:border-gold/30 hover:shadow-[0_20px_60px_rgba(0,0,0,0.6)] transition-all duration-500 flex flex-col ${isOutOfStock ? 'opacity-70' : ''}`}
@@ -280,6 +292,7 @@ export default function ProductGrid({ products, loading = false }: { products: P
                     <button
                       onClick={(e) => {
                         e.preventDefault()
+                        e.stopPropagation()
                         setQuickViewProduct(p)
                       }}
                       className="absolute top-3 right-3 opacity-0 group-hover:opacity-100 transition-all duration-400 bg-black/80 hover:bg-gold hover:text-black text-white p-2.5 rounded-xl backdrop-blur-md border border-white/10 hover:border-gold"
@@ -325,6 +338,7 @@ export default function ProductGrid({ products, loading = false }: { products: P
                         key={idx}
                         onClick={(e) => {
                           e.preventDefault()
+                          e.stopPropagation()
                           if (!isOutOfStock) handleSelectVariant(p.id, idx)
                         }}
                         disabled={isOutOfStock}
@@ -350,6 +364,7 @@ export default function ProductGrid({ products, loading = false }: { products: P
                     <motion.button
                       onClick={(e) => {
                         e.preventDefault()
+                        e.stopPropagation()
                         if (isOutOfStock) return
                         setPressedProductId(p.id)
                         setTimeout(() => {
@@ -396,7 +411,7 @@ export default function ProductGrid({ products, loading = false }: { products: P
                   </div>
                 </div>
               </motion.div>
-            </Link>
+            </motion.div>
           )
         })}
       </div>

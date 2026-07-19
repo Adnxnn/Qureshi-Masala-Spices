@@ -2,15 +2,18 @@ import { notFound } from 'next/navigation'
 import Image from 'next/image'
 import Link from 'next/link'
 import { ArrowLeft, Clock, Users, ChefHat, ArrowRight, CheckCircle } from 'lucide-react'
-import { getRecipeBySlug, getPublicRecipes } from '@/lib/actions'
+import { getPublicRecipes } from '@/lib/actions'
 import RecipeAddToCart from '@/components/site/RecipeAddToCart'
 import type { Product, ProductVariant } from '@/types'
 
 export const dynamic = 'force-dynamic'
 
 export default async function RecipeDetailPage({ params }: { params: { slug: string } }) {
-  const recipe = await getRecipeBySlug(params.slug)
   const allRecipes = await getPublicRecipes()
+  const requestedSlug = decodeURIComponent(params.slug).trim().toLowerCase()
+  const recipe = allRecipes.find(
+    (candidate: any) => candidate.slug?.trim().toLowerCase() === requestedSlug
+  )
 
   if (!recipe) {
     notFound()
