@@ -305,81 +305,106 @@ export async function updateUserProfile(formData: {
 // ============================================
 // ORDERS
 // ============================================
+export type PlaceOrderResult =
+  | { success: true; order: Database['public']['Tables']['orders']['Row'] }
+  | { success: false; error: string }
+
+// Generic, customer-safe message. Next.js redacts the .message of any error
+// *thrown* out of a Server Action in production builds (you only get a
+// "digest" to correlate with server logs), so to actually show the customer
+// something useful we catch everything below and return it as a normal
+// value instead of throwing. Full technical detail always goes to the
+// server console via console.error so it's still visible in deployment logs.
+const ORDER_FAILURE_MESSAGE =
+  'We could not place your order right now. Please try again in a moment, or message us on WhatsApp and we will sort it out directly.'
+
 export async function placeOrder(
   formData: PlaceOrderPayload,
   promoCode: PromoCode | null = null
-): Promise<Database['public']['Tables']['orders']['Row']> {
-  console.log('placeOrder called with formData:', formData)
-  console.log('promoCode:', promoCode)
-  
-  const user = await getCurrentUser()
-  console.log('Current user:', user)
+): Promise<PlaceOrderResult> {
+  try {
+    console.log('placeOrder called with formData:', formData)
+    console.log('promoCode:', promoCode)
 
-  const subtotal = formData.items.reduce((s, i) => s + i.variant.price * i.quantity, 0)
-  const { total } = calculateOrderTotal(subtotal, promoCode)
-  console.log('Calculated totals: subtotal', subtotal, 'total', total)
-  
-  const orderInsert: Database['public']['Tables']['orders']['Insert'] = {
-    user_id: user?.id || null,
-    customer_name: formData.customer_name,
-    customer_phone: formData.customer_phone,
-    customer_email: formData.customer_email,
-    customer_address: formData.customer_address,
-    customer_city: formData.customer_city,
-    customer_pincode: formData.customer_pincode,
-    notes: formData.notes,
-    total_amount: total,
-    status: 'pending'
+    const user = await getCurrentUser()
+    console.log('Current user:', user)
+
+    const subtotal = formData.items.reduce((s, i) => s + i.variant.price * i.quantity, 0)
+    const { total } = calculateOrderTotal(subtotal, promoCode)
+    console.log('Calculated totals: subtotal', subtotal, 'total', total)
+
+    const orderInsert: Database['public']['Tables']['orders']['Insert'] = {
+      user_id: user?.id || null,
+      customer_name: formData.customer_name,
+      customer_phone: formData.customer_phone,
+      customer_email: formData.customer_email,
+      customer_address: formData.customer_address,
+      customer_city: formData.customer_city,
+      customer_pincode: formData.customer_pincode,
+      notes: formData.notes,
+      total_amount: total,
+      status: 'pending'
+    }
+    console.log('Order insert object:', orderInsert)
+
+    // Use admin client to insert order (bypasses RLS). This throws if
+    // SUPABASE_SERVICE_ROLE_KEY / NEXT_PUBLIC_SUPABASE_URL aren't set on
+    // the deployment - that failure is caught below like any other.
+    const adminSupabase = createAdminSupabaseClient()
+    console.log('Created admin Supabase client')
+
+    // Insert order
+    console.log('Inserting order into orders table')
+    const result = await adminSupabase
+      .from('orders')
+      .insert(orderInsert as any)
+      .select()
+      .single()
+    console.log('Order insert result:', result)
+
+    const orderError = result.error
+    const order = result.data as Database['public']['Tables']['orders']['Row'] | null
+
+    if (orderError) {
+      console.error('[placeOrder] order insert failed:', JSON.stringify(orderError, null, 2))
+      return { success: false, error: ORDER_FAILURE_MESSAGE }
+    }
+
+    if (!order) {
+      console.error('[placeOrder] order insert returned no data')
+      return { success: false, error: ORDER_FAILURE_MESSAGE }
+    }
+
+    // Insert order items
+    const orderItems: Database['public']['Tables']['order_items']['Insert'][] = formData.items.map(item => ({
+      order_id: order.id,
+      product_id: item.product.id,
+      product_name: item.product.name,
+      variant_weight_grams: item.variant.weight_grams,
+      quantity: item.quantity,
+      unit_price: item.variant.price
+    }))
+    console.log('Order items to insert:', orderItems)
+
+    const { error: itemsError } = await adminSupabase.from('order_items').insert(orderItems as any)
+
+    if (itemsError) {
+      console.error('[placeOrder] order items insert failed:', JSON.stringify(itemsError, null, 2))
+      // The order row itself was created, but its line items weren't -
+      // still a failure from the customer's point of view.
+      return { success: false, error: ORDER_FAILURE_MESSAGE }
+    }
+
+    revalidatePath('/admin/orders')
+    revalidatePath('/account')
+    console.log('Order placed successfully, returning order:', order)
+    return { success: true, order }
+  } catch (err) {
+    // Catches createAdminSupabaseClient() throwing on missing env vars,
+    // and any other unexpected failure in the flow above.
+    console.error('[placeOrder] unexpected failure:', err)
+    return { success: false, error: ORDER_FAILURE_MESSAGE }
   }
-  console.log('Order insert object:', orderInsert)
-
-  // Use admin client to insert order (bypasses RLS)
-  const adminSupabase = createAdminSupabaseClient()
-  console.log('Created admin Supabase client')
-
-  // Insert order
-  console.log('Inserting order into orders table')
-  const result = await adminSupabase
-    .from('orders')
-    .insert(orderInsert as any)
-    .select()
-    .single()
-  console.log('Order insert result:', result)
-  
-  const orderError = result.error
-  const order = result.data as Database['public']['Tables']['orders']['Row'] | null
-
-  if (orderError) {
-    console.error('Order error details:', JSON.stringify(orderError, null, 2))
-    throw new Error(`Could not place order: ${orderError.message}`)
-  }
-
-  if (!order) {
-    throw new Error('Could not place order: insert returned no order data')
-  }
-
-  // Insert order items
-  const orderItems: Database['public']['Tables']['order_items']['Insert'][] = formData.items.map(item => ({
-    order_id: order.id,
-    product_id: item.product.id,
-    product_name: item.product.name,
-    variant_weight_grams: item.variant.weight_grams,
-    quantity: item.quantity,
-    unit_price: item.variant.price
-  }))
-  console.log('Order items to insert:', orderItems)
-
-  const { error: itemsError } = await adminSupabase.from('order_items').insert(orderItems as any)
-
-  if (itemsError) {
-    console.error('Order items error details:', JSON.stringify(itemsError, null, 2))
-    throw new Error(`Could not add order items: ${itemsError.message}`)
-  }
-
-  revalidatePath('/admin/orders')
-  revalidatePath('/account')
-  console.log('Order placed successfully, returning order:', order)
-  return order
 }
 
 // Promo code actions

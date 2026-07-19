@@ -87,9 +87,13 @@ export default function OrderPage() {
         notes: data.notes,
         items: items,
       }
-      const order = await placeOrder(payload)
+      const result = await placeOrder(payload)
+      if (result.success === false) {
+        toast.error(result.error)
+        return
+      }
       clearCart()
-      setOrderId(order.id.slice(0, 8).toUpperCase())
+      setOrderId(result.order.id.slice(0, 8).toUpperCase())
       setSubmitted(true)
     } catch (e) {
       toast.error('Something went wrong. Please try again.')

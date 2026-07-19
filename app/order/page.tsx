@@ -226,7 +226,15 @@ Please confirm this order.`
         items: items,
       }
       console.log('Placing order with payload:', payload)
-      const order = await placeOrder(payload, appliedPromoCode)
+      const result = await placeOrder(payload, appliedPromoCode)
+
+      if (result.success === false) {
+        console.error('Order failed:', result.error)
+        toast.error(result.error)
+        return
+      }
+
+      const order = result.order
       console.log('Order placed successfully:', order)
       const shortOrderId = String(order.id)
       setOrderData(data)
@@ -240,9 +248,10 @@ Please confirm this order.`
         window.location.href = whatsappUrl
       }, 500)
     } catch (e) {
+      // Covers failures elsewhere in this block (promo/profile updates
+      // are already caught individually above and won't reach here).
       console.error('Order failed with error:', e)
-      const errorMessage = e instanceof Error ? e.message : 'Unknown error'
-      toast.error(`Order failed: ${errorMessage}`)
+      toast.error('Something went wrong placing your order. Please try again.')
     }
   }
 
