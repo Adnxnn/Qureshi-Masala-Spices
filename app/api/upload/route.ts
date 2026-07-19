@@ -1,73 +1,166 @@
+import { randomUUID } from 'crypto'
 import { NextRequest, NextResponse } from 'next/server'
-import { writeFile } from 'fs/promises'
-import { join } from 'path'
 import { createServerSupabaseClient } from '@/lib/supabaseServer'
-import { cookies } from 'next/headers'
 
-// Allowed image MIME types
-const ALLOWED_MIME_TYPES = ['image/jpeg', 'image/jpg', 'image/png', 'image/webp', 'image/gif']
-const MAX_FILE_SIZE = 5 * 1024 * 1024 // 5MB
+const BUCKET_NAME = 'product-images'
+const MAX_FILE_SIZE = 5 * 1024 * 1024
+
+const ALLOWED_MIME_TYPES = [
+  'image/jpeg',
+  'image/jpg',
+  'image/png',
+  'image/webp',
+  'image/gif',
+]
+
+const EXTENSION_BY_MIME_TYPE: Record<string, string> = {
+  'image/jpeg': 'jpg',
+  'image/jpg': 'jpg',
+  'image/png': 'png',
+  'image/webp': 'webp',
+  'image/gif': 'gif',
+}
 
 export async function POST(request: NextRequest) {
   try {
-    // Check authentication
-    const cookieStore = cookies()
-    const supabase = createServerSupabaseClient()
-    const { data: { user } } = await supabase.auth.getUser()
+    const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL
+    const supabaseAnonKey =
+      process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY
 
-    if (!user) {
-      return NextResponse.json({ success: false, error: 'Unauthorized' }, { status: 401 })
+    if (!supabaseUrl || !supabaseAnonKey) {
+      return NextResponse.json(
+        {
+          success: false,
+          error: 'Supabase image storage is not configured.',
+        },
+        { status: 503 }
+      )
     }
 
-    // Check admin status
-    const { data: userProfile } = await supabase
+    const supabase = createServerSupabaseClient()
+
+    const {
+      data: { user },
+      error: userError,
+    } = await supabase.auth.getUser()
+
+    if (userError || !user) {
+      return NextResponse.json(
+        {
+          success: false,
+          error: 'Please sign in to upload an image.',
+        },
+        { status: 401 }
+      )
+    }
+
+    const {
+      data: userProfile,
+      error: profileError,
+    } = await supabase
       .from('users')
       .select('is_admin')
       .eq('id', user.id)
       .single()
 
-    if (!userProfile || !userProfile.is_admin) {
-      return NextResponse.json({ success: false, error: 'Admin access only' }, { status: 403 })
+    if (profileError || !userProfile?.is_admin) {
+      return NextResponse.json(
+        {
+          success: false,
+          error: 'Admin access is required to upload images.',
+        },
+        { status: 403 }
+      )
     }
 
-    // Process file upload
-    const data = await request.formData()
-    const file: File | null = data.get('file') as unknown as File
+    const formData = await request.formData()
+    const fileValue = formData.get('file')
 
-    if (!file) {
-      return NextResponse.json({ success: false, error: 'No file uploaded' }, { status: 400 })
+    if (!(fileValue instanceof File)) {
+      return NextResponse.json(
+        {
+          success: false,
+          error: 'No image was selected.',
+        },
+        { status: 400 }
+      )
     }
 
-    // Validate file type
+    const file = fileValue
+
     if (!ALLOWED_MIME_TYPES.includes(file.type)) {
-      return NextResponse.json({ success: false, error: 'Invalid file type. Only images are allowed.' }, { status: 400 })
+      return NextResponse.json(
+        {
+          success: false,
+          error: 'Only JPG, PNG, WebP and GIF images are allowed.',
+        },
+        { status: 400 }
+      )
     }
 
-    // Validate file size
     if (file.size > MAX_FILE_SIZE) {
-      return NextResponse.json({ success: false, error: 'File too large. Max 5MB allowed.' }, { status: 400 })
+      return NextResponse.json(
+        {
+          success: false,
+          error: 'The image must be smaller than 5 MB.',
+        },
+        { status: 400 }
+      )
     }
 
-    const bytes = await file.arrayBuffer()
-    const buffer = Buffer.from(bytes)
+    const extension = EXTENSION_BY_MIME_TYPE[file.type]
+    const dateFolder = new Date().toISOString().slice(0, 10)
 
-    // Create a unique filename
-    const timestamp = Date.now()
-    const ext = file.name.split('.').pop()?.toLowerCase() || 'jpg'
-    // Ensure extension is valid
-    const validExts = ['jpg', 'jpeg', 'png', 'webp', 'gif']
-    const safeExt = validExts.includes(ext) ? ext : 'jpg'
-    const filename = `${timestamp}.${safeExt}`
-    
-    // Path to public/images directory
-    const publicDir = join(process.cwd(), 'public', 'images')
-    const path = join(publicDir, filename)
+    const storagePath =
+      `recipes/${dateFolder}/${randomUUID()}.${extension}`
 
-    await writeFile(path, buffer)
+    const fileBuffer = await file.arrayBuffer()
 
-    return NextResponse.json({ success: true, imageUrl: `/images/${filename}` })
+    const {
+      error: uploadError,
+    } = await supabase.storage
+      .from(BUCKET_NAME)
+      .upload(storagePath, fileBuffer, {
+        cacheControl: '31536000',
+        contentType: file.type,
+        upsert: false,
+      })
+
+    if (uploadError) {
+      console.error('[recipe-upload] Supabase error:', uploadError)
+
+      return NextResponse.json(
+        {
+          success: false,
+          error: `Upload failed: ${uploadError.message}`,
+        },
+        { status: 500 }
+      )
+    }
+
+    const {
+      data: publicUrlData,
+    } = supabase.storage
+      .from(BUCKET_NAME)
+      .getPublicUrl(storagePath)
+
+    return NextResponse.json({
+      success: true,
+      imageUrl: publicUrlData.publicUrl,
+      path: storagePath,
+    })
   } catch (error) {
-    console.error('Upload error:', error)
-    return NextResponse.json({ success: false, error: 'Failed to upload file' }, { status: 500 })
+    console.error('[recipe-upload] Unexpected error:', error)
+
+    return NextResponse.json(
+      {
+        success: false,
+        error:
+          error instanceof Error
+            ? error.message
+            : 'The image could not be uploaded.',
+      },
+      { status: 500 }
+    )
   }
 }
