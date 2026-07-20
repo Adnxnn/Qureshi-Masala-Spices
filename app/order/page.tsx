@@ -498,7 +498,6 @@ export default function OrderPage() {
     handleSubmit,
     formState: { errors, isSubmitting },
     reset,
-    watch,
   } = useForm<CheckoutFormData>({
     resolver: zodResolver(checkoutSchema),
     defaultValues: {
@@ -511,8 +510,6 @@ export default function OrderPage() {
       notes: "",
     },
   });
-
-  const watchedData = watch();
 
   useEffect(() => {
     async function loadUser() {
@@ -596,19 +593,7 @@ Please confirm this order.`,
     setPromoError("");
 
     try {
-      const customerData =
-        watchedData.customer_email && watchedData.customer_phone
-          ? {
-              email: watchedData.customer_email,
-              phone: watchedData.customer_phone,
-            }
-          : undefined;
-
-      const promoCode = await validateAndApplyPromoCode(
-        code,
-        user,
-        customerData,
-      );
+      const promoCode = await validateAndApplyPromoCode(code);
 
       if (!promoCode) {
         setPromoError("Invalid or expired promo code");

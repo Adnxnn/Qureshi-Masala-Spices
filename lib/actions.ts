@@ -560,24 +560,22 @@ export async function placeOrder(
 // Promo code validation is server-side so admin changes apply to every visitor.
 export async function validateAndApplyPromoCode(
   code: string,
-  _user: User | null,
-  customerData?: { email: string; phone: string }
 ): Promise<PromoCode | null> {
   const normalisedCode = normalisePromoCode(code)
   if (!normalisedCode) return null
 
-  const currentUser = await getCurrentUser()
-  const supabase = createAdminSupabaseClient()
-  const { data, error } = await supabase
-    .from('promo_codes')
-    .select(
-      '*, promo_code_usages(user_id, customer_email, customer_phone, used_at)',
-    )
-    .ilike('code', normalisedCode)
-    .maybeSingle()
+  try {
+    const supabase = createAdminSupabaseClient()
+    const { data, error } = await supabase
+      .from('promo_codes')
+      .select(
+        'id, code, discount, type, is_active, usage_limit, used_count, created_at',
+      )
+      .ilike('code', normalisedCode)
+      .maybeSingle()
 
-  if (error) {
-    if (isMissingPromoSchemaError(error)) {
+    if (error) {
+      console.error('[validateAndApplyPromoCode]', error)
       const fallbackPromo = getFallbackPromoCode(normalisedCode)
       if (
         !fallbackPromo ||
@@ -586,62 +584,33 @@ export async function validateAndApplyPromoCode(
       ) {
         return null
       }
-
-      const fallbackEmail = customerData?.email
-        ? normaliseEmail(customerData.email)
-        : ''
-      const fallbackPhone = customerData?.phone
-        ? normalisePhone(customerData.phone)
-        : ''
-      const fallbackAlreadyUsed = fallbackPromo.usedBy.some((usage) => {
-        if (currentUser && usage.userId === currentUser.id) return true
-        if (
-          fallbackEmail &&
-          usage.customerEmail &&
-          normaliseEmail(usage.customerEmail) === fallbackEmail
-        ) {
-          return true
-        }
-        if (
-          fallbackPhone &&
-          usage.customerPhone &&
-          normalisePhone(usage.customerPhone) === fallbackPhone
-        ) {
-          return true
-        }
-        return false
-      })
-
-      return fallbackAlreadyUsed ? null : fallbackPromo
+      return fallbackPromo
     }
 
-    console.error('[validateAndApplyPromoCode]', error)
-    return null
+    if (!data) return null
+
+    const promoCode = mapPromoCode({
+      ...(data as unknown as PromoCodeRecord),
+      promo_code_usages: [],
+    })
+
+    if (!promoCode.isActive || promoCode.usedCount >= promoCode.usageLimit) {
+      return null
+    }
+
+    return promoCode
+  } catch (error) {
+    console.error('[validateAndApplyPromoCode] unexpected failure:', error)
+    const fallbackPromo = getFallbackPromoCode(normalisedCode)
+    if (
+      !fallbackPromo ||
+      !fallbackPromo.isActive ||
+      fallbackPromo.usedCount >= fallbackPromo.usageLimit
+    ) {
+      return null
+    }
+    return fallbackPromo
   }
-
-  if (!data) return null
-
-  const promoCode = mapPromoCode(data as unknown as PromoCodeRecord)
-
-  if (!promoCode.isActive || promoCode.usedCount >= promoCode.usageLimit) {
-    return null
-  }
-
-  const email = customerData?.email
-    ? normaliseEmail(customerData.email)
-    : ''
-  const phone = customerData?.phone
-    ? normalisePhone(customerData.phone)
-    : ''
-
-  const alreadyUsed = promoCode.usedBy.some((usage) => {
-    if (currentUser && usage.userId === currentUser.id) return true
-    if (email && usage.customerEmail === email) return true
-    if (phone && usage.customerPhone === phone) return true
-    return false
-  })
-
-  return alreadyUsed ? null : promoCode
 }
 
 export async function getUserOrders() {
