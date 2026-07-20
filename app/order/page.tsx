@@ -40,7 +40,7 @@ import {
 import { calculateOrderTotal } from "@/lib/utils";
 import type { CartItem, PlaceOrderPayload, User } from "@/types";
 
-const WHATSAPP_NUMBER = "918904951364";
+const WHATSAPP_NUMBER = "918762117816";
 
 const checkoutSchema = z.object({
   customer_name: z.string().trim().min(2, "Please enter your name"),

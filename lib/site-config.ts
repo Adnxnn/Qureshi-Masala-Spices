@@ -1,7 +1,7 @@
 export const SITE = {
   name: "Qureshi's Masala & Spices",
   tagline: 'Pure Flavour, Endless Taste',
-  whatsappNumber: '918904951364',
+  whatsappNumber: '918762117816',
   email: 'Connect@qureshismasalaspices.com',
   instagram: 'https://www.instagram.com/qureshis_masala',
 } as const

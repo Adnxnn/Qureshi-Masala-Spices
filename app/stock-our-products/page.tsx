@@ -14,7 +14,7 @@ export default function DealershipPage() {
 
   const handleWhatsAppClick = () => {
     const message = `Hello, I am interested in stocking Qureshi's Masala products.\n\nMy details are:\nName: ${name}\nPhone: ${phone}\nEmail: ${email}\nShop Type: ${shopType}\nShop Address: ${shopAddress}\nAdditional Details: ${shopDetails}\n\nPlease provide more information.`;
-    const whatsappUrl = `https://wa.me/918904951364?text=${encodeURIComponent(message)}`;
+    const whatsappUrl = `https://wa.me/918762117816?text=${encodeURIComponent(message)}`;
     window.open(whatsappUrl, '_blank');
   };
 

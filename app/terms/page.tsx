@@ -141,7 +141,7 @@ export default function TermsAndConditionsPage() {
                 Email: <Link href={`mailto:${SITE.email}`} className="text-gold hover:underline">{SITE.email}</Link>
               </p>
               <p>
-                Phone: <Link href="tel:+918904951364" className="text-gold hover:underline">+91 89049 51364</Link>
+                Phone: <Link href="tel:+918762117816" className="text-gold hover:underline">+91 87621 17816</Link>
               </p>
               <p>
                 Or visit our <Link href="/contact" className="text-gold hover:underline">Contact page</Link>

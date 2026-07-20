@@ -161,7 +161,7 @@ export default function SiteLayout({ children }: { children: React.ReactNode }) 
                 <a href="https://instagram.com" target="_blank" rel="noreferrer" className="w-10 h-10 rounded-full border border-white/10 flex items-center justify-center text-white/40 hover:border-gold hover:text-gold transition-all">
                   <span className="text-sm font-display">IG</span>
                 </a>
-                <a href="https://wa.me/91XXXXXXXXXX" className="w-10 h-10 rounded-full border border-white/10 flex items-center justify-center text-white/40 hover:border-gold hover:text-gold transition-all">
+                <a href="https://wa.me/918762117816" className="w-10 h-10 rounded-full border border-white/10 flex items-center justify-center text-white/40 hover:border-gold hover:text-gold transition-all">
                   <span className="text-sm font-display">WA</span>
                 </a>
                 <a href={`mailto:${SITE.email}`} className="w-10 h-10 rounded-full border border-white/10 flex items-center justify-center text-white/40 hover:border-gold hover:text-gold transition-all">
@@ -186,7 +186,7 @@ export default function SiteLayout({ children }: { children: React.ReactNode }) 
               <div className="text-[11px] tracking-[0.3em] uppercase text-gold mb-5 font-semibold">Get in Touch</div>
               <ul className="space-y-3 text-sm text-white/40">
                 <li><a href={`mailto:${SITE.email}`} className="hover:text-white transition-colors">{SITE.email}</a></li>
-                <li><a href="https://wa.me/91XXXXXXXXXX" className="hover:text-white transition-colors">+91 XXXXX XXXXX</a></li>
+                <li><a href="https://wa.me/918762117816" className="hover:text-white transition-colors">+91 87621 17816</a></li>
               </ul>
             </div>
           </div>
