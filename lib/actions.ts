@@ -3,7 +3,6 @@ import { revalidatePath } from 'next/cache'
 import { redirect } from 'next/navigation'
 import { createClient } from '@supabase/supabase-js'
 import type { CartItem, User, OrderWithItems, PlaceOrderPayload, Product, ProductVariant, Database, PromoCode } from '@/types'
-import fallbackPromoCodesJson from '@/data/promo-codes.json'
 import { createServerSupabaseClient } from './supabaseServer'
 import { calculateOrderTotal } from './utils'
 
@@ -78,27 +77,6 @@ function mapPromoCode(record: PromoCodeRecord): PromoCode {
   }
 }
 
-const FALLBACK_PROMO_CODES = fallbackPromoCodesJson as unknown as PromoCode[]
-
-function isMissingPromoSchemaError(error: { code?: string; message?: string }) {
-  const message = error.message?.toLowerCase() ?? ''
-  return (
-    error.code === '42P01' ||
-    error.code === '42883' ||
-    error.code === 'PGRST202' ||
-    message.includes('promo_codes') ||
-    message.includes('redeem_promo_code')
-  )
-}
-
-function getFallbackPromoCode(code: string) {
-  return (
-    FALLBACK_PROMO_CODES.find(
-      (promo) => normalisePromoCode(promo.code) === normalisePromoCode(code),
-    ) ?? null
-  )
-}
-
 async function redeemPromoCode(
   supabase: ReturnType<typeof createAdminSupabaseClient>,
   code: string,
@@ -113,41 +91,6 @@ async function redeemPromoCode(
   })
 
   if (error) {
-    if (isMissingPromoSchemaError(error)) {
-      const promoCode = getFallbackPromoCode(code)
-
-      if (
-        !promoCode ||
-        !promoCode.isActive ||
-        promoCode.usedCount >= promoCode.usageLimit
-      ) {
-        return null
-      }
-
-      const email = normaliseEmail(customerData.email)
-      const phone = normalisePhone(customerData.phone)
-      const alreadyUsed = promoCode.usedBy.some((usage) => {
-        if (user && usage.userId === user.id) return true
-        if (
-          email &&
-          usage.customerEmail &&
-          normaliseEmail(usage.customerEmail) === email
-        ) {
-          return true
-        }
-        if (
-          phone &&
-          usage.customerPhone &&
-          normalisePhone(usage.customerPhone) === phone
-        ) {
-          return true
-        }
-        return false
-      })
-
-      return alreadyUsed ? null : { usageId: null, promoCode }
-    }
-
     console.error('[redeemPromoCode]', error)
     throw new Error(`Unable to redeem promo code: ${error.message}`)
   }
@@ -565,32 +508,25 @@ export async function validateAndApplyPromoCode(
   if (!normalisedCode) return null
 
   try {
-    const supabase = createAdminSupabaseClient()
-    const { data, error } = await supabase
-      .from('promo_codes')
-      .select(
-        'id, code, discount, type, is_active, usage_limit, used_count, created_at',
-      )
-      .ilike('code', normalisedCode)
-      .maybeSingle()
+    const supabase = createServerSupabaseClient()
+    const { data, error } = await (supabase as any).rpc(
+      'validate_promo_code',
+      { p_code: normalisedCode },
+    )
 
     if (error) {
       console.error('[validateAndApplyPromoCode]', error)
-      const fallbackPromo = getFallbackPromoCode(normalisedCode)
-      if (
-        !fallbackPromo ||
-        !fallbackPromo.isActive ||
-        fallbackPromo.usedCount >= fallbackPromo.usageLimit
-      ) {
-        return null
-      }
-      return fallbackPromo
+      return null
     }
 
-    if (!data) return null
+    const record = (Array.isArray(data) ? data[0] : data) as
+      | PromoCodeRecord
+      | null
+
+    if (!record) return null
 
     const promoCode = mapPromoCode({
-      ...(data as unknown as PromoCodeRecord),
+      ...record,
       promo_code_usages: [],
     })
 
@@ -601,15 +537,7 @@ export async function validateAndApplyPromoCode(
     return promoCode
   } catch (error) {
     console.error('[validateAndApplyPromoCode] unexpected failure:', error)
-    const fallbackPromo = getFallbackPromoCode(normalisedCode)
-    if (
-      !fallbackPromo ||
-      !fallbackPromo.isActive ||
-      fallbackPromo.usedCount >= fallbackPromo.usageLimit
-    ) {
-      return null
-    }
-    return fallbackPromo
+    return null
   }
 }
 
