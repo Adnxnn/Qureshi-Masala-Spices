@@ -9,7 +9,8 @@ import { calculateOrderTotal } from './utils'
 // ============================================
 // ADMIN SUPABASE CLIENT (for orders bypassing RLS)
 // ============================================
-export const createAdminSupabaseClient = () => {
+const createAdminSupabaseClient = () => {
+
   const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL
   const serviceRoleKey = process.env.SUPABASE_SERVICE_ROLE_KEY
 
