@@ -1,16 +1,16 @@
-'use client'
+"use client";
 
-import { useEffect, useState } from 'react'
-import Image from 'next/image'
-import Link from 'next/link'
+import { useEffect, useState } from "react";
+import Image from "next/image";
+import Link from "next/link";
 import {
   useForm,
   type FieldErrors,
   type UseFormRegister,
-} from 'react-hook-form'
-import { zodResolver } from '@hookform/resolvers/zod'
-import { z } from 'zod'
-import toast from 'react-hot-toast'
+} from "react-hook-form";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { z } from "zod";
+import toast from "react-hot-toast";
 import {
   ArrowLeft,
   ArrowRight,
@@ -29,94 +29,81 @@ import {
   Trash2,
   Truck,
   X,
-} from 'lucide-react'
-import { useCart } from '@/lib/cart'
+} from "lucide-react";
+import { useCart } from "@/lib/cart";
 import {
   getCurrentUser,
   incrementPromoCodeUsage,
   placeOrder,
   updateUserProfile,
   validateAndApplyPromoCode,
-} from '@/lib/actions'
-import { calculateOrderTotal } from '@/lib/utils'
-import type {
-  CartItem,
-  PlaceOrderPayload,
-  User,
-} from '@/types'
+} from "@/lib/actions";
+import { calculateOrderTotal } from "@/lib/utils";
+import type { CartItem, PlaceOrderPayload, User } from "@/types";
 
-const WHATSAPP_NUMBER = '918904951364'
+const WHATSAPP_NUMBER = "918904951364";
 
 const checkoutSchema = z.object({
-  customer_name: z
-    .string()
-    .trim()
-    .min(2, 'Please enter your name'),
+  customer_name: z.string().trim().min(2, "Please enter your name"),
 
   customer_phone: z
     .string()
     .trim()
-    .min(10, 'Enter a valid phone number')
-    .max(13, 'Enter a valid phone number'),
+    .min(10, "Enter a valid phone number")
+    .max(13, "Enter a valid phone number"),
 
-  customer_email: z
-    .string()
-    .trim()
-    .email('Enter a valid email address'),
+  customer_email: z.string().trim().email("Enter a valid email address"),
 
   customer_address: z
     .string()
     .trim()
-    .min(10, 'Enter your complete delivery address'),
+    .min(10, "Enter your complete delivery address"),
 
-  customer_city: z
-    .string()
-    .trim()
-    .min(2, 'Enter your city'),
+  customer_city: z.string().trim().min(2, "Enter your city"),
 
   customer_pincode: z
     .string()
     .trim()
-    .length(6, 'Enter a valid 6-digit pincode'),
+    .length(6, "Enter a valid 6-digit pincode"),
 
   notes: z.string().optional(),
-})
+});
 
-type CheckoutFormData = z.infer<typeof checkoutSchema>
+type CheckoutFormData = z.infer<typeof checkoutSchema>;
 
 type OrderTotals = {
-  subtotal: number
-  deliveryCharge: number
-  discount: number
-  total: number
-}
+  subtotal: number;
+  deliveryCharge: number;
+  discount: number;
+  total: number;
+};
 
 function formatWeight(grams: number) {
   if (grams >= 1000) {
-    return `${grams / 1000}kg`
+    return `${grams / 1000}kg`;
   }
 
-  return `${grams}g`
+  return `${grams}g`;
 }
 
 function CheckoutInput({
   id,
   label,
   placeholder,
-  type = 'text',
+  type = "text",
   autoComplete,
   register,
   errors,
 }: {
-  id: keyof CheckoutFormData
-  label: string
-  placeholder: string
-  type?: string
-  autoComplete?: string
-  register: UseFormRegister<CheckoutFormData>
-  errors: FieldErrors<CheckoutFormData>
+  id: keyof CheckoutFormData;
+  label: string;
+  placeholder: string;
+  type?: string;
+  autoComplete?: string;
+  register: UseFormRegister<CheckoutFormData>;
+  errors: FieldErrors<CheckoutFormData>;
 }) {
-  const error = errors[id]
+  const error = errors[id];
 
   return (
     <div className="min-w-0 space-y-2">
@@ -135,95 +122,124 @@ function CheckoutInput({
         {...register(id)}
         className={`min-h-12 w-full min-w-0 rounded-xl border bg-[#11100f] px-4 text-sm text-[#f5efe6] outline-none transition-colors placeholder:text-[#f5efe6]/20 ${
           error
-            ? 'border-red-400/50 focus:border-red-400'
-            : 'border-white/10 focus:border-[#c9a45f]/70'
+            ? "border-red-400/50 focus:border-red-400"
+            : "border-white/10 focus:border-[#c9a45f]/70"
         }`}
       />
 
-      {error && (
-        <p className="text-[11px] text-red-300">
-          {error.message}
-        </p>
-      )}
+      {error && <p className="text-[11px] text-red-300">{error.message}</p>}
     </div>
-  )
+  );
 }
 
 function CheckoutProgress({
   currentStep,
+  itemCount,
+  onStepChange,
 }: {
-  currentStep: 'cart' | 'delivery'
+  currentStep: "cart" | "delivery";
+  itemCount: number;
+  onStepChange: (step: "cart" | "delivery") => void;
 }) {
-  const deliveryActive = currentStep === 'delivery'
+  const deliveryActive = currentStep === "delivery";
+  const hasItems = itemCount > 0;
 
   return (
-    <div className="flex w-full items-center rounded-2xl border border-white/10 bg-white/[0.025] p-1.5 sm:w-auto">
-      <div
-        className={`flex min-h-10 flex-1 items-center justify-center gap-2 rounded-xl px-3 text-[10px] font-bold uppercase tracking-[0.16em] transition-colors sm:flex-none sm:px-5 ${
+    <div
+      role="tablist"
+      aria-label="Checkout steps"
+      className="grid w-full grid-cols-2 gap-1 rounded-2xl border border-white/10 bg-black/25 p-1.5 shadow-lg shadow-black/10 sm:w-auto sm:min-w-[310px]"
+    >
+      <button
+        type="button"
+        role="tab"
+        aria-selected={!deliveryActive}
+        aria-controls="cart-step-panel"
+        onClick={() => onStepChange("cart")}
+        className={`flex min-h-11 min-w-0 items-center justify-center gap-2 rounded-xl px-3 text-[10px] font-bold uppercase tracking-[0.14em] transition-colors sm:px-5 ${
           !deliveryActive
-            ? 'bg-[#c9a45f] text-[#130d08]'
-            : 'text-[#f5efe6]/45'
+            ? "bg-[#c9a45f] text-[#130d08] shadow-md shadow-black/20"
+            : "text-[#f5efe6]/55 hover:bg-white/5 hover:text-[#f5efe6]"
         }`}
       >
         <span
-          className={`flex h-5 w-5 items-center justify-center rounded-full text-[10px] ${
-            deliveryActive
-              ? 'bg-green-500/20 text-green-300'
-              : 'bg-black/15'
+          className={`flex h-6 w-6 shrink-0 items-center justify-center rounded-full text-[10px] ${
+            deliveryActive ? "bg-green-500/15 text-green-300" : "bg-black/15"
           }`}
         >
-          {deliveryActive ? <Check size={11} /> : '1'}
+          {deliveryActive ? <Check size={12} /> : "1"}
         </span>
 
-        Cart
-      </div>
+        <span className="truncate">Cart</span>
 
-      <div
-        className={`flex min-h-10 flex-1 items-center justify-center gap-2 rounded-xl px-3 text-[10px] font-bold uppercase tracking-[0.16em] transition-colors sm:flex-none sm:px-5 ${
+        {hasItems && (
+          <span
+            className={`flex h-5 min-w-5 shrink-0 items-center justify-center rounded-full px-1.5 text-[9px] ${
+              !deliveryActive
+                ? "bg-black/15 text-[#130d08]"
+                : "bg-[#c9a45f]/10 text-[#d9b56f]"
+            }`}
+          >
+            {itemCount}
+          </span>
+        )}
+      </button>
+
+      <button
+        id="delivery-step"
+        type="button"
+        role="tab"
+        aria-selected={deliveryActive}
+        aria-controls="delivery-step-panel"
+        aria-disabled={!hasItems}
+        disabled={!hasItems}
+        onClick={() => onStepChange("delivery")}
+        className={`flex min-h-11 min-w-0 items-center justify-center gap-2 rounded-xl px-3 text-[10px] font-bold uppercase tracking-[0.14em] transition-colors sm:px-5 ${
           deliveryActive
-            ? 'bg-[#c9a45f] text-[#130d08]'
-            : 'text-[#f5efe6]/45'
+            ? "bg-[#c9a45f] text-[#130d08] shadow-md shadow-black/20"
+            : "text-[#f5efe6]/55 hover:bg-white/5 hover:text-[#f5efe6] disabled:cursor-not-allowed disabled:opacity-30 disabled:hover:bg-transparent"
         }`}
       >
-        <span className="flex h-5 w-5 items-center justify-center rounded-full bg-white/5 text-[10px]">
+        <span
+          className={`flex h-6 w-6 shrink-0 items-center justify-center rounded-full text-[10px] ${
+            deliveryActive ? "bg-black/15" : "bg-white/5"
+          }`}
+        >
           2
         </span>
 
-        Delivery
-      </div>
+        <span className="truncate">Delivery</span>
+      </button>
     </div>
-  )
+  );
 }
 
 function TrustStrip() {
   const items = [
     {
       icon: MessageCircle,
-      title: 'WhatsApp confirmation',
-      description: 'Confirm directly with us',
+      title: "WhatsApp confirmation",
+      description: "Confirm directly with us",
     },
     {
       icon: ShieldCheck,
-      title: 'No online payment',
-      description: 'Pay only after confirmation',
+      title: "No online payment",
+      description: "Pay only after confirmation",
     },
     {
       icon: Leaf,
-      title: 'Freshly packed',
-      description: 'Prepared with care',
+      title: "Freshly packed",
+      description: "Prepared with care",
     },
-  ]
+  ];
 
   return (
     <div className="grid grid-cols-1 divide-y divide-white/10 rounded-2xl border border-white/10 bg-white/[0.025] sm:grid-cols-3 sm:divide-x sm:divide-y-0">
       {items.map((item) => {
-        const Icon = item.icon
+        const Icon = item.icon;
 
         return (
-          <div
-            key={item.title}
-            className="flex items-center gap-3 px-4 py-4"
-          >
+          <div key={item.title} className="flex items-center gap-3 px-4 py-4">
             <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-[#c9a45f]/10 text-[#c9a45f]">
               <Icon size={17} />
             </span>
@@ -238,10 +254,10 @@ function TrustStrip() {
               </p>
             </div>
           </div>
-        )
+        );
       })}
     </div>
-  )
+  );
 }
 
 function CartProductRow({
@@ -249,18 +265,11 @@ function CartProductRow({
   updateQuantity,
   removeProduct,
 }: {
-  item: CartItem
-  updateQuantity: (
-    productId: string,
-    weight: number,
-    quantity: number
-  ) => void
-  removeProduct: (
-    productId: string,
-    weight: number
-  ) => void
+  item: CartItem;
+  updateQuantity: (productId: string, weight: number, quantity: number) => void;
+  removeProduct: (productId: string, weight: number) => void;
 }) {
-  const { product, variant, quantity } = item
+  const { product, variant, quantity } = item;
 
   return (
     <article className="grid min-w-0 grid-cols-[64px_minmax(0,1fr)_auto] gap-x-3 gap-y-3 border-b border-white/[0.07] py-4 last:border-b-0 sm:grid-cols-[72px_minmax(0,1fr)_auto_auto] sm:items-center sm:gap-x-4">
@@ -302,11 +311,7 @@ function CartProductRow({
             type="button"
             aria-label={`Decrease ${product.name} quantity`}
             onClick={() =>
-              updateQuantity(
-                product.id,
-                variant.weight_grams,
-                quantity - 1
-              )
+              updateQuantity(product.id, variant.weight_grams, quantity - 1)
             }
             className="flex h-8 w-8 items-center justify-center rounded-md text-[#f5efe6]/45 transition-colors hover:bg-white/5 hover:text-[#d9b56f]"
           >
@@ -321,11 +326,7 @@ function CartProductRow({
             type="button"
             aria-label={`Increase ${product.name} quantity`}
             onClick={() =>
-              updateQuantity(
-                product.id,
-                variant.weight_grams,
-                quantity + 1
-              )
+              updateQuantity(product.id, variant.weight_grams, quantity + 1)
             }
             className="flex h-8 w-8 items-center justify-center rounded-md text-[#f5efe6]/45 transition-colors hover:bg-white/5 hover:text-[#d9b56f]"
           >
@@ -336,19 +337,14 @@ function CartProductRow({
         <button
           type="button"
           aria-label={`Remove ${product.name}`}
-          onClick={() =>
-            removeProduct(
-              product.id,
-              variant.weight_grams
-            )
-          }
+          onClick={() => removeProduct(product.id, variant.weight_grams)}
           className="flex h-10 w-10 items-center justify-center rounded-lg text-[#f5efe6]/25 transition-colors hover:bg-red-500/10 hover:text-red-300"
         >
           <Trash2 size={15} />
         </button>
       </div>
     </article>
-  )
+  );
 }
 
 function OrderSuccess({
@@ -358,11 +354,11 @@ function OrderSuccess({
   orderTotals,
   openWhatsApp,
 }: {
-  orderId: string
-  orderData: CheckoutFormData
-  orderItems: CartItem[]
-  orderTotals: OrderTotals | null
-  openWhatsApp: () => void
+  orderId: string;
+  orderData: CheckoutFormData;
+  orderItems: CartItem[];
+  orderTotals: OrderTotals | null;
+  openWhatsApp: () => void;
 }) {
   return (
     <div className="relative min-h-screen w-full overflow-x-hidden bg-[#0b0a09] pb-16 pt-24">
@@ -387,8 +383,8 @@ function OrderSuccess({
             </h1>
 
             <p className="mx-auto mt-4 max-w-md text-sm leading-6 text-[#f5efe6]/45">
-              Your order has been saved. Continue to WhatsApp
-              so we can confirm availability and delivery.
+              Your order has been saved. Continue to WhatsApp so we can confirm
+              availability and delivery.
             </p>
 
             <div className="mx-auto mt-5 inline-flex rounded-full border border-[#c9a45f]/20 bg-[#c9a45f]/10 px-4 py-2 font-mono text-xs tracking-wider text-[#d9b56f]">
@@ -420,17 +416,12 @@ function OrderSuccess({
                   </p>
 
                   <p className="text-[10px] text-[#f5efe6]/35">
-                    {formatWeight(
-                      item.variant.weight_grams
-                    )}{' '}
-                    × {item.quantity}
+                    {formatWeight(item.variant.weight_grams)} × {item.quantity}
                   </p>
                 </div>
 
                 <p className="shrink-0 text-sm font-semibold text-[#d9b56f]">
-                  ₹
-                  {item.variant.price *
-                    item.quantity}
+                  ₹{item.variant.price * item.quantity}
                 </p>
               </div>
             ))}
@@ -444,7 +435,7 @@ function OrderSuccess({
             </span>
 
             <span className="font-display text-3xl text-[#d9b56f]">
-              ₹{orderTotals?.total.toFixed(0) || '0'}
+              ₹{orderTotals?.total.toFixed(0) || "0"}
             </span>
           </div>
 
@@ -466,7 +457,7 @@ function OrderSuccess({
         </div>
       </div>
     </div>
-  )
+  );
 }
 
 export default function OrderPage() {
@@ -478,34 +469,30 @@ export default function OrderPage() {
     totalAmount,
     appliedPromoCode,
     applyPromoCode,
-  } = useCart()
+  } = useCart();
 
-  const [checkoutStep, setCheckoutStep] =
-    useState<'cart' | 'delivery'>('cart')
+  const [checkoutStep, setCheckoutStep] = useState<"cart" | "delivery">("cart");
 
-  const [user, setUser] = useState<User | null>(null)
-  const [loading, setLoading] = useState(true)
-  const [submitted, setSubmitted] = useState(false)
-  const [orderId, setOrderId] = useState('')
-  const [orderData, setOrderData] =
-    useState<CheckoutFormData | null>(null)
-  const [lastOrderItems, setLastOrderItems] =
-    useState<CartItem[]>([])
-  const [lastOrderTotals, setLastOrderTotals] =
-    useState<OrderTotals | null>(null)
-  const [whatsappMessage, setWhatsappMessage] =
-    useState('')
-  const [promoInput, setPromoInput] = useState('')
-  const [promoError, setPromoError] = useState('')
-  const [applyingPromo, setApplyingPromo] =
-    useState(false)
+  const [user, setUser] = useState<User | null>(null);
+  const [loading, setLoading] = useState(true);
+  const [submitted, setSubmitted] = useState(false);
+  const [orderId, setOrderId] = useState("");
+  const [orderData, setOrderData] = useState<CheckoutFormData | null>(null);
+  const [lastOrderItems, setLastOrderItems] = useState<CartItem[]>([]);
+  const [lastOrderTotals, setLastOrderTotals] = useState<OrderTotals | null>(
+    null,
+  );
+  const [whatsappMessage, setWhatsappMessage] = useState("");
+  const [promoInput, setPromoInput] = useState("");
+  const [promoError, setPromoError] = useState("");
+  const [applyingPromo, setApplyingPromo] = useState(false);
 
-  const subtotal = totalAmount()
+  const subtotal = totalAmount();
 
   const currentTotals = calculateOrderTotal(
     subtotal,
-    appliedPromoCode
-  ) as OrderTotals
+    appliedPromoCode,
+  ) as OrderTotals;
 
   const {
     register,
@@ -516,67 +503,62 @@ export default function OrderPage() {
   } = useForm<CheckoutFormData>({
     resolver: zodResolver(checkoutSchema),
     defaultValues: {
-      customer_name: '',
-      customer_phone: '',
-      customer_email: '',
-      customer_address: '',
-      customer_city: '',
-      customer_pincode: '',
-      notes: '',
+      customer_name: "",
+      customer_phone: "",
+      customer_email: "",
+      customer_address: "",
+      customer_city: "",
+      customer_pincode: "",
+      notes: "",
     },
-  })
+  });
 
-  const watchedData = watch()
+  const watchedData = watch();
 
   useEffect(() => {
     async function loadUser() {
       try {
-        const userData = await getCurrentUser()
-        setUser(userData)
+        const userData = await getCurrentUser();
+        setUser(userData);
 
         if (userData) {
           reset({
-            customer_name: userData.full_name || '',
-            customer_email: userData.email || '',
-            customer_phone: userData.phone || '',
-            customer_address: userData.address || '',
-            customer_city: userData.city || '',
-            customer_pincode: userData.pincode || '',
-            notes: '',
-          })
+            customer_name: userData.full_name || "",
+            customer_email: userData.email || "",
+            customer_phone: userData.phone || "",
+            customer_address: userData.address || "",
+            customer_city: userData.city || "",
+            customer_pincode: userData.pincode || "",
+            notes: "",
+          });
         }
       } catch (error) {
-        console.error(
-          'Unable to load customer details:',
-          error
-        )
+        console.error("Unable to load customer details:", error);
       } finally {
-        setLoading(false)
+        setLoading(false);
       }
     }
 
-    void loadUser()
-  }, [reset])
+    void loadUser();
+  }, [reset]);
 
   const createWhatsAppMessage = (
     customer: CheckoutFormData,
     generatedOrderId: string,
     orderItems: CartItem[],
-    totals: OrderTotals
+    totals: OrderTotals,
   ) => {
     const products = orderItems
       .map(
         (item) =>
           `• ${item.product.name} (${formatWeight(
-            item.variant.weight_grams
-          )}) × ${item.quantity} = ₹${
-            item.variant.price * item.quantity
-          }`
+            item.variant.weight_grams,
+          )}) × ${item.quantity} = ₹${item.variant.price * item.quantity}`,
       )
-      .join('\n')
+      .join("\n");
 
     return encodeURIComponent(
-`🛒 NEW ORDER
+      `🛒 NEW ORDER
 
 Order ID: ${generatedOrderId}
 
@@ -592,106 +574,108 @@ ${customer.customer_city} - ${customer.customer_pincode}
 Products:
 ${products}
 
-${totals.discount > 0 ? `Discount: -₹${totals.discount}\n` : ''}Total Amount: ₹${totals.total}
+${totals.discount > 0 ? `Discount: -₹${totals.discount}\n` : ""}Total Amount: ₹${totals.total}
 
-${customer.notes ? `Notes: ${customer.notes}` : ''}
+${customer.notes ? `Notes: ${customer.notes}` : ""}
 
-Please confirm this order.`
-    )
-  }
+Please confirm this order.`,
+    );
+  };
 
   const openWhatsApp = () => {
-    if (!whatsappMessage) return
+    if (!whatsappMessage) return;
 
-    window.location.href =
-      `https://wa.me/${WHATSAPP_NUMBER}?text=${whatsappMessage}`
-  }
+    window.location.href = `https://wa.me/${WHATSAPP_NUMBER}?text=${whatsappMessage}`;
+  };
 
   const handleApplyPromo = async () => {
-    const code = promoInput.trim()
+    const code = promoInput.trim();
 
-    if (!code) return
+    if (!code) return;
 
-    setApplyingPromo(true)
-    setPromoError('')
+    setApplyingPromo(true);
+    setPromoError("");
 
     try {
       const customerData =
-        watchedData.customer_email &&
-        watchedData.customer_phone
+        watchedData.customer_email && watchedData.customer_phone
           ? {
               email: watchedData.customer_email,
               phone: watchedData.customer_phone,
             }
-          : undefined
+          : undefined;
 
-      const promoCode =
-        await validateAndApplyPromoCode(
-          code,
-          user,
-          customerData
-        )
+      const promoCode = await validateAndApplyPromoCode(
+        code,
+        user,
+        customerData,
+      );
 
       if (!promoCode) {
-        setPromoError('Invalid or expired promo code')
-        return
+        setPromoError("Invalid or expired promo code");
+        return;
       }
 
-      applyPromoCode(promoCode)
-      setPromoInput('')
-      toast.success('Promo code applied')
+      applyPromoCode(promoCode);
+      setPromoInput("");
+      toast.success("Promo code applied");
     } catch (error) {
-      console.error('Promo code error:', error)
-      setPromoError('Unable to apply this promo code')
+      console.error("Promo code error:", error);
+      setPromoError("Unable to apply this promo code");
     } finally {
-      setApplyingPromo(false)
+      setApplyingPromo(false);
     }
-  }
+  };
 
   const handleRemovePromo = () => {
-    applyPromoCode(null)
-    toast.success('Promo code removed')
-  }
+    applyPromoCode(null);
+    toast.success("Promo code removed");
+  };
 
-  const onSubmit = async (
-    customer: CheckoutFormData
-  ) => {
-    if (items.length === 0) {
-      toast.error('Your cart is empty')
-      setCheckoutStep('cart')
-      return
+  const changeCheckoutStep = (step: "cart" | "delivery") => {
+    if (step === "delivery" && items.length === 0) {
+      toast.error("Add an item before entering delivery details");
+      return;
     }
 
-    const currentItems = [...items]
+    setCheckoutStep(step);
+
+    window.requestAnimationFrame(() => {
+      window.scrollTo({
+        top: 0,
+        behavior: "smooth",
+      });
+    });
+  };
+
+  const onSubmit = async (customer: CheckoutFormData) => {
+    if (items.length === 0) {
+      toast.error("Your cart is empty");
+      setCheckoutStep("cart");
+      return;
+    }
+
+    const currentItems = [...items];
 
     const currentSubtotal = currentItems.reduce(
-      (total, item) =>
-        total +
-        item.variant.price * item.quantity,
-      0
-    )
+      (total, item) => total + item.variant.price * item.quantity,
+      0,
+    );
 
     const totals = calculateOrderTotal(
       currentSubtotal,
-      appliedPromoCode
-    ) as OrderTotals
+      appliedPromoCode,
+    ) as OrderTotals;
 
     try {
       if (appliedPromoCode) {
         try {
-          await incrementPromoCodeUsage(
-            appliedPromoCode.code,
-            user,
-            {
-              email: customer.customer_email,
-              phone: customer.customer_phone,
-            }
-          )
+          await incrementPromoCodeUsage(appliedPromoCode.code, user, {
+            email: customer.customer_email,
+            phone: customer.customer_phone,
+          });
         } catch (error) {
-          console.warn(
-            'Unable to update promo usage:',
-            error
-          )
+          console.warn("Unable to update promo usage:", error);
         }
       }
 
@@ -703,12 +687,9 @@ Please confirm this order.`
             address: customer.customer_address,
             city: customer.customer_city,
             pincode: customer.customer_pincode,
-          })
+          });
         } catch (error) {
-          console.warn(
-            'Unable to update profile:',
-            error
-          )
+          console.warn("Unable to update profile:", error);
         }
       }
 
@@ -716,56 +697,46 @@ Please confirm this order.`
         customer_name: customer.customer_name,
         customer_phone: customer.customer_phone,
         customer_email: customer.customer_email,
-        customer_address:
-          customer.customer_address,
+        customer_address: customer.customer_address,
         customer_city: customer.customer_city,
-        customer_pincode:
-          customer.customer_pincode,
+        customer_pincode: customer.customer_pincode,
         notes: customer.notes,
         items: currentItems,
-      }
+      };
 
-      const result = await placeOrder(
-        payload,
-        appliedPromoCode
-      )
+      const result = await placeOrder(payload, appliedPromoCode);
 
       if (result.success === false) {
-        toast.error(result.error)
-        return
+        toast.error(result.error);
+        return;
       }
 
-      const generatedOrderId = String(
-        result.order.id
-      )
+      const generatedOrderId = String(result.order.id);
 
       const message = createWhatsAppMessage(
         customer,
         generatedOrderId,
         currentItems,
-        totals
-      )
+        totals,
+      );
 
-      setOrderId(generatedOrderId)
-      setOrderData(customer)
-      setLastOrderItems(currentItems)
-      setLastOrderTotals(totals)
-      setWhatsappMessage(message)
-      setSubmitted(true)
-      clearCart()
+      setOrderId(generatedOrderId);
+      setOrderData(customer);
+      setLastOrderItems(currentItems);
+      setLastOrderTotals(totals);
+      setWhatsappMessage(message);
+      setSubmitted(true);
+      clearCart();
 
       window.setTimeout(() => {
-        window.location.href =
-          `https://wa.me/${WHATSAPP_NUMBER}?text=${message}`
-      }, 700)
+        window.location.href = `https://wa.me/${WHATSAPP_NUMBER}?text=${message}`;
+      }, 700);
     } catch (error) {
-      console.error('Order failed:', error)
+      console.error("Order failed:", error);
 
-      toast.error(
-        'We could not place your order. Please try again.'
-      )
+      toast.error("We could not place your order. Please try again.");
     }
-  }
+  };
 
   if (loading) {
     return (
@@ -778,7 +749,7 @@ Please confirm this order.`
           </p>
         </div>
       </div>
-    )
+    );
   }
 
   if (submitted && orderData) {
@@ -790,11 +761,11 @@ Please confirm this order.`
         orderTotals={lastOrderTotals}
         openWhatsApp={openWhatsApp}
       />
-    )
+    );
   }
 
   return (
-    <div className="relative min-h-screen w-full overflow-x-hidden bg-[#0b0a09] pb-20 pt-24 sm:pt-28">
+    <div className="relative min-h-screen w-full overflow-x-hidden bg-[#0b0a09] pb-32 pt-24 sm:pt-28 lg:pb-20">
       <div className="pointer-events-none absolute inset-0 overflow-hidden">
         <div className="absolute -right-40 top-10 h-[420px] w-[420px] rounded-full bg-[#6b1a1a]/15 blur-[120px]" />
 
@@ -816,28 +787,35 @@ Please confirm this order.`
               </div>
 
               <h1 className="break-words font-display text-4xl uppercase leading-none text-[#f5efe6] sm:text-5xl md:text-6xl">
-                {checkoutStep === 'cart'
-                  ? 'Your Cart'
-                  : 'Place Your Order'}
+                {checkoutStep === "cart" ? "Your Cart" : "Place Your Order"}
               </h1>
 
               <p className="mt-4 max-w-xl text-sm leading-6 text-[#f5efe6]/40 sm:text-base">
-                {checkoutStep === 'cart'
-                  ? 'Review your masalas, adjust quantities and continue when everything looks right.'
-                  : 'Add your delivery details. We will save the order and confirm everything with you on WhatsApp.'}
+                {checkoutStep === "cart"
+                  ? "Review your masalas, adjust quantities and continue when everything looks right."
+                  : "Add your delivery details. We will save the order and confirm everything with you on WhatsApp."}
               </p>
             </div>
 
             <CheckoutProgress
               currentStep={checkoutStep}
+              itemCount={items.reduce(
+                (count, item) => count + item.quantity,
+                0,
+              )}
+              onStepChange={changeCheckoutStep}
             />
           </div>
         </header>
 
         <TrustStrip />
 
-        {checkoutStep === 'cart' ? (
-          <div className="mt-6 grid min-w-0 grid-cols-1 gap-6 lg:grid-cols-12 lg:gap-8">
+        {checkoutStep === "cart" ? (
+          <div
+            id="cart-step-panel"
+            role="tabpanel"
+            className="mt-6 grid min-w-0 grid-cols-1 gap-6 lg:grid-cols-12 lg:gap-8"
+          >
             <section className="min-w-0 lg:col-span-8">
               {!user && (
                 <div className="mb-5 overflow-hidden rounded-2xl border border-[#c9a45f]/15 bg-gradient-to-r from-[#6b1a1a]/15 to-[#c9a45f]/5 p-4 sm:p-5">
@@ -848,8 +826,8 @@ Please confirm this order.`
                       </p>
 
                       <p className="mt-1 text-xs leading-5 text-[#f5efe6]/40">
-                        Sign in to automatically fill your
-                        saved delivery details.
+                        Sign in to automatically fill your saved delivery
+                        details.
                       </p>
                     </div>
 
@@ -883,8 +861,8 @@ Please confirm this order.`
                   </h2>
 
                   <p className="mt-3 max-w-sm text-sm leading-6 text-[#f5efe6]/40">
-                    Explore our handcrafted masalas and add
-                    your favourites to begin an order.
+                    Explore our handcrafted masalas and add your favourites to
+                    begin an order.
                   </p>
 
                   <Link
@@ -904,18 +882,13 @@ Please confirm this order.`
                       </p>
 
                       <p className="mt-1 text-xs text-[#f5efe6]/35">
-                        {items.length}{' '}
-                        {items.length === 1
-                          ? 'product'
-                          : 'products'}{' '}
-                        in your cart
+                        {items.length}{" "}
+                        {items.length === 1 ? "product" : "products"} in your
+                        cart
                       </p>
                     </div>
 
-                    <ShoppingBag
-                      size={20}
-                      className="text-[#c9a45f]/60"
-                    />
+                    <ShoppingBag size={20} className="text-[#c9a45f]/60" />
                   </div>
 
                   <div className="min-w-0 px-4 sm:px-6">
@@ -998,10 +971,8 @@ Please confirm this order.`
                               type="text"
                               value={promoInput}
                               onChange={(event) => {
-                                setPromoInput(
-                                  event.target.value
-                                )
-                                setPromoError('')
+                                setPromoInput(event.target.value);
+                                setPromoError("");
                               }}
                               placeholder="ENTER CODE"
                               className="min-h-11 w-full min-w-0 flex-1 rounded-xl border border-white/10 bg-black/25 px-3 text-xs uppercase tracking-[0.12em] text-[#f5efe6] outline-none placeholder:text-white/15 focus:border-[#c9a45f]/60"
@@ -1013,9 +984,7 @@ Please confirm this order.`
                               disabled={applyingPromo}
                               className="min-h-11 shrink-0 rounded-xl border border-[#c9a45f]/20 bg-[#c9a45f]/10 px-5 text-[10px] font-bold uppercase tracking-[0.16em] text-[#d9b56f] transition-colors hover:bg-[#c9a45f]/15 disabled:opacity-40"
                             >
-                              {applyingPromo
-                                ? 'Checking...'
-                                : 'Apply'}
+                              {applyingPromo ? "Checking..." : "Apply"}
                             </button>
                           </div>
 
@@ -1034,10 +1003,7 @@ Please confirm this order.`
                           </span>
 
                           <span className="text-sm font-semibold text-[#f5efe6]/75">
-                            ₹
-                            {currentTotals.subtotal.toFixed(
-                              0
-                            )}
+                            ₹{currentTotals.subtotal.toFixed(0)}
                           </span>
                         </div>
 
@@ -1049,9 +1015,7 @@ Please confirm this order.`
 
                             <span className="text-sm font-semibold text-green-300/70">
                               -₹
-                              {currentTotals.discount.toFixed(
-                                0
-                              )}
+                              {currentTotals.discount.toFixed(0)}
                             </span>
                           </div>
                         )}
@@ -1069,13 +1033,7 @@ Please confirm this order.`
 
                       <button
                         type="button"
-                        onClick={() => {
-                          setCheckoutStep('delivery')
-                          window.scrollTo({
-                            top: 0,
-                            behavior: 'smooth',
-                          })
-                        }}
+                        onClick={() => changeCheckoutStep("delivery")}
                         className="flex min-h-14 w-full items-center justify-center gap-3 rounded-xl bg-[#c9a45f] px-5 text-[10px] font-bold uppercase tracking-[0.18em] text-[#130d08] transition-colors hover:bg-[#e0bd77]"
                       >
                         Continue to Delivery
@@ -1089,9 +1047,8 @@ Please confirm this order.`
                         />
 
                         <p className="text-[10px] leading-5 text-[#f5efe6]/35">
-                          No payment is collected here. Your
-                          order will be confirmed directly on
-                          WhatsApp.
+                          No payment is collected here. Your order will be
+                          confirmed directly on WhatsApp.
                         </p>
                       </div>
                     </div>
@@ -1102,19 +1059,16 @@ Please confirm this order.`
           </div>
         ) : (
           <form
+            id="delivery-checkout-form"
+            role="tabpanel"
+            aria-labelledby="delivery-step"
             onSubmit={handleSubmit(onSubmit)}
             className="mt-6 grid min-w-0 grid-cols-1 gap-6 lg:grid-cols-12 lg:gap-8"
           >
             <section className="min-w-0 lg:col-span-8">
               <button
                 type="button"
-                onClick={() => {
-                  setCheckoutStep('cart')
-                  window.scrollTo({
-                    top: 0,
-                    behavior: 'smooth',
-                  })
-                }}
+                onClick={() => changeCheckoutStep("cart")}
                 className="mb-5 inline-flex min-h-11 items-center gap-2 rounded-xl border border-white/10 px-4 text-[10px] font-bold uppercase tracking-[0.16em] text-[#f5efe6]/50 transition-colors hover:bg-white/5 hover:text-white"
               >
                 <ArrowLeft size={14} />
@@ -1185,20 +1139,17 @@ Please confirm this order.`
                       rows={4}
                       autoComplete="street-address"
                       placeholder="House number, street, landmark and area"
-                      {...register('customer_address')}
+                      {...register("customer_address")}
                       className={`w-full min-w-0 resize-none rounded-xl border bg-[#11100f] px-4 py-3 text-sm leading-6 text-[#f5efe6] outline-none placeholder:text-[#f5efe6]/20 ${
                         errors.customer_address
-                          ? 'border-red-400/50 focus:border-red-400'
-                          : 'border-white/10 focus:border-[#c9a45f]/70'
+                          ? "border-red-400/50 focus:border-red-400"
+                          : "border-white/10 focus:border-[#c9a45f]/70"
                       }`}
                     />
 
                     {errors.customer_address && (
                       <p className="text-[11px] text-red-300">
-                        {
-                          errors.customer_address
-                            .message
-                        }
+                        {errors.customer_address.message}
                       </p>
                     )}
                   </div>
@@ -1228,7 +1179,7 @@ Please confirm this order.`
                       htmlFor="notes"
                       className="block text-[10px] font-semibold uppercase tracking-[0.18em] text-[#d7c8b3]/55"
                     >
-                      Order notes{' '}
+                      Order notes{" "}
                       <span className="normal-case tracking-normal text-white/20">
                         (optional)
                       </span>
@@ -1238,7 +1189,7 @@ Please confirm this order.`
                       id="notes"
                       rows={3}
                       placeholder="Delivery instructions or anything we should know"
-                      {...register('notes')}
+                      {...register("notes")}
                       className="w-full min-w-0 resize-none rounded-xl border border-white/10 bg-[#11100f] px-4 py-3 text-sm leading-6 text-[#f5efe6] outline-none placeholder:text-[#f5efe6]/20 focus:border-[#c9a45f]/70"
                     />
                   </div>
@@ -1264,9 +1215,7 @@ Please confirm this order.`
                         >
                           <div className="h-11 w-11 shrink-0 overflow-hidden rounded-lg border border-white/10 bg-black/30">
                             <Image
-                              src={
-                                item.product.image_url
-                              }
+                              src={item.product.image_url}
                               alt={item.product.name}
                               width={44}
                               height={44}
@@ -1280,18 +1229,13 @@ Please confirm this order.`
                             </p>
 
                             <p className="mt-0.5 text-[9px] text-[#f5efe6]/30">
-                              {formatWeight(
-                                item.variant
-                                  .weight_grams
-                              )}{' '}
-                              × {item.quantity}
+                              {formatWeight(item.variant.weight_grams)} ×{" "}
+                              {item.quantity}
                             </p>
                           </div>
 
                           <span className="shrink-0 text-xs font-semibold text-[#d9b56f]">
-                            ₹
-                            {item.variant.price *
-                              item.quantity}
+                            ₹{item.variant.price * item.quantity}
                           </span>
                         </div>
                       ))}
@@ -1306,9 +1250,7 @@ Please confirm this order.`
 
                           <span className="text-xs font-semibold text-green-300/70">
                             -₹
-                            {currentTotals.discount.toFixed(
-                              0
-                            )}
+                            {currentTotals.discount.toFixed(0)}
                           </span>
                         </div>
                       )}
@@ -1332,20 +1274,16 @@ Please confirm this order.`
                       <MessageCircle size={17} />
 
                       {isSubmitting
-                        ? 'Placing Order...'
-                        : 'Place Order on WhatsApp'}
+                        ? "Placing Order..."
+                        : "Place Order on WhatsApp"}
                     </button>
 
                     <div className="space-y-3 border-t border-white/10 pt-4">
                       <div className="flex items-center gap-3">
-                        <Truck
-                          size={15}
-                          className="shrink-0 text-[#c9a45f]"
-                        />
+                        <Truck size={15} className="shrink-0 text-[#c9a45f]" />
 
                         <p className="text-[10px] leading-5 text-[#f5efe6]/35">
-                          Delivery details are confirmed
-                          directly with our team.
+                          Delivery details are confirmed directly with our team.
                         </p>
                       </div>
 
@@ -1356,8 +1294,7 @@ Please confirm this order.`
                         />
 
                         <p className="text-[10px] leading-5 text-[#f5efe6]/35">
-                          No payment information is collected
-                          on this website.
+                          No payment information is collected on this website.
                         </p>
                       </div>
                     </div>
@@ -1368,6 +1305,49 @@ Please confirm this order.`
           </form>
         )}
       </div>
+
+      {items.length > 0 && (
+        <div
+          className="fixed inset-x-0 bottom-0 z-40 border-t border-white/10 bg-[#0b0a09]/95 px-4 pt-3 shadow-[0_-16px_40px_rgba(0,0,0,0.45)] backdrop-blur-xl lg:hidden"
+          style={{
+            paddingBottom: "calc(0.75rem + env(safe-area-inset-bottom))",
+          }}
+        >
+          <div className="mx-auto flex w-full max-w-7xl items-center gap-3">
+            <div className="min-w-0 flex-1">
+              <p className="text-[9px] font-bold uppercase tracking-[0.2em] text-[#f5efe6]/35">
+                Order total
+              </p>
+
+              <p className="mt-0.5 font-display text-2xl leading-none text-[#e0bd77]">
+                ₹{currentTotals.total.toFixed(0)}
+              </p>
+            </div>
+
+            {checkoutStep === "cart" ? (
+              <button
+                type="button"
+                onClick={() => changeCheckoutStep("delivery")}
+                className="flex min-h-12 flex-[1.6] items-center justify-center gap-2 rounded-xl bg-[#c9a45f] px-4 text-center text-[10px] font-bold uppercase tracking-[0.14em] text-[#130d08]"
+              >
+                Delivery
+                <ArrowRight size={15} />
+              </button>
+            ) : (
+              <button
+                type="submit"
+                form="delivery-checkout-form"
+                disabled={isSubmitting}
+                className="flex min-h-12 flex-[1.8] items-center justify-center gap-2 rounded-xl bg-[#278c4d] px-3 text-center text-[10px] font-bold uppercase tracking-[0.12em] text-white disabled:cursor-not-allowed disabled:opacity-50"
+              >
+                <MessageCircle size={16} />
+
+                {isSubmitting ? "Placing..." : "Place Order"}
+              </button>
+            )}
+          </div>
+        </div>
+      )}
     </div>
-  )
+  );
 }
