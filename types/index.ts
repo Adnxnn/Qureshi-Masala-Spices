@@ -100,6 +100,27 @@ export type PromoCode = {
   createdAt: string
 }
 
+export type PromoCodeUsage = {
+  id: string
+  promo_code_id: string
+  user_id: string | null
+  customer_email: string | null
+  customer_phone: string | null
+  used_at: string
+}
+
+export type PromoCodeRow = {
+  id: string
+  code: string
+  discount: number
+  type: 'percentage' | 'fixed'
+  is_active: boolean
+  usage_limit: number
+  used_count: number
+  created_at: string
+  updated_at: string
+}
+
 export type RecipeIngredient = {
   text: string;
   order: number;
@@ -246,6 +267,35 @@ export type Database = {
           product_id?: string;
           recommended_quantity?: string | null;
         };
+      },
+      promo_codes: {
+        Row: PromoCodeRow;
+        Insert: {
+          code: string;
+          discount: number;
+          type: PromoCode['type'];
+          is_active?: boolean;
+          usage_limit: number;
+          used_count?: number;
+        };
+        Update: {
+          code?: string;
+          discount?: number;
+          type?: PromoCode['type'];
+          is_active?: boolean;
+          usage_limit?: number;
+          used_count?: number;
+        };
+      },
+      promo_code_usages: {
+        Row: PromoCodeUsage;
+        Insert: {
+          promo_code_id: string;
+          user_id?: string | null;
+          customer_email?: string | null;
+          customer_phone?: string | null;
+        };
+        Update: never;
       },
       orders: { Row: Omit<Order, 'items'>; Insert: Omit<Order, 'id' | 'created_at' | 'items'>; Update: Partial<Order> },
       order_items: { Row: OrderItem; Insert: Omit<OrderItem, 'id' | 'subtotal'>; Update: Partial<OrderItem> },

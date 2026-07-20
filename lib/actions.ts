@@ -1,33 +1,11 @@
 'use server'
 import { revalidatePath } from 'next/cache'
 import { redirect } from 'next/navigation'
-import { promises as fs } from 'fs'
-import path from 'path'
 import { createClient } from '@supabase/supabase-js'
 import type { CartItem, User, OrderWithItems, PlaceOrderPayload, Product, ProductVariant, Database, PromoCode } from '@/types'
+import fallbackPromoCodesJson from '@/data/promo-codes.json'
 import { createServerSupabaseClient } from './supabaseServer'
 import { calculateOrderTotal } from './utils'
-
-// File paths for promo codes
-const PROMO_CODES_FILE = path.join(process.cwd(), 'data', 'promo-codes.json')
-
-async function loadPromoCodes() {
-  try {
-    const data = await fs.readFile(PROMO_CODES_FILE, 'utf8')
-    return JSON.parse(data)
-  } catch {
-    return []
-  }
-}
-
-async function savePromoCodes(promoCodes: PromoCode[]) {
-  try {
-    await fs.writeFile(PROMO_CODES_FILE, JSON.stringify(promoCodes, null, 2))
-  } catch (error) {
-    // On Vercel, filesystem is read-only, so we just log and continue
-    console.warn('Could not save promo codes (filesystem is read-only)', error)
-  }
-}
 
 // ============================================
 // ADMIN SUPABASE CLIENT (for orders bypassing RLS)
@@ -46,6 +24,160 @@ export const createAdminSupabaseClient = () => {
       persistSession: false
     }
   })
+}
+
+type PromoCodeRecord = {
+  id: string
+  code: string
+  discount: number
+  type: PromoCode['type']
+  is_active: boolean
+  usage_limit: number
+  used_count: number
+  created_at: string
+  promo_code_usages?: Array<{
+    user_id: string | null
+    customer_email: string | null
+    customer_phone: string | null
+    used_at: string
+  }>
+}
+
+type PromoRedemptionRecord = PromoCodeRecord & {
+  usage_id: string
+}
+
+function normalisePromoCode(code: string) {
+  return code.trim().toUpperCase().replace(/\s+/g, '')
+}
+
+function normaliseEmail(email: string) {
+  return email.trim().toLowerCase()
+}
+
+function normalisePhone(phone: string) {
+  return phone.replace(/\D/g, '')
+}
+
+function mapPromoCode(record: PromoCodeRecord): PromoCode {
+  return {
+    id: record.id,
+    code: record.code,
+    discount: Number(record.discount),
+    type: record.type,
+    isActive: record.is_active,
+    usageLimit: record.usage_limit,
+    usedCount: record.used_count,
+    usedBy: (record.promo_code_usages ?? []).map((usage) => ({
+      userId: usage.user_id ?? undefined,
+      customerEmail: usage.customer_email ?? undefined,
+      customerPhone: usage.customer_phone ?? undefined,
+      usedAt: usage.used_at,
+    })),
+    createdAt: record.created_at,
+  }
+}
+
+const FALLBACK_PROMO_CODES = fallbackPromoCodesJson as unknown as PromoCode[]
+
+function isMissingPromoSchemaError(error: { code?: string; message?: string }) {
+  const message = error.message?.toLowerCase() ?? ''
+  return (
+    error.code === '42P01' ||
+    error.code === '42883' ||
+    error.code === 'PGRST202' ||
+    message.includes('promo_codes') ||
+    message.includes('redeem_promo_code')
+  )
+}
+
+function getFallbackPromoCode(code: string) {
+  return (
+    FALLBACK_PROMO_CODES.find(
+      (promo) => normalisePromoCode(promo.code) === normalisePromoCode(code),
+    ) ?? null
+  )
+}
+
+async function redeemPromoCode(
+  supabase: ReturnType<typeof createAdminSupabaseClient>,
+  code: string,
+  user: User | null,
+  customerData: { email: string; phone: string },
+) {
+  const { data, error } = await (supabase as any).rpc('redeem_promo_code', {
+    p_code: normalisePromoCode(code),
+    p_user_id: user?.id ?? null,
+    p_customer_email: normaliseEmail(customerData.email),
+    p_customer_phone: normalisePhone(customerData.phone),
+  })
+
+  if (error) {
+    if (isMissingPromoSchemaError(error)) {
+      const promoCode = getFallbackPromoCode(code)
+
+      if (
+        !promoCode ||
+        !promoCode.isActive ||
+        promoCode.usedCount >= promoCode.usageLimit
+      ) {
+        return null
+      }
+
+      const email = normaliseEmail(customerData.email)
+      const phone = normalisePhone(customerData.phone)
+      const alreadyUsed = promoCode.usedBy.some((usage) => {
+        if (user && usage.userId === user.id) return true
+        if (
+          email &&
+          usage.customerEmail &&
+          normaliseEmail(usage.customerEmail) === email
+        ) {
+          return true
+        }
+        if (
+          phone &&
+          usage.customerPhone &&
+          normalisePhone(usage.customerPhone) === phone
+        ) {
+          return true
+        }
+        return false
+      })
+
+      return alreadyUsed ? null : { usageId: null, promoCode }
+    }
+
+    console.error('[redeemPromoCode]', error)
+    throw new Error(`Unable to redeem promo code: ${error.message}`)
+  }
+
+  const record = (Array.isArray(data) ? data[0] : data) as
+    | PromoRedemptionRecord
+    | null
+
+  if (!record) return null
+
+  return {
+    usageId: record.usage_id,
+    promoCode: mapPromoCode(record),
+  }
+}
+
+async function releasePromoCodeRedemption(
+  supabase: ReturnType<typeof createAdminSupabaseClient>,
+  usageId: string | null,
+) {
+  if (!usageId) return
+
+  const { error } = await (supabase as any).rpc(
+    'release_promo_code_redemption',
+    { p_usage_id: usageId },
+  )
+
+  if (error) {
+    console.error('[releasePromoCodeRedemption]', error)
+  }
 }
 
 // Helper function to generate slugs
@@ -317,16 +449,43 @@ export type PlaceOrderResult =
 // server console via console.error so it's still visible in deployment logs.
 const ORDER_FAILURE_MESSAGE =
   'We could not place your order right now. Please try again in a moment, or message us on WhatsApp and we will sort it out directly.'
+const PROMO_FAILURE_MESSAGE =
+  'This promo code is no longer available, has reached its usage limit, or has already been used with these customer details.'
 
 export async function placeOrder(
   formData: PlaceOrderPayload,
   promoCode: PromoCode | null = null
 ): Promise<PlaceOrderResult> {
+  let redeemedUsageId: string | null = null
+  let adminSupabase: ReturnType<typeof createAdminSupabaseClient> | null = null
+
   try {
     const user = await getCurrentUser()
+    adminSupabase = createAdminSupabaseClient()
+
+    let verifiedPromoCode: PromoCode | null = null
+
+    if (promoCode?.code) {
+      const redemption = await redeemPromoCode(
+        adminSupabase,
+        promoCode.code,
+        user,
+        {
+          email: formData.customer_email,
+          phone: formData.customer_phone,
+        },
+      )
+
+      if (!redemption) {
+        return { success: false, error: PROMO_FAILURE_MESSAGE }
+      }
+
+      redeemedUsageId = redemption.usageId
+      verifiedPromoCode = redemption.promoCode
+    }
 
     const subtotal = formData.items.reduce((s, i) => s + i.variant.price * i.quantity, 0)
-    const { total } = calculateOrderTotal(subtotal, promoCode)
+    const { total } = calculateOrderTotal(subtotal, verifiedPromoCode)
 
     const orderInsert: Database['public']['Tables']['orders']['Insert'] = {
       user_id: user?.id || null,
@@ -341,11 +500,6 @@ export async function placeOrder(
       status: 'pending'
     }
 
-    // Use admin client to insert order (bypasses RLS). This throws if
-    // SUPABASE_SERVICE_ROLE_KEY / NEXT_PUBLIC_SUPABASE_URL aren't set on
-    // the deployment - that failure is caught below like any other.
-    const adminSupabase = await createAdminSupabaseClient()
-
     // Insert order
     const result = await adminSupabase
       .from('orders')
@@ -358,11 +512,15 @@ export async function placeOrder(
 
     if (orderError) {
       console.error('[placeOrder] order insert failed:', JSON.stringify(orderError, null, 2))
+      await releasePromoCodeRedemption(adminSupabase, redeemedUsageId)
+      redeemedUsageId = null
       return { success: false, error: ORDER_FAILURE_MESSAGE }
     }
 
     if (!order) {
       console.error('[placeOrder] order insert returned no data')
+      await releasePromoCodeRedemption(adminSupabase, redeemedUsageId)
+      redeemedUsageId = null
       return { success: false, error: ORDER_FAILURE_MESSAGE }
     }
 
@@ -380,110 +538,110 @@ export async function placeOrder(
 
     if (itemsError) {
       console.error('[placeOrder] order items insert failed:', JSON.stringify(itemsError, null, 2))
-      // The order row itself was created, but its line items weren't -
-      // still a failure from the customer's point of view.
+      await adminSupabase.from('orders').delete().eq('id', order.id)
+      await releasePromoCodeRedemption(adminSupabase, redeemedUsageId)
+      redeemedUsageId = null
       return { success: false, error: ORDER_FAILURE_MESSAGE }
     }
 
     revalidatePath('/admin/orders')
+    revalidatePath('/admin/promo-codes')
     revalidatePath('/account')
     return { success: true, order }
   } catch (err) {
-    // Catches createAdminSupabaseClient() throwing on missing env vars,
-    // and any other unexpected failure in the flow above.
+    if (adminSupabase && redeemedUsageId) {
+      await releasePromoCodeRedemption(adminSupabase, redeemedUsageId)
+    }
     console.error('[placeOrder] unexpected failure:', err)
     return { success: false, error: ORDER_FAILURE_MESSAGE }
   }
 }
 
-// Promo code actions
-export async function getPromoCodes(): Promise<PromoCode[]> {
-  return loadPromoCodes()
-}
-
-export async function addPromoCode(promoCodeData: Omit<PromoCode, 'id' | 'createdAt' | 'usedCount' | 'usedBy'>) {
-  const promoCodes = await loadPromoCodes()
-  const newPromoCode: PromoCode = {
-    ...promoCodeData,
-    id: Date.now().toString(),
-    usedCount: 0,
-    usedBy: [],
-    createdAt: new Date().toISOString()
-  }
-  await savePromoCodes([newPromoCode, ...promoCodes])
-  revalidatePath('/admin/promo-codes')
-}
-
-export async function updatePromoCode(id: string, updates: Partial<PromoCode>) {
-  const promoCodes = await loadPromoCodes()
-  const updatedPromoCodes = promoCodes.map(pc =>
-    pc.id === id ? { ...pc, ...updates } : pc
-  )
-  await savePromoCodes(updatedPromoCodes)
-  revalidatePath('/admin/promo-codes')
-}
-
-export async function deletePromoCode(id: string) {
-  const promoCodes = await loadPromoCodes()
-  await savePromoCodes(promoCodes.filter(pc => pc.id !== id))
-  revalidatePath('/admin/promo-codes')
-}
-
+// Promo code validation is server-side so admin changes apply to every visitor.
 export async function validateAndApplyPromoCode(
   code: string,
-  user: User | null,
+  _user: User | null,
   customerData?: { email: string; phone: string }
 ): Promise<PromoCode | null> {
-  const promoCodes = await loadPromoCodes()
-  const promoCode = promoCodes.find(pc => pc.code.toUpperCase() === code.toUpperCase())
+  const normalisedCode = normalisePromoCode(code)
+  if (!normalisedCode) return null
 
-  if (!promoCode) return null
-  if (!promoCode.isActive) return null
-  if (promoCode.usedCount >= promoCode.usageLimit) return null
+  const currentUser = await getCurrentUser()
+  const supabase = createAdminSupabaseClient()
+  const { data, error } = await supabase
+    .from('promo_codes')
+    .select(
+      '*, promo_code_usages(user_id, customer_email, customer_phone, used_at)',
+    )
+    .ilike('code', normalisedCode)
+    .maybeSingle()
 
-  // Check if user has already used this promo code
-  const hasUserUsed = promoCode.usedBy.some(usage => {
-    if (user && usage.userId === user.id) {
-      return true
-    }
-    if (customerData) {
-      if (usage.customerEmail === customerData.email || usage.customerPhone === customerData.phone) {
-        return true
+  if (error) {
+    if (isMissingPromoSchemaError(error)) {
+      const fallbackPromo = getFallbackPromoCode(normalisedCode)
+      if (
+        !fallbackPromo ||
+        !fallbackPromo.isActive ||
+        fallbackPromo.usedCount >= fallbackPromo.usageLimit
+      ) {
+        return null
       }
+
+      const fallbackEmail = customerData?.email
+        ? normaliseEmail(customerData.email)
+        : ''
+      const fallbackPhone = customerData?.phone
+        ? normalisePhone(customerData.phone)
+        : ''
+      const fallbackAlreadyUsed = fallbackPromo.usedBy.some((usage) => {
+        if (currentUser && usage.userId === currentUser.id) return true
+        if (
+          fallbackEmail &&
+          usage.customerEmail &&
+          normaliseEmail(usage.customerEmail) === fallbackEmail
+        ) {
+          return true
+        }
+        if (
+          fallbackPhone &&
+          usage.customerPhone &&
+          normalisePhone(usage.customerPhone) === fallbackPhone
+        ) {
+          return true
+        }
+        return false
+      })
+
+      return fallbackAlreadyUsed ? null : fallbackPromo
     }
+
+    console.error('[validateAndApplyPromoCode]', error)
+    return null
+  }
+
+  if (!data) return null
+
+  const promoCode = mapPromoCode(data as unknown as PromoCodeRecord)
+
+  if (!promoCode.isActive || promoCode.usedCount >= promoCode.usageLimit) {
+    return null
+  }
+
+  const email = customerData?.email
+    ? normaliseEmail(customerData.email)
+    : ''
+  const phone = customerData?.phone
+    ? normalisePhone(customerData.phone)
+    : ''
+
+  const alreadyUsed = promoCode.usedBy.some((usage) => {
+    if (currentUser && usage.userId === currentUser.id) return true
+    if (email && usage.customerEmail === email) return true
+    if (phone && usage.customerPhone === phone) return true
     return false
   })
 
-  if (hasUserUsed) return null
-
-  return promoCode
-}
-
-export async function incrementPromoCodeUsage(
-  code: string,
-  user: User | null,
-  customerData: { email: string; phone: string }
-) {
-  const promoCodes = await loadPromoCodes()
-  const updatedPromoCodes = promoCodes.map(pc => {
-    if (pc.code.toUpperCase() === code.toUpperCase()) {
-      return {
-        ...pc,
-        usedCount: pc.usedCount + 1,
-        usedBy: [
-          ...pc.usedBy,
-          {
-            userId: user?.id,
-            customerEmail: customerData.email,
-            customerPhone: customerData.phone,
-            usedAt: new Date().toISOString()
-          }
-        ]
-      }
-    }
-    return pc
-  })
-  await savePromoCodes(updatedPromoCodes)
+  return alreadyUsed ? null : promoCode
 }
 
 export async function getUserOrders() {

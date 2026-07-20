@@ -33,7 +33,6 @@ import {
 import { useCart } from "@/lib/cart";
 import {
   getCurrentUser,
-  incrementPromoCodeUsage,
   placeOrder,
   updateUserProfile,
   validateAndApplyPromoCode,
@@ -662,23 +661,7 @@ Please confirm this order.`,
       0,
     );
 
-    const totals = calculateOrderTotal(
-      currentSubtotal,
-      appliedPromoCode,
-    ) as OrderTotals;
-
     try {
-      if (appliedPromoCode) {
-        try {
-          await incrementPromoCodeUsage(appliedPromoCode.code, user, {
-            email: customer.customer_email,
-            phone: customer.customer_phone,
-          });
-        } catch (error) {
-          console.warn("Unable to update promo usage:", error);
-        }
-      }
-
       if (user) {
         try {
           await updateUserProfile({
@@ -712,18 +695,25 @@ Please confirm this order.`,
       }
 
       const generatedOrderId = String(result.order.id);
+      const confirmedTotal = Number(result.order.total_amount);
+      const confirmedTotals: OrderTotals = {
+        subtotal: currentSubtotal,
+        deliveryCharge: 0,
+        discount: Math.max(currentSubtotal - confirmedTotal, 0),
+        total: confirmedTotal,
+      };
 
       const message = createWhatsAppMessage(
         customer,
         generatedOrderId,
         currentItems,
-        totals,
+        confirmedTotals,
       );
 
       setOrderId(generatedOrderId);
       setOrderData(customer);
       setLastOrderItems(currentItems);
-      setLastOrderTotals(totals);
+      setLastOrderTotals(confirmedTotals);
       setWhatsappMessage(message);
       setSubmitted(true);
       clearCart();

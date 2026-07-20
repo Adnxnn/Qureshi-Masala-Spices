@@ -1,7 +1,5 @@
 'use server'
 
-import { promises as fs } from 'fs'
-import path from 'path'
 import { revalidatePath } from 'next/cache'
 import { createServerSupabaseClient } from '@/lib/supabaseServer'
 import type {
@@ -11,8 +9,6 @@ import type {
   Recipe,
   PromoCode,
 } from '@/types'
-
-const PROMOS_FILE_PATH = path.join(process.cwd(), 'data', 'admin-promos.json')
 
 const generateSlug = (name: string) =>
   name
@@ -234,48 +230,208 @@ export async function adminUpsertProduct(product: any): Promise<Product> {
 }
 
 // ============================================
-// PROMO CODES — EXISTING JSON STORAGE
-// A Supabase promo_codes table is required before these can persist on Vercel.
+// PROMO CODES — SUPABASE
 // ============================================
 
-export async function getPromoCodes(): Promise<PromoCode[]> {
-  try {
-    const jsonData = await fs.readFile(PROMOS_FILE_PATH, 'utf-8')
-    return JSON.parse(jsonData) as PromoCode[]
-  } catch {
-    return []
+type PromoCodeRecord = {
+  id: string
+  code: string
+  discount: number
+  type: PromoCode['type']
+  is_active: boolean
+  usage_limit: number
+  used_count: number
+  created_at: string
+  promo_code_usages?: Array<{
+    user_id: string | null
+    customer_email: string | null
+    customer_phone: string | null
+    used_at: string
+  }>
+}
+
+function normalisePromoCode(code: string) {
+  return code.trim().toUpperCase().replace(/\s+/g, '')
+}
+
+function mapPromoCode(record: PromoCodeRecord): PromoCode {
+  return {
+    id: record.id,
+    code: record.code,
+    discount: Number(record.discount),
+    type: record.type,
+    isActive: record.is_active,
+    usageLimit: record.usage_limit,
+    usedCount: record.used_count,
+    usedBy: (record.promo_code_usages ?? []).map((usage) => ({
+      userId: usage.user_id ?? undefined,
+      customerEmail: usage.customer_email ?? undefined,
+      customerPhone: usage.customer_phone ?? undefined,
+      usedAt: usage.used_at,
+    })),
+    createdAt: record.created_at,
   }
+}
+
+function validatePromoValues(input: {
+  code: string
+  discount: number
+  type: PromoCode['type']
+  usageLimit: number
+}) {
+  if (!/^[A-Z0-9_-]{3,32}$/.test(input.code)) {
+    throw new Error('Promo code must be 3–32 letters, numbers, hyphens or underscores.')
+  }
+
+  if (!Number.isFinite(input.discount) || input.discount <= 0) {
+    throw new Error('Discount must be greater than zero.')
+  }
+
+  if (input.type === 'percentage' && input.discount > 100) {
+    throw new Error('Percentage discount cannot be more than 100%.')
+  }
+
+  if (!Number.isInteger(input.usageLimit) || input.usageLimit < 1) {
+    throw new Error('Usage limit must be at least 1.')
+  }
+}
+
+export async function getPromoCodes(): Promise<PromoCode[]> {
+  const supabase = await requireAdmin()
+  const { data, error } = await supabase
+    .from('promo_codes')
+    .select(
+      '*, promo_code_usages(user_id, customer_email, customer_phone, used_at)',
+    )
+    .order('created_at', { ascending: false })
+
+  if (error) {
+    console.error('[getPromoCodes]', error)
+    throw new Error(`Unable to load promo codes: ${error.message}`)
+  }
+
+  return ((data ?? []) as unknown as PromoCodeRecord[]).map(mapPromoCode)
 }
 
 export async function addPromoCode(
-  promoCode: Omit<PromoCode, 'id' | 'usedCount' | 'createdAt' | 'usedBy' | 'isActive'> & {
-    usedBy?: PromoCode['usedBy']
+  promoCode: Omit<
+    PromoCode,
+    'id' | 'usedCount' | 'createdAt' | 'usedBy' | 'isActive'
+  > & {
     isActive?: boolean
   },
-) {
-  const promoCodes = await getPromoCodes()
-  const newPromo: PromoCode = {
-    ...promoCode,
-    id: `promo-${Date.now()}`,
-    isActive: promoCode.isActive ?? true,
-    usedCount: 0,
-    usedBy: promoCode.usedBy ?? [],
-    createdAt: new Date().toISOString(),
+): Promise<PromoCode> {
+  const supabase = await requireAdmin()
+  const code = normalisePromoCode(promoCode.code)
+  const discount = Number(promoCode.discount)
+  const usageLimit = Number(promoCode.usageLimit)
+
+  validatePromoValues({
+    code,
+    discount,
+    type: promoCode.type,
+    usageLimit,
+  })
+
+  const { data, error } = await supabase
+    .from('promo_codes')
+    .insert({
+      code,
+      discount,
+      type: promoCode.type,
+      usage_limit: usageLimit,
+      is_active: promoCode.isActive ?? true,
+      used_count: 0,
+    })
+    .select('*')
+    .single()
+
+  if (error) {
+    console.error('[addPromoCode]', error)
+    if (error.code === '23505') {
+      throw new Error('A promo code with this name already exists.')
+    }
+    throw new Error(`Unable to create promo code: ${error.message}`)
   }
-  promoCodes.push(newPromo)
-  await fs.writeFile(PROMOS_FILE_PATH, JSON.stringify(promoCodes, null, 2), 'utf-8')
-  return newPromo
+
+  revalidatePath('/admin/promo-codes')
+  revalidatePath('/order')
+  return mapPromoCode(data as unknown as PromoCodeRecord)
 }
 
-export async function updatePromoCode(id: string, updates: Partial<PromoCode>) {
-  const promoCodes = await getPromoCodes()
-  const index = promoCodes.findIndex((promo) => promo.id === id)
-  if (index === -1) return
-  promoCodes[index] = { ...promoCodes[index], ...updates }
-  await fs.writeFile(PROMOS_FILE_PATH, JSON.stringify(promoCodes, null, 2), 'utf-8')
+export async function updatePromoCode(
+  id: string,
+  updates: Partial<PromoCode>,
+): Promise<PromoCode> {
+  const supabase = await requireAdmin()
+  const { data: current, error: currentError } = await supabase
+    .from('promo_codes')
+    .select('*')
+    .eq('id', id)
+    .single()
+
+  if (currentError || !current) {
+    throw new Error('Promo code could not be found.')
+  }
+
+  const currentRecord = current as unknown as PromoCodeRecord
+  const code =
+    updates.code === undefined
+      ? currentRecord.code
+      : normalisePromoCode(updates.code)
+  const discount =
+    updates.discount === undefined
+      ? Number(currentRecord.discount)
+      : Number(updates.discount)
+  const type = updates.type ?? currentRecord.type
+  const usageLimit =
+    updates.usageLimit === undefined
+      ? currentRecord.usage_limit
+      : Number(updates.usageLimit)
+
+  validatePromoValues({ code, discount, type, usageLimit })
+
+  if (usageLimit < currentRecord.used_count) {
+    throw new Error(
+      `Usage limit cannot be lower than the current usage count (${currentRecord.used_count}).`,
+    )
+  }
+
+  const { data, error } = await supabase
+    .from('promo_codes')
+    .update({
+      code,
+      discount,
+      type,
+      usage_limit: usageLimit,
+      is_active: updates.isActive ?? currentRecord.is_active,
+    })
+    .eq('id', id)
+    .select('*')
+    .single()
+
+  if (error) {
+    console.error('[updatePromoCode]', error)
+    if (error.code === '23505') {
+      throw new Error('A promo code with this name already exists.')
+    }
+    throw new Error(`Unable to update promo code: ${error.message}`)
+  }
+
+  revalidatePath('/admin/promo-codes')
+  revalidatePath('/order')
+  return mapPromoCode(data as unknown as PromoCodeRecord)
 }
 
-export async function deletePromoCode(id: string) {
-  const promoCodes = (await getPromoCodes()).filter((promo) => promo.id !== id)
-  await fs.writeFile(PROMOS_FILE_PATH, JSON.stringify(promoCodes, null, 2), 'utf-8')
+export async function deletePromoCode(id: string): Promise<void> {
+  const supabase = await requireAdmin()
+  const { error } = await supabase.from('promo_codes').delete().eq('id', id)
+
+  if (error) {
+    console.error('[deletePromoCode]', error)
+    throw new Error(`Unable to delete promo code: ${error.message}`)
+  }
+
+  revalidatePath('/admin/promo-codes')
+  revalidatePath('/order')
 }
