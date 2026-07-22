@@ -5,6 +5,7 @@ import { createClient } from '@supabase/supabase-js'
 import type { CartItem, User, OrderWithItems, PlaceOrderPayload, Product, ProductVariant, Database, PromoCode } from '@/types'
 import { createServerSupabaseClient } from './supabaseServer'
 import { calculateOrderTotal } from './utils'
+import { sendNewOrderWhatsAppAlert } from './whatsapp'
 
 // ============================================
 // ADMIN SUPABASE CLIENT (for orders bypassing RLS)
@@ -468,6 +469,13 @@ export async function placeOrder(
 
       return { success: false, error: message }
     }
+
+    // The order is already safely stored. A WhatsApp API failure is logged,
+    // but it never makes checkout fail or creates a duplicate order.
+    await sendNewOrderWhatsAppAlert({
+      order,
+      formData,
+    })
 
     revalidatePath('/admin/orders')
     revalidatePath('/admin/products')
