@@ -241,6 +241,95 @@ export async function updateVariantsFromForm(formData: FormData) {
 // ============================================
 // USER AUTHENTICATION
 // ============================================
+export type AuthActionResult =
+  | { success: true; requiresEmailConfirmation?: boolean }
+  | { success: false; error: string }
+
+type ProfileDetails = {
+  full_name?: string
+  phone?: string
+  address?: string
+  city?: string
+  pincode?: string
+}
+
+function authErrorMessage(message: string) {
+  const normalisedMessage = message.toLowerCase()
+
+  if (normalisedMessage.includes('invalid login credentials')) {
+    return 'The email or password is incorrect.'
+  }
+
+  if (normalisedMessage.includes('email not confirmed')) {
+    return 'Please confirm your email before signing in.'
+  }
+
+  if (normalisedMessage.includes('already registered')) {
+    return 'An account with this email already exists. Sign in instead.'
+  }
+
+  return 'We could not complete the sign-in request. Please try again.'
+}
+
+async function ensureUserProfile(
+  authUser: {
+    id: string
+    email?: string | null
+    user_metadata?: Record<string, unknown>
+  },
+  details: ProfileDetails = {},
+) {
+  const adminSupabase = createAdminSupabaseClient()
+  const metadata = authUser.user_metadata ?? {}
+  const email = normaliseEmail(authUser.email ?? '')
+  const fallbackName = email.split('@')[0] || 'Customer'
+
+  const { data: existingProfile, error: existingProfileError } = await (
+    adminSupabase as any
+  )
+    .from('users')
+    .select('*')
+    .eq('id', authUser.id)
+    .maybeSingle()
+
+  if (existingProfileError) {
+    console.error('[ensureUserProfile] lookup failed', existingProfileError)
+    return null
+  }
+
+  if (existingProfile) {
+    return existingProfile as User
+  }
+
+  const { data, error } = await (adminSupabase as any)
+    .from('users')
+    .insert({
+      id: authUser.id,
+      email,
+      full_name:
+        details.full_name?.trim() ||
+        (typeof metadata.full_name === 'string'
+          ? metadata.full_name.trim()
+          : '') ||
+        fallbackName,
+      phone:
+        details.phone?.trim() ||
+        (typeof metadata.phone === 'string' ? metadata.phone.trim() : ''),
+      address: details.address?.trim() || null,
+      city: details.city?.trim() || null,
+      pincode: details.pincode?.trim() || null,
+    })
+    .select('*')
+    .single()
+
+  if (error) {
+    console.error('[ensureUserProfile]', error)
+    return null
+  }
+
+  return data as User
+}
+
 export async function getCurrentUser(): Promise<User | null> {
   const supabase = createServerSupabaseClient()
   const { data: { user }, error } = await supabase.auth.getUser()
@@ -250,12 +339,11 @@ export async function getCurrentUser(): Promise<User | null> {
   }
 
   try {
-    // Get user profile from database
     const { data: userProfile, error: profileError } = await supabase
       .from('users')
       .select('*')
       .eq('id', user.id)
-      .single()
+      .maybeSingle()
 
     if (profileError) {
       console.warn('Error fetching user profile:', profileError)
@@ -266,24 +354,10 @@ export async function getCurrentUser(): Promise<User | null> {
       return userProfile
     }
 
-    // Create a profile if none exists
-    const { data: newProfile, error: insertError } = await supabase
-      .from('users')
-      .insert({
-        id: user.id,
-        email: user.email!,
-        full_name: user.user_metadata.full_name || '',
-        phone: user.user_metadata.phone || ''
-      })
-      .select()
-      .single()
-
-    if (insertError) {
-      console.warn('Error creating user profile:', insertError)
-      return null
-    }
-
-    return newProfile
+    // Repair older auth accounts that were created before their public profile
+    // row. This runs with the server-only service role and never exposes admin
+    // credentials to the browser.
+    return ensureUserProfile(user)
   } catch (err) {
     console.error('Unexpected error in getCurrentUser:', err)
     return null
@@ -298,52 +372,118 @@ export async function registerUser(formData: {
   address?: string
   city?: string
   pincode?: string
-}) {
+}): Promise<AuthActionResult> {
   const supabase = createServerSupabaseClient()
+  const email = normaliseEmail(formData.email)
 
-  // Sign up user
+  if (!formData.full_name.trim() || !email || !formData.phone.trim()) {
+    return { success: false, error: 'Name, email and phone number are required.' }
+  }
+
+  if (formData.password.length < 6) {
+    return { success: false, error: 'Password must be at least 6 characters.' }
+  }
+
   const { data: authData, error: authError } = await supabase.auth.signUp({
-    email: formData.email,
+    email,
     password: formData.password,
     options: {
       data: {
-        full_name: formData.full_name,
-        phone: formData.phone
+        full_name: formData.full_name.trim(),
+        phone: formData.phone.trim(),
       }
     }
   })
 
-  if (authError) throw new Error(authError.message)
+  if (authError) {
+    return { success: false, error: authErrorMessage(authError.message) }
+  }
 
-  // Create user profile
-  if (authData.user) {
-    await supabase.from('users').insert({
-      id: authData.user.id,
-      email: formData.email,
-      full_name: formData.full_name,
-      phone: formData.phone,
-      address: formData.address,
-      city: formData.city,
-      pincode: formData.pincode
-    })
+  if (!authData.user || authData.user.identities?.length === 0) {
+    return {
+      success: false,
+      error: 'An account with this email already exists. Sign in instead.',
+    }
+  }
+
+  const profile = await ensureUserProfile(authData.user, formData)
+
+  if (!profile) {
+    return {
+      success: false,
+      error: 'Your account was created, but the profile could not be prepared. Please sign in and try again.',
+    }
   }
 
   revalidatePath('/')
-  redirect('/')
+
+  return {
+    success: true,
+    requiresEmailConfirmation: !authData.session,
+  }
 }
 
-export async function loginUser(formData: { email: string; password: string }) {
+export async function loginUser(formData: {
+  email: string
+  password: string
+}): Promise<AuthActionResult> {
   const supabase = createServerSupabaseClient()
 
-  const { error } = await supabase.auth.signInWithPassword({
-    email: formData.email,
+  const { data, error } = await supabase.auth.signInWithPassword({
+    email: normaliseEmail(formData.email),
     password: formData.password
   })
 
-  if (error) throw new Error(error.message)
+  if (error || !data.user) {
+    return {
+      success: false,
+      error: authErrorMessage(error?.message ?? 'Unable to sign in'),
+    }
+  }
+
+  const profile = await ensureUserProfile(data.user)
+  if (!profile) {
+    await supabase.auth.signOut()
+    return {
+      success: false,
+      error: 'We could not load your account profile. Please try again.',
+    }
+  }
 
   revalidatePath('/')
-  redirect('/')
+  revalidatePath('/account')
+  return { success: true }
+}
+
+export async function adminLoginUser(formData: {
+  email: string
+  password: string
+}): Promise<AuthActionResult> {
+  const supabase = createServerSupabaseClient()
+  const { data, error } = await supabase.auth.signInWithPassword({
+    email: normaliseEmail(formData.email),
+    password: formData.password,
+  })
+
+  if (error || !data.user) {
+    return {
+      success: false,
+      error: authErrorMessage(error?.message ?? 'Unable to sign in'),
+    }
+  }
+
+  const profile = await ensureUserProfile(data.user)
+
+  if (!profile?.is_admin) {
+    await supabase.auth.signOut()
+    return {
+      success: false,
+      error: 'This account does not have administrator access.',
+    }
+  }
+
+  revalidatePath('/admin')
+  return { success: true }
 }
 
 export async function logoutUser() {
@@ -365,18 +505,21 @@ export async function updateUserProfile(formData: {
     const user = await getCurrentUser()
     if (!user) {
       console.warn('Cannot update profile: user not logged in')
-      return
+      return { success: false, error: 'Please sign in again to update your profile.' }
     }
 
     const supabase = createServerSupabaseClient()
     const { error } = await supabase.from('users').update(formData).eq('id', user.id)
     if (error) {
       console.warn('Error updating user profile:', error)
+      return { success: false, error: 'We could not save your details. Please try again.' }
     }
 
     revalidatePath('/account')
+    return { success: true }
   } catch (err) {
     console.error('Unexpected error in updateUserProfile:', err)
+    return { success: false, error: 'We could not save your details. Please try again.' }
   }
 }
 

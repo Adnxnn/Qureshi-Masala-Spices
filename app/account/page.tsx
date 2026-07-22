@@ -1,9 +1,27 @@
 'use client'
 
 import { useEffect, useState } from 'react'
+import Link from 'next/link'
 import { useForm } from 'react-hook-form'
-import { getCurrentUser, getUserOrders, updateUserProfile, logoutUser } from '@/lib/actions'
-import type { User, Order } from '@/types'
+import toast from 'react-hot-toast'
+import { LogOut, MapPin, PackageCheck, UserRound } from 'lucide-react'
+import {
+  getCurrentUser,
+  getUserOrders,
+  logoutUser,
+  updateUserProfile,
+} from '@/lib/actions'
+import type { OrderWithItems, User } from '@/types'
+
+type AccountTab = 'profile' | 'orders'
+
+type ProfileFormValues = {
+  full_name: string
+  phone: string
+  address?: string
+  city?: string
+  pincode?: string
+}
 
 function formatDate(dateString: string) {
   return new Date(dateString).toLocaleDateString('en-IN', {
@@ -11,59 +29,118 @@ function formatDate(dateString: string) {
     month: 'short',
     day: 'numeric',
     hour: '2-digit',
-    minute: '2-digit'
+    minute: '2-digit',
   })
+}
+
+function formatCurrency(value: number) {
+  return new Intl.NumberFormat('en-IN', {
+    style: 'currency',
+    currency: 'INR',
+    maximumFractionDigits: 0,
+  }).format(value)
 }
 
 function getStatusColor(status: string) {
   const colors: Record<string, string> = {
-    pending: 'bg-yellow-500/20 text-yellow-400',
-    confirmed: 'bg-blue-500/20 text-blue-400',
-    processing: 'bg-purple-500/20 text-purple-400',
-    shipped: 'bg-orange-500/20 text-orange-400',
-    delivered: 'bg-green-500/20 text-green-400',
-    cancelled: 'bg-red-500/20 text-red-400'
+    pending: 'border-yellow-400/20 bg-yellow-400/10 text-yellow-300',
+    confirmed: 'border-blue-400/20 bg-blue-400/10 text-blue-300',
+    dispatched: 'border-orange-400/20 bg-orange-400/10 text-orange-300',
+    delivered: 'border-green-400/20 bg-green-400/10 text-green-300',
+    cancelled: 'border-red-400/20 bg-red-400/10 text-red-300',
   }
-  return colors[status] || 'bg-gray-500/20 text-gray-400'
+  return colors[status] || 'border-white/10 bg-white/5 text-white/60'
 }
 
 export default function AccountPage() {
   const [user, setUser] = useState<User | null>(null)
-  const [orders, setOrders] = useState<any[]>([])
+  const [orders, setOrders] = useState<OrderWithItems[]>([])
   const [loading, setLoading] = useState(true)
-  const [activeTab, setActiveTab] = useState<'profile' | 'orders'>('profile')
-  const { register, handleSubmit, formState: { errors, isSubmitting }, reset } = useForm()
+  const [loggingOut, setLoggingOut] = useState(false)
+  const [activeTab, setActiveTab] = useState<AccountTab>('profile')
+  const {
+    register,
+    handleSubmit,
+    reset,
+    formState: { errors, isSubmitting },
+  } = useForm<ProfileFormValues>()
 
   useEffect(() => {
-    async function loadData() {
-      const userData = await getCurrentUser()
-      setUser(userData)
-      if (userData) {
-        const userOrders = await getUserOrders()
-        setOrders(userOrders)
-      }
-      setLoading(false)
+    const syncTabFromHash = () => {
+      setActiveTab(window.location.hash === '#orders' ? 'orders' : 'profile')
     }
-    loadData()
+
+    syncTabFromHash()
+    window.addEventListener('hashchange', syncTabFromHash)
+    return () => window.removeEventListener('hashchange', syncTabFromHash)
   }, [])
 
-  async function onSubmitProfile(data: any) {
-    await updateUserProfile(data)
+  useEffect(() => {
+    let cancelled = false
+
+    async function loadData() {
+      try {
+        const userData = await getCurrentUser()
+        if (cancelled) return
+
+        setUser(userData)
+        if (!userData) return
+
+        reset({
+          full_name: userData.full_name,
+          phone: userData.phone,
+          address: userData.address ?? '',
+          city: userData.city ?? '',
+          pincode: userData.pincode ?? '',
+        })
+
+        const userOrders = await getUserOrders()
+        if (!cancelled) setOrders(userOrders)
+      } catch (error) {
+        console.error('[AccountPage] load failed', error)
+        if (!cancelled) toast.error('We could not load all account details.')
+      } finally {
+        if (!cancelled) setLoading(false)
+      }
+    }
+
+    void loadData()
+    return () => {
+      cancelled = true
+    }
+  }, [reset])
+
+  function selectTab(tab: AccountTab) {
+    setActiveTab(tab)
+    window.history.replaceState(null, '', tab === 'orders' ? '#orders' : '#profile')
+  }
+
+  async function onSubmitProfile(data: ProfileFormValues) {
+    const result = await updateUserProfile(data)
+
+    if ('error' in result) {
+      toast.error(result.error)
+      return
+    }
+
     const userData = await getCurrentUser()
     setUser(userData)
+    toast.success('Profile and delivery address saved.')
   }
 
   async function handleLogout() {
+    setLoggingOut(true)
     await logoutUser()
   }
 
   if (loading) {
     return (
-      <div className="min-h-screen bg-dark pt-32 pb-20 px-4">
-        <div className="max-w-4xl mx-auto">
-          <div className="text-center">
-            <p className="text-white/60">Loading...</p>
-          </div>
+      <div className="min-h-screen bg-dark px-4 pb-20 pt-16 sm:pt-24">
+        <div className="mx-auto max-w-4xl animate-pulse" aria-label="Loading account">
+          <div className="h-10 w-52 rounded bg-white/10" />
+          <div className="mt-3 h-5 w-72 max-w-full rounded bg-white/5" />
+          <div className="mt-8 h-14 rounded-xl bg-white/5" />
+          <div className="mt-6 h-80 rounded-2xl bg-white/5" />
         </div>
       </div>
     )
@@ -71,14 +148,28 @@ export default function AccountPage() {
 
   if (!user) {
     return (
-      <div className="min-h-screen bg-dark pt-32 pb-20 px-4">
-        <div className="max-w-4xl mx-auto">
-          <div className="text-center">
-            <h1 className="font-display text-4xl text-white mb-4">Please Login</h1>
-            <p className="text-white/60 mb-8">You need to be logged in to view this page</p>
-            <a href="/login" className="inline-block bg-primary hover:bg-primary/90 text-white font-semibold py-3 px-8 rounded-lg transition-colors">
-              Go to Login
-            </a>
+      <div className="min-h-screen bg-dark px-4 pb-20 pt-16 sm:pt-24">
+        <div className="mx-auto max-w-lg text-center">
+          <UserRound className="mx-auto mb-5 text-gold" size={40} aria-hidden="true" />
+          <h1 className="font-display text-4xl tracking-wide text-white sm:text-5xl">
+            Sign In to Your Account
+          </h1>
+          <p className="mx-auto mt-3 max-w-md text-sm leading-6 text-white/55 sm:text-base">
+            Your profile, saved delivery address and order history are kept securely in your account.
+          </p>
+          <div className="mt-8 flex flex-col gap-3 sm:flex-row sm:justify-center">
+            <Link
+              href="/login?next=/account"
+              className="inline-flex min-h-12 items-center justify-center rounded-xl bg-gold px-7 font-bold text-black transition hover:bg-gold-light focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-gold"
+            >
+              Sign In
+            </Link>
+            <Link
+              href="/register"
+              className="inline-flex min-h-12 items-center justify-center rounded-xl border border-white/15 px-7 font-semibold text-white transition hover:border-gold/50 hover:text-gold focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-gold"
+            >
+              Create Account
+            </Link>
           </div>
         </div>
       </div>
@@ -86,175 +177,238 @@ export default function AccountPage() {
   }
 
   return (
-    <div className="min-h-screen bg-dark pt-32 pb-20 px-4">
-      <div className="max-w-4xl mx-auto">
-        <div className="mb-10">
-          <h1 className="font-display text-4xl text-white mb-2">My Account</h1>
-          <p className="text-white/60">Welcome back, {user.full_name}</p>
+    <div className="min-h-screen bg-dark px-4 pb-20 pt-14 sm:px-6 sm:pt-24">
+      <div className="mx-auto max-w-4xl">
+        <div className="mb-7 sm:mb-9">
+          <p className="mb-2 text-[11px] font-bold uppercase tracking-[0.28em] text-gold">
+            Your Qureshi&apos;s account
+          </p>
+          <h1 className="font-display text-4xl tracking-wide text-white sm:text-5xl">My Account</h1>
+          <p className="mt-2 text-sm text-white/55 sm:text-base">Welcome back, {user.full_name}.</p>
         </div>
 
-        {/* Tabs */}
-        <div className="flex gap-2 mb-8 bg-white/5 p-1 rounded-xl">
+        <div
+          role="tablist"
+          aria-label="Account sections"
+          className="mb-6 grid grid-cols-2 gap-1 rounded-xl border border-white/10 bg-black/20 p-1 sm:mb-8"
+        >
           <button
-            onClick={() => setActiveTab('profile')}
-            className={`flex-1 py-3 px-6 rounded-lg font-medium transition-all ${
-              activeTab === 'profile' ? 'bg-white/10 text-white' : 'text-white/60 hover:text-white'
+            type="button"
+            role="tab"
+            aria-selected={activeTab === 'profile'}
+            onClick={() => selectTab('profile')}
+            className={`flex min-h-12 items-center justify-center gap-2 rounded-lg px-3 text-sm font-semibold transition focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-gold sm:px-6 ${
+              activeTab === 'profile'
+                ? 'bg-white/10 text-white'
+                : 'text-white/50 hover:text-white'
             }`}
           >
-            Profile
+            <UserRound size={18} aria-hidden="true" />
+            <span className="sm:hidden">Profile</span>
+            <span className="hidden sm:inline">Profile &amp; Address</span>
           </button>
           <button
-            onClick={() => setActiveTab('orders')}
-            className={`flex-1 py-3 px-6 rounded-lg font-medium transition-all ${
-              activeTab === 'orders' ? 'bg-white/10 text-white' : 'text-white/60 hover:text-white'
+            type="button"
+            role="tab"
+            aria-selected={activeTab === 'orders'}
+            onClick={() => selectTab('orders')}
+            className={`flex min-h-12 items-center justify-center gap-2 rounded-lg px-3 text-sm font-semibold transition focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-gold sm:px-6 ${
+              activeTab === 'orders'
+                ? 'bg-white/10 text-white'
+                : 'text-white/50 hover:text-white'
             }`}
           >
-            Orders
+            <PackageCheck size={18} aria-hidden="true" />
+            <span className="sm:hidden">Orders</span>
+            <span className="hidden sm:inline">Order History</span>
           </button>
         </div>
 
-        {/* Profile Tab */}
-        {activeTab === 'profile' && (
-          <div className="bg-white/5 border border-white/10 rounded-2xl p-8">
-            <h2 className="text-2xl font-display text-white mb-8">Profile Information</h2>
-            
-            <form onSubmit={handleSubmit(onSubmitProfile)} className="space-y-6">
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+        {activeTab === 'profile' ? (
+          <section
+            id="profile"
+            role="tabpanel"
+            className="rounded-2xl border border-white/10 bg-white/[0.04] p-5 sm:p-8"
+          >
+            <div className="mb-7 flex items-start gap-3 border-b border-white/10 pb-6">
+              <MapPin className="mt-0.5 shrink-0 text-gold" size={21} aria-hidden="true" />
+              <div>
+                <h2 className="font-display text-2xl tracking-wide text-white sm:text-3xl">
+                  Profile &amp; Saved Address
+                </h2>
+                <p className="mt-1 text-sm leading-6 text-white/50">
+                  These details automatically fill your next order.
+                </p>
+              </div>
+            </div>
+
+            <form onSubmit={handleSubmit(onSubmitProfile)} className="space-y-5" noValidate>
+              <div className="grid grid-cols-1 gap-5 md:grid-cols-2">
                 <div>
-                  <label className="block text-sm font-medium text-white mb-2">Full Name</label>
+                  <label htmlFor="account_name" className="mb-2 block text-sm font-medium text-white">
+                    Full name
+                  </label>
                   <input
-                    {...register('full_name', { required: 'Name is required' })}
+                    id="account_name"
                     type="text"
-                    defaultValue={user.full_name}
-                    className="w-full bg-white/5 border border-white/10 rounded-lg px-4 py-3 text-white placeholder-white/40 focus:outline-none focus:border-primary"
+                    autoComplete="name"
+                    aria-invalid={errors.full_name ? 'true' : 'false'}
+                    {...register('full_name', { required: 'Name is required.' })}
+                    className="min-h-12 w-full rounded-xl border border-white/10 bg-black/25 px-4 text-base text-white outline-none transition focus-visible:border-gold focus-visible:ring-2 focus-visible:ring-gold/20"
                   />
-                  {errors.full_name && <p className="text-red-400 text-sm mt-2">{errors.full_name.message as string}</p>}
+                  {errors.full_name ? (
+                    <p role="alert" className="mt-2 text-sm text-red-300">{errors.full_name.message}</p>
+                  ) : null}
                 </div>
 
                 <div>
-                  <label className="block text-sm font-medium text-white mb-2">Phone</label>
+                  <label htmlFor="account_phone" className="mb-2 block text-sm font-medium text-white">
+                    Phone number
+                  </label>
                   <input
-                    {...register('phone', { required: 'Phone is required' })}
+                    id="account_phone"
                     type="tel"
-                    defaultValue={user.phone}
-                    className="w-full bg-white/5 border border-white/10 rounded-lg px-4 py-3 text-white placeholder-white/40 focus:outline-none focus:border-primary"
+                    inputMode="tel"
+                    autoComplete="tel"
+                    aria-invalid={errors.phone ? 'true' : 'false'}
+                    {...register('phone', { required: 'Phone number is required.' })}
+                    className="min-h-12 w-full rounded-xl border border-white/10 bg-black/25 px-4 text-base text-white outline-none transition focus-visible:border-gold focus-visible:ring-2 focus-visible:ring-gold/20"
                   />
-                  {errors.phone && <p className="text-red-400 text-sm mt-2">{errors.phone.message as string}</p>}
+                  {errors.phone ? (
+                    <p role="alert" className="mt-2 text-sm text-red-300">{errors.phone.message}</p>
+                  ) : null}
                 </div>
               </div>
 
               <div>
-                <label className="block text-sm font-medium text-white mb-2">Email</label>
+                <label htmlFor="account_email" className="mb-2 block text-sm font-medium text-white">
+                  Email address
+                </label>
                 <input
+                  id="account_email"
                   type="email"
                   value={user.email}
                   disabled
-                  className="w-full bg-white/5 border border-white/10 rounded-lg px-4 py-3 text-white/50 cursor-not-allowed"
+                  className="min-h-12 w-full cursor-not-allowed rounded-xl border border-white/10 bg-white/[0.03] px-4 text-base text-white/45"
                 />
               </div>
 
               <div>
-                <label className="block text-sm font-medium text-white mb-2">Address</label>
+                <label htmlFor="account_address" className="mb-2 block text-sm font-medium text-white">
+                  Complete delivery address
+                </label>
                 <textarea
-                  {...register('address')}
+                  id="account_address"
                   rows={3}
-                  defaultValue={user.address || ''}
-                  className="w-full bg-white/5 border border-white/10 rounded-lg px-4 py-3 text-white placeholder-white/40 focus:outline-none focus:border-primary"
+                  autoComplete="street-address"
+                  {...register('address')}
+                  className="w-full rounded-xl border border-white/10 bg-black/25 px-4 py-3 text-base text-white outline-none transition focus-visible:border-gold focus-visible:ring-2 focus-visible:ring-gold/20"
+                  placeholder="House, street and area"
                 />
               </div>
 
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+              <div className="grid grid-cols-1 gap-5 md:grid-cols-2">
                 <div>
-                  <label className="block text-sm font-medium text-white mb-2">City</label>
+                  <label htmlFor="account_city" className="mb-2 block text-sm font-medium text-white">City</label>
                   <input
-                    {...register('city')}
+                    id="account_city"
                     type="text"
-                    defaultValue={user.city || ''}
-                    className="w-full bg-white/5 border border-white/10 rounded-lg px-4 py-3 text-white placeholder-white/40 focus:outline-none focus:border-primary"
+                    autoComplete="address-level2"
+                    {...register('city')}
+                    className="min-h-12 w-full rounded-xl border border-white/10 bg-black/25 px-4 text-base text-white outline-none transition focus-visible:border-gold focus-visible:ring-2 focus-visible:ring-gold/20"
                   />
                 </div>
                 <div>
-                  <label className="block text-sm font-medium text-white mb-2">Pincode</label>
+                  <label htmlFor="account_pincode" className="mb-2 block text-sm font-medium text-white">Pincode</label>
                   <input
-                    {...register('pincode')}
+                    id="account_pincode"
                     type="text"
-                    defaultValue={user.pincode || ''}
-                    className="w-full bg-white/5 border border-white/10 rounded-lg px-4 py-3 text-white placeholder-white/40 focus:outline-none focus:border-primary"
+                    inputMode="numeric"
+                    autoComplete="postal-code"
+                    {...register('pincode')}
+                    className="min-h-12 w-full rounded-xl border border-white/10 bg-black/25 px-4 text-base text-white outline-none transition focus-visible:border-gold focus-visible:ring-2 focus-visible:ring-gold/20"
                   />
                 </div>
               </div>
 
-              <div className="flex gap-4 pt-4">
+              <div className="flex flex-col gap-3 pt-2 sm:flex-row">
                 <button
                   type="submit"
                   disabled={isSubmitting}
-                  className="bg-primary hover:bg-primary/90 text-white font-semibold py-3 px-8 rounded-lg transition-colors disabled:opacity-50"
+                  className="min-h-12 rounded-xl bg-gold px-7 font-bold text-black transition hover:bg-gold-light focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-gold disabled:cursor-wait disabled:opacity-60"
                 >
-                  {isSubmitting ? 'Saving...' : 'Save Changes'}
+                  {isSubmitting ? 'Saving…' : 'Save Details'}
                 </button>
                 <button
                   type="button"
                   onClick={handleLogout}
-                  className="bg-white/10 hover:bg-white/20 text-white font-semibold py-3 px-8 rounded-lg transition-colors"
+                  disabled={loggingOut}
+                  className="flex min-h-12 items-center justify-center gap-2 rounded-xl border border-white/15 px-7 font-semibold text-white/70 transition hover:border-red-400/35 hover:text-red-300 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-red-300 disabled:cursor-wait disabled:opacity-60"
                 >
-                  Logout
+                  <LogOut size={18} aria-hidden="true" />
+                  {loggingOut ? 'Signing out…' : 'Sign Out'}
                 </button>
               </div>
             </form>
-          </div>
-        )}
-
-        {/* Orders Tab */}
-        {activeTab === 'orders' && (
-          <div>
+          </section>
+        ) : (
+          <section id="orders" role="tabpanel">
             {orders.length === 0 ? (
-              <div className="bg-white/5 border border-white/10 rounded-2xl p-12 text-center">
-                <h3 className="text-xl text-white mb-4">No Orders Yet</h3>
-                <p className="text-white/60 mb-8">You haven't placed any orders yet</p>
-                <a href="/" className="inline-block bg-primary hover:bg-primary/90 text-white font-semibold py-3 px-8 rounded-lg transition-colors">
+              <div className="rounded-2xl border border-white/10 bg-white/[0.04] p-8 text-center sm:p-12">
+                <PackageCheck className="mx-auto mb-4 text-gold" size={36} aria-hidden="true" />
+                <h2 className="font-display text-3xl tracking-wide text-white">No Orders Yet</h2>
+                <p className="mt-2 text-sm text-white/50">Your confirmed website orders will appear here.</p>
+                <Link
+                  href="/shop"
+                  className="mt-7 inline-flex min-h-12 items-center justify-center rounded-xl bg-gold px-7 font-bold text-black transition hover:bg-gold-light focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-gold"
+                >
                   Start Shopping
-                </a>
+                </Link>
               </div>
             ) : (
-              <div className="space-y-6">
+              <div className="space-y-4">
                 {orders.map((order) => (
-                  <div key={order.id} className="bg-white/5 border border-white/10 rounded-2xl p-6">
-                    <div className="flex flex-wrap items-center justify-between gap-4 mb-6 pb-4 border-b border-white/10">
+                  <article key={order.id} className="rounded-2xl border border-white/10 bg-white/[0.04] p-5 sm:p-6">
+                    <div className="grid grid-cols-2 gap-4 border-b border-white/10 pb-5 sm:grid-cols-4">
                       <div>
-                        <p className="text-sm text-white/50 mb-1">Order ID</p>
-                        <p className="font-mono text-white">{order.id.slice(0, 8)}</p>
+                        <p className="text-xs uppercase tracking-wider text-white/40">Order ID</p>
+                        <p className="mt-1 font-mono text-sm text-white">{order.id.slice(0, 8).toUpperCase()}</p>
                       </div>
-                      <div className="text-right">
-                        <p className="text-sm text-white/50 mb-1">Total</p>
-                        <p className="font-display text-2xl text-primary">₹{order.total_amount}</p>
+                      <div>
+                        <p className="text-xs uppercase tracking-wider text-white/40">Total</p>
+                        <p className="mt-1 font-semibold text-gold">{formatCurrency(Number(order.total_amount))}</p>
                       </div>
-                      <div className="text-right">
-                        <p className="text-sm text-white/50 mb-1">Date</p>
-                        <p className="text-white">{formatDate(order.created_at)}</p>
+                      <div className="col-span-2 sm:col-span-1">
+                        <p className="text-xs uppercase tracking-wider text-white/40">Placed</p>
+                        <p className="mt-1 text-sm text-white/75">{formatDate(order.created_at)}</p>
                       </div>
-                      <div className={`px-4 py-2 rounded-full text-sm font-medium ${getStatusColor(order.status)}`}>
-                        {order.status.charAt(0).toUpperCase() + order.status.slice(1)}
+                      <div className="col-span-2 flex items-start sm:col-span-1 sm:justify-end">
+                        <span className={`rounded-full border px-3 py-1.5 text-xs font-semibold capitalize ${getStatusColor(order.status)}`}>
+                          {order.status}
+                        </span>
                       </div>
                     </div>
 
-                    <div>
-                      <p className="text-sm text-white/50 mb-3">Items</p>
-                      <div className="space-y-2">
-                        {order.order_items?.map((item: any) => (
-                          <div key={item.id} className="flex justify-between text-white/80">
-                            <span>
-                              {item.product_name} ({item.variant_weight_grams}g) x {item.quantity}
+                    <div className="pt-5">
+                      <p className="mb-3 text-xs font-semibold uppercase tracking-wider text-white/40">Items</p>
+                      <div className="divide-y divide-white/10">
+                        {order.order_items?.map((item) => (
+                          <div key={item.id} className="flex gap-4 py-3 text-sm first:pt-0 last:pb-0">
+                            <span className="min-w-0 flex-1 text-white/75">
+                              {item.product_name} ({item.variant_weight_grams}g) × {item.quantity}
                             </span>
-                            <span>₹{item.subtotal}</span>
+                            <span className="shrink-0 font-medium text-white">
+                              {formatCurrency(Number(item.subtotal))}
+                            </span>
                           </div>
                         ))}
                       </div>
                     </div>
-                  </div>
+                  </article>
                 ))}
               </div>
             )}
-          </div>
+          </section>
         )}
       </div>
     </div>

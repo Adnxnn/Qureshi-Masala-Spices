@@ -13,6 +13,7 @@ import {
   Search 
 } from 'lucide-react'
 import { useCart } from '@/lib/cart'
+import type { User as UserType } from '@/types'
 
 const navLinks = [
   { href: '/shop', label: 'Shop', hasMega: true },
@@ -45,7 +46,7 @@ const featuredLinks = [
   { name: 'Complete Collection', href: '/shop' },
 ]
 
-export default function Header() {
+export default function Header({ user }: { user: UserType | null }) {
   const pathname = usePathname()
   const { totalItems } = useCart()
   const [mounted, setMounted] = useState(false)
@@ -72,6 +73,17 @@ export default function Header() {
     setActiveMega(null)
   }, [pathname])
 
+  useEffect(() => {
+    if (!isMobileMenuOpen) return
+
+    const previousOverflow = document.body.style.overflow
+    document.body.style.overflow = 'hidden'
+
+    return () => {
+      document.body.style.overflow = previousOverflow
+    }
+  }, [isMobileMenuOpen])
+
   return (
     <>
       {/* Desktop Header */}
@@ -87,13 +99,13 @@ export default function Header() {
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex items-center justify-between">
             {/* Logo */}
-            <Link href="/" className="flex items-center z-50">
+            <Link href="/" className="z-50 flex items-center" aria-label="Qureshi's home">
               <Image
                 src="/images/Qureshi's Nav.png"
                 alt="Qureshi's Masala & Spices"
                 width={160}
                 height={40}
-                className="object-contain"
+                className="h-auto w-[132px] object-contain sm:w-[160px]"
                 priority
               />
             </Link>
@@ -212,22 +224,24 @@ export default function Header() {
             </nav>
 
             {/* Right Icons */}
-            <div className="flex items-center gap-4 sm:gap-6">
+            <div className="flex items-center gap-1 sm:gap-3 lg:gap-5">
               <button
                 aria-label="Search"
-                className="text-white/70 hover:text-[#C9A84C] transition-colors"
+                className="hidden size-10 items-center justify-center text-white/70 transition-colors hover:text-[#C9A84C] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#C9A84C] sm:flex"
               >
                 <Search size={18} />
               </button>
               <Link
-                href="/account"
-                className="text-white/70 hover:text-[#C9A84C] transition-colors hidden sm:block"
+                href={user ? '/account' : '/login?next=/account'}
+                aria-label={user ? 'Open my account' : 'Sign in'}
+                className="flex size-10 items-center justify-center text-white/70 transition-colors hover:text-[#C9A84C] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#C9A84C]"
               >
-                <User size={18} />
+                <User size={20} />
               </Link>
               <Link
                 href="/order"
-                className="relative flex items-center gap-2 group"
+                aria-label={`View cart with ${count} item${count === 1 ? '' : 's'}`}
+                className="group relative flex min-h-10 min-w-10 items-center justify-center gap-2 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#C9A84C] sm:px-1"
               >
                 <ShoppingBag size={18} className="text-white/70 group-hover:text-[#C9A84C] transition-colors" />
                 {count > 0 && (
@@ -248,8 +262,9 @@ export default function Header() {
               {/* Mobile Menu Toggle */}
               <button
                 onClick={() => setIsMobileMenuOpen(true)}
-                className="lg:hidden text-white/70 hover:text-[#C9A84C] transition-colors"
+                className="flex size-10 items-center justify-center text-white/70 transition-colors hover:text-[#C9A84C] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#C9A84C] lg:hidden"
                 aria-label="Open menu"
+                aria-expanded={isMobileMenuOpen}
               >
                 <Menu size={24} />
               </button>
@@ -288,7 +303,7 @@ export default function Header() {
                 </button>
               </div>
 
-              <div className="flex-1 overflow-y-auto px-6 py-8">
+              <div className="flex-1 overscroll-contain overflow-y-auto px-6 py-8">
                 <nav className="flex flex-col gap-6">
                   {navLinks.map((link) => (
                     <Link
@@ -305,6 +320,52 @@ export default function Header() {
                     </Link>
                   ))}
                 </nav>
+
+                <div className="mt-10 border-t border-white/10 pt-8">
+                  <h3 className="mb-4 text-xs font-bold uppercase tracking-[0.3em] text-[#C9A84C]">
+                    {user ? `Hello, ${user.full_name.split(' ')[0]}` : 'Your Account'}
+                  </h3>
+                  <div className="divide-y divide-white/10 rounded-xl border border-white/10 bg-white/[0.03]">
+                    {user ? (
+                      <>
+                        <Link
+                          href="/account#profile"
+                          onClick={() => setIsMobileMenuOpen(false)}
+                          className="flex min-h-12 items-center gap-3 px-4 text-sm text-white/80 transition hover:bg-white/5 hover:text-[#C9A84C]"
+                        >
+                          <User size={18} aria-hidden="true" />
+                          Profile &amp; saved address
+                        </Link>
+                        <Link
+                          href="/account#orders"
+                          onClick={() => setIsMobileMenuOpen(false)}
+                          className="flex min-h-12 items-center gap-3 px-4 text-sm text-white/80 transition hover:bg-white/5 hover:text-[#C9A84C]"
+                        >
+                          <ShoppingBag size={18} aria-hidden="true" />
+                          Order history
+                        </Link>
+                      </>
+                    ) : (
+                      <>
+                        <Link
+                          href="/login?next=/account"
+                          onClick={() => setIsMobileMenuOpen(false)}
+                          className="flex min-h-12 items-center gap-3 px-4 text-sm font-semibold text-white transition hover:bg-white/5 hover:text-[#C9A84C]"
+                        >
+                          <User size={18} aria-hidden="true" />
+                          Sign in
+                        </Link>
+                        <Link
+                          href="/register"
+                          onClick={() => setIsMobileMenuOpen(false)}
+                          className="flex min-h-12 items-center px-4 text-sm text-white/70 transition hover:bg-white/5 hover:text-[#C9A84C]"
+                        >
+                          Create account
+                        </Link>
+                      </>
+                    )}
+                  </div>
+                </div>
 
                 <div className="mt-10 pt-8 border-t border-white/10">
                   <h3 className="text-[#C9A84C] text-xs font-bold tracking-[0.3em] uppercase mb-4">Products</h3>

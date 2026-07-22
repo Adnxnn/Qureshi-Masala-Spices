@@ -26,6 +26,12 @@ body {
   overflow-x: hidden;
 }
 
+button,
+a {
+  touch-action: manipulation;
+  -webkit-tap-highlight-color: rgba(245, 197, 24, 0.14);
+}
+
 .font-display { font-family: var(--font-display); }
 .font-serif   { font-family: 'Playfair Display', serif; }
 
