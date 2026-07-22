@@ -6,6 +6,7 @@ import type { CartItem, User, OrderWithItems, PlaceOrderPayload, Product, Produc
 import { createServerSupabaseClient } from './supabaseServer'
 import { calculateOrderTotal } from './utils'
 import { sendNewOrderWhatsAppAlert } from './whatsapp-server'
+import { sendOrderEmails } from './order-emails'
 
 // ============================================
 // ADMIN SUPABASE CLIENT (for orders bypassing RLS)
@@ -472,7 +473,16 @@ export async function placeOrder(
 
     // The order is already safely stored. A notification failure must never
     // fail checkout or create a duplicate order.
-    await sendNewOrderWhatsAppAlert({ order, formData })
+    const notificationResults = await Promise.allSettled([
+      sendNewOrderWhatsAppAlert({ order, formData }),
+      sendOrderEmails({ order, formData }),
+    ])
+
+    for (const result of notificationResults) {
+      if (result.status === 'rejected') {
+        console.error('[placeOrder] Post-order notification failed:', result.reason)
+      }
+    }
     revalidatePath('/admin/orders')
     revalidatePath('/admin/products')
     revalidatePath('/shop')
