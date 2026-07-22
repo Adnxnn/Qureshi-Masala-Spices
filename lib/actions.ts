@@ -57,6 +57,18 @@ function normaliseEmail(email: string) {
   return email.trim().toLowerCase()
 }
 
+function getEmailConfirmationUrl() {
+  const configuredSiteUrl =
+    process.env.NEXT_PUBLIC_SITE_URL?.trim() ||
+    'https://www.qureshismasalaspices.com'
+
+  try {
+    return new URL('/auth/confirmed', configuredSiteUrl).toString()
+  } catch {
+    return 'https://www.qureshismasalaspices.com/auth/confirmed'
+  }
+}
+
 function normalisePhone(phone: string) {
   return phone.replace(/\D/g, '')
 }
@@ -388,11 +400,12 @@ export async function registerUser(formData: {
     email,
     password: formData.password,
     options: {
+      emailRedirectTo: getEmailConfirmationUrl(),
       data: {
         full_name: formData.full_name.trim(),
         phone: formData.phone.trim(),
-      }
-    }
+      },
+    },
   })
 
   if (authError) {
