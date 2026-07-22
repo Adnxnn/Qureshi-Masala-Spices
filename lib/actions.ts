@@ -431,46 +431,10 @@ export async function placeOrder(
     const subtotal = formData.items.reduce((s, i) => s + i.variant.price * i.quantity, 0)
     const { total } = calculateOrderTotal(subtotal, verifiedPromoCode)
 
-    const orderInsert: Database['public']['Tables']['orders']['Insert'] = {
-      user_id: user?.id || null,
-      customer_name: formData.customer_name,
-      customer_phone: formData.customer_phone,
-      customer_email: formData.customer_email,
-      customer_address: formData.customer_address,
-      customer_city: formData.customer_city,
-      customer_pincode: formData.customer_pincode,
-      notes: formData.notes,
-      total_amount: total,
-      status: 'pending'
-    }
-
-    // Insert order
-    const result = await adminSupabase
-      .from('orders')
-      .insert(orderInsert as any)
-      .select()
-      .single()
-
-    const orderError = result.error
-    const order = result.data as Database['public']['Tables']['orders']['Row'] | null
-
-    if (orderError) {
-      console.error('[placeOrder] order insert failed:', JSON.stringify(orderError, null, 2))
-      await releasePromoCodeRedemption(adminSupabase, redeemedUsageId)
-      redeemedUsageId = null
-      return { success: false, error: ORDER_FAILURE_MESSAGE }
-    }
-
-    if (!order) {
-      console.error('[placeOrder] order insert returned no data')
-      await releasePromoCodeRedemption(adminSupabase, redeemedUsageId)
-      redeemedUsageId = null
-      return { success: false, error: ORDER_FAILURE_MESSAGE }
-    }
-
-    // Insert order items
-    const orderItems: Database['public']['Tables']['order_items']['Insert'][] = formData.items.map(item => ({
-      order_id: order.id,
+    // place_order is a single Postgres transaction: it inserts the order,
+    // inserts the order items, and decrements product stock_qty atomically.
+    // If stock is insufficient for any item, the whole thing rolls back.
+    const rpcItems = formData.items.map(item => ({
       product_id: item.product.id,
       product_name: item.product.name,
       variant_weight_grams: item.variant.weight_grams,
@@ -478,17 +442,36 @@ export async function placeOrder(
       unit_price: item.variant.price
     }))
 
-    const { error: itemsError } = await adminSupabase.from('order_items').insert(orderItems as any)
+    const { data: order, error: orderError } = await (adminSupabase as any)
+      .rpc('place_order', {
+        p_user_id: user?.id || null,
+        p_customer_name: formData.customer_name,
+        p_customer_phone: formData.customer_phone,
+        p_customer_email: formData.customer_email,
+        p_customer_address: formData.customer_address,
+        p_customer_city: formData.customer_city,
+        p_customer_pincode: formData.customer_pincode,
+        p_notes: formData.notes ?? null,
+        p_total_amount: total,
+        p_items: rpcItems
+      })
+      .single()
 
-    if (itemsError) {
-      console.error('[placeOrder] order items insert failed:', JSON.stringify(itemsError, null, 2))
-      await adminSupabase.from('orders').delete().eq('id', order.id)
+    if (orderError || !order) {
+      console.error('[placeOrder] place_order rpc failed:', JSON.stringify(orderError, null, 2))
       await releasePromoCodeRedemption(adminSupabase, redeemedUsageId)
       redeemedUsageId = null
-      return { success: false, error: ORDER_FAILURE_MESSAGE }
+
+      const message = orderError?.message?.includes('INSUFFICIENT_STOCK')
+        ? 'One or more items in your cart just sold out. Please update your cart and try again.'
+        : ORDER_FAILURE_MESSAGE
+
+      return { success: false, error: message }
     }
 
     revalidatePath('/admin/orders')
+    revalidatePath('/admin/products')
+    revalidatePath('/shop')
     revalidatePath('/admin/promo-codes')
     revalidatePath('/account')
     return { success: true, order }
