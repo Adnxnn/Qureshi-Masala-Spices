@@ -1,5 +1,7 @@
 import { createHmac, timingSafeEqual } from 'node:crypto'
+import { createClient } from '@supabase/supabase-js'
 import { NextRequest, NextResponse } from 'next/server'
+import type { Database, OrderStatus } from '@/types'
 
 export const runtime = 'nodejs'
 export const dynamic = 'force-dynamic'
@@ -41,6 +43,67 @@ function hasValidMetaSignature(
     receivedSignature.length === expectedSignature.length &&
     timingSafeEqual(receivedSignature, expectedSignature)
   )
+}
+
+function digitsOnly(value: string) {
+  return value.replace(/\D/g, '')
+}
+
+type OrderAction = {
+  orderId: string
+  status: Extract<OrderStatus, 'confirmed' | 'cancelled'>
+}
+
+function getOrderAction(message: any): OrderAction | null {
+  const payload =
+    message?.button?.payload ??
+    message?.interactive?.button_reply?.id ??
+    ''
+
+  const match = /^order:(confirm|reject):([0-9a-f-]{36})$/i.exec(payload)
+
+  if (!match) {
+    return null
+  }
+
+  return {
+    orderId: match[2],
+    status: match[1].toLowerCase() === 'confirm' ? 'confirmed' : 'cancelled',
+  }
+}
+
+async function applyOrderAction(orderAction: OrderAction) {
+  const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL
+  const serviceRoleKey = process.env.SUPABASE_SERVICE_ROLE_KEY
+
+  if (!supabaseUrl || !serviceRoleKey) {
+    throw new Error('Supabase server credentials are not configured')
+  }
+
+  const supabase = createClient<Database>(supabaseUrl, serviceRoleKey, {
+    auth: {
+      autoRefreshToken: false,
+      persistSession: false,
+    },
+  })
+
+  const { data, error } = await (supabase as any)
+    .from('orders')
+    .update({ status: orderAction.status })
+    .eq('id', orderAction.orderId)
+    .eq('status', 'pending')
+    .select('id')
+    .maybeSingle()
+
+  if (error) {
+    throw error
+  }
+
+  if (!data) {
+    console.warn(
+      `[WhatsApp webhook] Order ${orderAction.orderId} was not pending or was not found`,
+    )
+  }
 }
 
 export async function GET(request: NextRequest) {
@@ -109,13 +172,31 @@ export async function POST(request: NextRequest) {
       return NextResponse.json({ received: true })
     }
 
-    // Interactive Confirm/Reject processing will be added after the
-    // WhatsApp message template and order-status workflow are configured.
+    const adminNumber = digitsOnly(process.env.WHATSAPP_ADMIN_NUMBER ?? '')
+    const messages =
+      payload?.entry?.flatMap((entry: any) =>
+        entry?.changes?.flatMap((change: any) => change?.value?.messages ?? []),
+      ) ?? []
+
+    const orderActions = messages
+      .filter(
+        (message: any) =>
+          adminNumber && digitsOnly(message?.from ?? '') === adminNumber,
+      )
+      .map(getOrderAction)
+      .filter((action: OrderAction | null): action is OrderAction =>
+        Boolean(action),
+      )
+
+    await Promise.all(orderActions.map(applyOrderAction))
+
     return NextResponse.json({ received: true })
-  } catch {
+  } catch (error) {
+    console.error('[WhatsApp webhook] Processing failed:', error)
+
     return NextResponse.json(
-      { error: 'Invalid webhook payload' },
-      { status: 400 },
+      { error: 'Webhook payload could not be processed' },
+      { status: 500 },
     )
   }
 }
