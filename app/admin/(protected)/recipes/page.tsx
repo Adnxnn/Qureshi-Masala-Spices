@@ -208,10 +208,15 @@ export default function AdminRecipesPage() {
 
   return (
     <div>
-      <div className="mb-8 flex items-center justify-between gap-4">
-        <h1 className="font-display text-3xl uppercase tracking-wider text-white">
-          Recipes
-        </h1>
+      <div className="mb-6 flex flex-col gap-4 sm:mb-8 sm:flex-row sm:items-end sm:justify-between">
+        <div>
+          <p className="mb-1.5 text-[10px] font-semibold uppercase tracking-[0.22em] text-gold md:hidden">
+            Content management
+          </p>
+          <h1 className="font-display text-3xl uppercase tracking-wider text-white sm:text-4xl">
+            Recipes
+          </h1>
+        </div>
 
         <button
           type="button"
@@ -223,7 +228,7 @@ export default function AdminRecipesPage() {
               setShowForm(true)
             }
           }}
-          className="flex min-h-11 items-center gap-2 bg-gold px-5 py-2.5 text-xs font-bold uppercase tracking-wider text-black transition-colors hover:bg-white focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white"
+          className="flex min-h-12 w-full items-center justify-center gap-2 rounded-xl bg-gold px-5 py-2.5 text-xs font-bold uppercase tracking-wider text-black transition-colors hover:bg-white focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white sm:min-h-11 sm:w-auto"
         >
           <Plus size={14} aria-hidden="true" />
           {showForm ? 'Cancel' : 'Add Recipe'}
@@ -231,7 +236,7 @@ export default function AdminRecipesPage() {
       </div>
 
       {showForm && (
-        <div className="mb-8 rounded border border-white/10 bg-[#111] p-4 sm:p-6">
+        <div className="mb-8 scroll-mt-24 rounded-2xl border border-white/10 bg-[#111] p-4 sm:p-6">
           <h2 className="mb-5 text-sm font-semibold tracking-wider text-white">
             {editingId ? 'Edit Recipe' : 'New Recipe'}
           </h2>
@@ -340,7 +345,7 @@ export default function AdminRecipesPage() {
                 Cooking Information
               </h3>
 
-              <div className="grid grid-cols-2 gap-3 md:grid-cols-4">
+              <div className="grid grid-cols-1 gap-3 min-[390px]:grid-cols-2 md:grid-cols-4">
                 <div>
                   <label
                     htmlFor="preparation-time"
@@ -442,7 +447,7 @@ export default function AdminRecipesPage() {
                 </div>
               </div>
 
-              <div className="flex flex-wrap items-center gap-5">
+              <div className="grid grid-cols-1 gap-1 sm:flex sm:flex-wrap sm:items-center sm:gap-5">
                 <label className="flex min-h-11 cursor-pointer items-center gap-2">
                   <input
                     type="checkbox"
@@ -589,7 +594,7 @@ export default function AdminRecipesPage() {
                 Ingredients
               </h3>
 
-              <div className="flex gap-2">
+              <div className="flex flex-col gap-2 sm:flex-row">
                 <input
                   type="text"
                   value={newIngredient}
@@ -603,13 +608,13 @@ export default function AdminRecipesPage() {
                     }
                   }}
                   placeholder="Add an ingredient..."
-                  className="min-h-11 flex-1 border border-white/10 bg-black px-3 py-2 text-xs text-white focus:border-gold focus:outline-none"
+                  className="min-h-12 min-w-0 flex-1 rounded-xl border border-white/10 bg-black px-3 py-2 text-white focus:border-gold focus:outline-none sm:min-h-11 sm:text-sm"
                 />
 
                 <button
                   type="button"
                   onClick={handleAddIngredient}
-                  className="min-h-11 bg-white/10 px-4 py-2 text-xs font-bold text-white transition-colors hover:bg-white/20"
+                  className="min-h-12 rounded-xl bg-white/10 px-4 py-2 text-xs font-bold text-white transition-colors hover:bg-white/20 sm:min-h-11"
                 >
                   Add
                 </button>
@@ -620,9 +625,9 @@ export default function AdminRecipesPage() {
                   (ingredient, index) => (
                     <li
                       key={`${ingredient.text}-${index}`}
-                      className="flex items-center justify-between rounded border border-white/5 bg-black/50 px-3 py-2"
+                      className="flex items-center justify-between gap-2 rounded-xl border border-white/5 bg-black/50 px-3 py-2"
                     >
-                      <span className="text-xs text-white/80">
+                      <span className="min-w-0 break-words text-xs leading-5 text-white/80">
                         {ingredient.text}
                       </span>
 
@@ -645,7 +650,7 @@ export default function AdminRecipesPage() {
                 Preparation Steps
               </h3>
 
-              <div className="flex gap-2">
+              <div className="flex flex-col gap-2 sm:flex-row">
                 <input
                   type="text"
                   value={newStep}
@@ -657,13 +662,13 @@ export default function AdminRecipesPage() {
                     }
                   }}
                   placeholder="Add a preparation step..."
-                  className="min-h-11 flex-1 border border-white/10 bg-black px-3 py-2 text-xs text-white focus:border-gold focus:outline-none"
+                  className="min-h-12 min-w-0 flex-1 rounded-xl border border-white/10 bg-black px-3 py-2 text-white focus:border-gold focus:outline-none sm:min-h-11 sm:text-sm"
                 />
 
                 <button
                   type="button"
                   onClick={handleAddStep}
-                  className="min-h-11 bg-white/10 px-4 py-2 text-xs font-bold text-white transition-colors hover:bg-white/20"
+                  className="min-h-12 rounded-xl bg-white/10 px-4 py-2 text-xs font-bold text-white transition-colors hover:bg-white/20 sm:min-h-11"
                 >
                   Add
                 </button>
@@ -674,14 +679,14 @@ export default function AdminRecipesPage() {
                   (step, index) => (
                     <li
                       key={`${step.text}-${index}`}
-                      className="flex items-start justify-between gap-2 rounded border border-white/5 bg-black/50 px-3 py-2"
+                      className="flex items-start justify-between gap-2 rounded-xl border border-white/5 bg-black/50 px-3 py-2"
                     >
-                      <div className="flex items-start gap-3">
+                      <div className="min-w-0 flex items-start gap-3">
                         <span className="mt-0.5 text-xs font-bold text-gold">
                           {index + 1}.
                         </span>
 
-                        <span className="text-xs leading-5 text-white/80">
+                        <span className="min-w-0 break-words text-xs leading-5 text-white/80">
                           {step.text}
                         </span>
                       </div>
@@ -759,11 +764,11 @@ export default function AdminRecipesPage() {
               </p>
             )}
 
-            <div className="flex flex-col gap-2 sm:flex-row">
+            <div className="flex flex-col gap-3 border-t border-white/10 pt-5 sm:flex-row">
               <button
                 type="submit"
                 disabled={isSaving}
-                className="flex min-h-11 flex-1 items-center justify-center gap-2 bg-gold py-2.5 text-xs font-bold uppercase tracking-wider text-black transition-colors hover:bg-white focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white disabled:cursor-wait disabled:opacity-70"
+                className="flex min-h-12 flex-1 items-center justify-center gap-2 rounded-xl bg-gold py-2.5 text-xs font-bold uppercase tracking-wider text-black transition-colors hover:bg-white focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white disabled:cursor-wait disabled:opacity-70 sm:min-h-11"
               >
                 {isSaving && (
                   <Loader2
@@ -784,7 +789,7 @@ export default function AdminRecipesPage() {
                 type="button"
                 onClick={closeForm}
                 disabled={isSaving}
-                className="min-h-11 bg-white/10 px-6 py-2.5 text-xs font-bold uppercase tracking-wider text-white transition-colors hover:bg-white/20 disabled:opacity-50"
+                className="min-h-12 rounded-xl bg-white/10 px-6 py-2.5 text-xs font-bold uppercase tracking-wider text-white transition-colors hover:bg-white/20 disabled:opacity-50 sm:min-h-11"
               >
                 Cancel
               </button>
@@ -793,11 +798,11 @@ export default function AdminRecipesPage() {
         </div>
       )}
 
-      <div className="grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-3">
+      <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 sm:gap-6 xl:grid-cols-3">
         {recipes.map((recipe) => (
           <article
             key={recipe.id}
-            className="rounded border border-white/10 bg-[#111] p-4"
+            className="overflow-hidden rounded-xl border border-white/10 bg-[#111] p-4"
           >
             {recipe.thumbnail_url && (
               <div className="mb-4 h-40 overflow-hidden rounded border border-white/5">

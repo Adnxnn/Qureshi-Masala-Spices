@@ -1,13 +1,17 @@
 'use client'
 
 import { adminGetProducts, adminUpsertProduct } from '@/lib/admin-actions'
-import { useEffect, useState } from 'react'
-import { Plus } from 'lucide-react'
+import { useCallback, useEffect, useState } from 'react'
+import { Loader2, Plus, X } from 'lucide-react'
 import ProductItem from '@/components/ProductItem'
+import type { Product } from '@/types'
 
 export default function AdminProductsPage() {
-  const [products, setProducts] = useState([])
+  const [products, setProducts] = useState<Product[]>([])
   const [showAddForm, setShowAddForm] = useState(false)
+  const [loading, setLoading] = useState(true)
+  const [saving, setSaving] = useState(false)
+  const [error, setError] = useState('')
   const [formData, setFormData] = useState({
     name: '',
     short_description: '',
@@ -20,16 +24,30 @@ export default function AdminProductsPage() {
     description: ''
   })
 
-  useEffect(() => {
-    const fetchProducts = async () => {
+  const fetchProducts = useCallback(async () => {
+    try {
+      setError('')
       const fetchedProducts = await adminGetProducts()
       setProducts(fetchedProducts)
+    } catch (fetchError) {
+      setError(
+        fetchError instanceof Error
+          ? fetchError.message
+          : 'Unable to load products.'
+      )
+    } finally {
+      setLoading(false)
     }
-    fetchProducts()
   }, [])
+
+  useEffect(() => {
+    void fetchProducts()
+  }, [fetchProducts])
 
   const handleAddProduct = async (e: React.FormEvent) => {
     e.preventDefault()
+    setSaving(true)
+    setError('')
 
     const defaultVariants = [
       { weight_grams: 200, price: 120, original_price: 150 },
@@ -49,45 +67,75 @@ export default function AdminProductsPage() {
       badge: formData.badge || null,
       is_active: true,
       variants: defaultVariants,
-      created_at: new Date()
+      created_at: new Date().toISOString()
     }
 
-    await adminUpsertProduct(newProduct)
-    
-    const updatedProducts = await adminGetProducts()
-    setProducts(updatedProducts)
+    try {
+      await adminUpsertProduct(newProduct)
+      await fetchProducts()
 
-    setShowAddForm(false)
-    setFormData({
-      name: '',
-      short_description: '',
-      image_url: '',
-      accent_color: '',
-      category: 'spice',
-      stock_qty: '',
-      tags: '',
-      badge: '',
-      description: ''
-    })
+      setShowAddForm(false)
+      setFormData({
+        name: '',
+        short_description: '',
+        image_url: '',
+        accent_color: '',
+        category: 'spice',
+        stock_qty: '',
+        tags: '',
+        badge: '',
+        description: ''
+      })
+    } catch (saveError) {
+      setError(
+        saveError instanceof Error
+          ? saveError.message
+          : 'Unable to create the product.'
+      )
+    } finally {
+      setSaving(false)
+    }
   }
 
   return (
     <div>
-      <div className="flex items-center justify-between mb-8">
-        <h1 className="font-display text-3xl uppercase text-white tracking-wider">Products</h1>
+      <div className="mb-6 flex flex-col gap-4 sm:mb-8 sm:flex-row sm:items-end sm:justify-between">
+        <div>
+          <p className="mb-1.5 text-[10px] font-semibold uppercase tracking-[0.22em] text-gold md:hidden">
+            Catalogue management
+          </p>
+          <h1 className="font-display text-3xl uppercase tracking-wider text-white sm:text-4xl">
+            Products
+          </h1>
+        </div>
         <button
+          type="button"
           onClick={() => setShowAddForm(!showAddForm)}
-          className="bg-gold text-black px-5 py-2.5 text-xs font-bold tracking-wider uppercase cursor-pointer hover:bg-white transition-colors flex items-center gap-2"
+          className="flex min-h-12 w-full items-center justify-center gap-2 rounded-xl bg-gold px-5 text-xs font-bold uppercase tracking-wider text-black transition-colors hover:bg-white focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white sm:min-h-11 sm:w-auto"
         >
-          <Plus size={14} />
+          {showAddForm ? <X size={15} aria-hidden="true" /> : <Plus size={15} aria-hidden="true" />}
           {showAddForm ? 'Cancel' : 'Add Product'}
         </button>
       </div>
 
+      {error ? (
+        <div
+          role="alert"
+          className="mb-6 rounded-xl border border-red-500/30 bg-red-500/10 p-4 text-sm leading-6 text-red-300"
+        >
+          {error}
+        </div>
+      ) : null}
+
       {showAddForm && (
-        <div className="bg-[#111] border border-white/10 p-6 rounded mb-8">
-          <h3 className="text-sm font-semibold text-white mb-4 tracking-wider">New Product</h3>
-          <form onSubmit={handleAddProduct} className="space-y-3">
+        <section className="mb-8 overflow-hidden rounded-2xl border border-white/10 bg-[#111]">
+          <div className="border-b border-white/10 bg-gradient-to-r from-gold/10 to-transparent px-4 py-4 sm:px-6">
+            <h2 className="text-sm font-semibold tracking-wider text-white">New Product</h2>
+            <p className="mt-1 text-xs leading-5 text-white/40">
+              Add the product details. Default 200g, 500g and 1kg variants will be created.
+            </p>
+          </div>
+          <form onSubmit={handleAddProduct} className="space-y-4 p-4 sm:p-6">
             <div>
               <label className="block text-[10px] tracking-[0.2em] uppercase text-white/40 mb-1">Product Name</label>
               <input
@@ -96,7 +144,7 @@ export default function AdminProductsPage() {
                 value={formData.name}
                 onChange={(e) => setFormData({ ...formData, name: e.target.value })}
                 placeholder="Chicken Masala"
-                className="w-full bg-black border border-white/10 text-white px-3 py-2 text-xs focus:border-gold focus:outline-none"
+                className="min-h-12 w-full rounded-xl border border-white/10 bg-black px-3 py-2 text-white focus:border-gold focus:outline-none sm:min-h-11 sm:text-sm"
                 required
               />
             </div>
@@ -108,7 +156,7 @@ export default function AdminProductsPage() {
                 value={formData.short_description}
                 onChange={(e) => setFormData({ ...formData, short_description: e.target.value })}
                 placeholder="Bold chicken curry blend"
-                className="w-full bg-black border border-white/10 text-white px-3 py-2 text-xs focus:border-gold focus:outline-none"
+                className="min-h-12 w-full rounded-xl border border-white/10 bg-black px-3 py-2 text-white focus:border-gold focus:outline-none sm:min-h-11 sm:text-sm"
                 required
               />
             </div>
@@ -120,7 +168,7 @@ export default function AdminProductsPage() {
                 value={formData.image_url}
                 onChange={(e) => setFormData({ ...formData, image_url: e.target.value })}
                 placeholder="https://example.com/image.jpg"
-                className="w-full bg-black border border-white/10 text-white px-3 py-2 text-xs focus:border-gold focus:outline-none"
+                className="min-h-12 w-full rounded-xl border border-white/10 bg-black px-3 py-2 text-white focus:border-gold focus:outline-none sm:min-h-11 sm:text-sm"
               />
             </div>
             <div>
@@ -131,17 +179,17 @@ export default function AdminProductsPage() {
                 value={formData.accent_color}
                 onChange={(e) => setFormData({ ...formData, accent_color: e.target.value })}
                 placeholder="#E8730A"
-                className="w-full bg-black border border-white/10 text-white px-3 py-2 text-xs focus:border-gold focus:outline-none"
+                className="min-h-12 w-full rounded-xl border border-white/10 bg-black px-3 py-2 text-white focus:border-gold focus:outline-none sm:min-h-11 sm:text-sm"
               />
             </div>
-            <div className="grid grid-cols-2 gap-3">
+            <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
               <div>
                 <label className="block text-[10px] tracking-[0.2em] uppercase text-white/40 mb-1">Category</label>
                 <select
                   name="category"
                   value={formData.category}
                   onChange={(e) => setFormData({ ...formData, category: e.target.value })}
-                  className="w-full bg-black border border-white/10 text-white px-3 py-2 text-xs focus:border-gold focus:outline-none"
+                  className="min-h-12 w-full rounded-xl border border-white/10 bg-black px-3 py-2 text-white focus:border-gold focus:outline-none sm:min-h-11 sm:text-sm"
                 >
                   <option value="chicken">Chicken</option>
                   <option value="seafood">Seafood</option>
@@ -157,7 +205,7 @@ export default function AdminProductsPage() {
                   value={formData.stock_qty}
                   onChange={(e) => setFormData({ ...formData, stock_qty: e.target.value })}
                   placeholder="100"
-                  className="w-full bg-black border border-white/10 text-white px-3 py-2 text-xs focus:border-gold focus:outline-none"
+                  className="min-h-12 w-full rounded-xl border border-white/10 bg-black px-3 py-2 text-white focus:border-gold focus:outline-none sm:min-h-11 sm:text-sm"
                 />
               </div>
             </div>
@@ -169,7 +217,7 @@ export default function AdminProductsPage() {
                 value={formData.tags}
                 onChange={(e) => setFormData({ ...formData, tags: e.target.value })}
                 placeholder="smoky,bold,spicy"
-                className="w-full bg-black border border-white/10 text-white px-3 py-2 text-xs focus:border-gold focus:outline-none"
+                className="min-h-12 w-full rounded-xl border border-white/10 bg-black px-3 py-2 text-white focus:border-gold focus:outline-none sm:min-h-11 sm:text-sm"
               />
             </div>
             <div>
@@ -180,7 +228,7 @@ export default function AdminProductsPage() {
                 value={formData.badge}
                 onChange={(e) => setFormData({ ...formData, badge: e.target.value })}
                 placeholder="New"
-                className="w-full bg-black border border-white/10 text-white px-3 py-2 text-xs focus:border-gold focus:outline-none"
+                className="min-h-12 w-full rounded-xl border border-white/10 bg-black px-3 py-2 text-white focus:border-gold focus:outline-none sm:min-h-11 sm:text-sm"
               />
             </div>
             <div>
@@ -191,21 +239,38 @@ export default function AdminProductsPage() {
                 value={formData.description}
                 onChange={(e) => setFormData({ ...formData, description: e.target.value })}
                 placeholder="Full product description..."
-                className="w-full bg-black border border-white/10 text-white px-3 py-2 text-xs focus:border-gold focus:outline-none resize-none"
+                className="w-full resize-none rounded-xl border border-white/10 bg-black px-3 py-3 text-white focus:border-gold focus:outline-none sm:text-sm"
               />
             </div>
-            <button type="submit" className="w-full bg-gold text-black py-2.5 text-xs font-bold tracking-wider uppercase hover:bg-white transition-colors mt-2">
-              Create Product
+            <button
+              type="submit"
+              disabled={saving}
+              className="mt-2 flex min-h-12 w-full items-center justify-center gap-2 rounded-xl bg-gold px-5 text-xs font-bold uppercase tracking-wider text-black transition-colors hover:bg-white disabled:cursor-wait disabled:opacity-60"
+            >
+              {saving ? <Loader2 size={15} className="animate-spin" aria-hidden="true" /> : null}
+              {saving ? 'Creating Product…' : 'Create Product'}
             </button>
           </form>
-        </div>
+        </section>
       )}
 
-      <div className="space-y-4">
-        {products.map((product) => (
-          <ProductItem key={product.id} product={product} />
-        ))}
-      </div>
+      {loading ? (
+        <div className="flex min-h-[40vh] items-center justify-center text-white/40">
+          <Loader2 size={24} className="animate-spin text-gold" aria-hidden="true" />
+          <span className="ml-3 text-sm">Loading products…</span>
+        </div>
+      ) : (
+        <div className="space-y-3 sm:space-y-4">
+          {products.map((product) => (
+            <ProductItem key={product.id} product={product} />
+          ))}
+          {products.length === 0 ? (
+            <div className="rounded-xl border border-dashed border-white/10 py-16 text-center text-sm text-white/35">
+              No products found.
+            </div>
+          ) : null}
+        </div>
+      )}
     </div>
   )
 }

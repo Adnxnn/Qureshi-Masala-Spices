@@ -32,6 +32,37 @@ a {
   -webkit-tap-highlight-color: rgba(245, 197, 24, 0.14);
 }
 
+.admin-mobile-header,
+.admin-mobile-drawer {
+  padding-top: env(safe-area-inset-top);
+}
+
+.admin-mobile-drawer {
+  overscroll-behavior: contain;
+}
+
+.admin-mobile-content {
+  padding-top: calc(4rem + env(safe-area-inset-top));
+}
+
+@media (max-width: 767px) {
+  .admin-panel input,
+  .admin-panel select,
+  .admin-panel textarea {
+    font-size: 16px;
+  }
+}
+
+@media (min-width: 768px) {
+  .admin-mobile-content {
+    padding-top: 0;
+  }
+
+  .admin-mobile-drawer {
+    padding-top: 0;
+  }
+}
+
 .font-display { font-family: var(--font-display); }
 .font-serif   { font-family: 'Playfair Display', serif; }
 

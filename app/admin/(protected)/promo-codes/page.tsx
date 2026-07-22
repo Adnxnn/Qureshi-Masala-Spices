@@ -236,7 +236,7 @@ export default function AdminPromoCodesPage() {
         <button
           type="button"
           onClick={openCreateForm}
-          className="flex min-h-11 w-full items-center justify-center gap-2 rounded-xl bg-gold px-5 text-xs font-bold uppercase tracking-wider text-black transition-colors hover:bg-white sm:w-auto"
+          className="flex min-h-12 w-full items-center justify-center gap-2 rounded-xl bg-gold px-5 text-xs font-bold uppercase tracking-wider text-black transition-colors hover:bg-white focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white sm:min-h-11 sm:w-auto"
         >
           {showForm && !editingId ? <X size={14} /> : <Plus size={14} />}
           {showForm && !editingId ? 'Cancel' : 'Add Promo Code'}
@@ -342,7 +342,7 @@ export default function AdminPromoCodesPage() {
               <button
                 type="button"
                 onClick={resetForm}
-                className="min-h-11 rounded-xl border border-white/10 px-5 text-xs font-bold uppercase tracking-wider text-white/50 transition-colors hover:bg-white/5 hover:text-white"
+                className="min-h-12 rounded-xl border border-white/10 px-5 text-xs font-bold uppercase tracking-wider text-white/60 transition-colors hover:bg-white/5 hover:text-white focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-gold sm:min-h-11"
               >
                 Cancel
               </button>
@@ -351,7 +351,7 @@ export default function AdminPromoCodesPage() {
                 type="button"
                 onClick={handleSavePromo}
                 disabled={saving}
-                className="flex min-h-11 items-center justify-center gap-2 rounded-xl bg-gold px-6 text-xs font-bold uppercase tracking-wider text-black transition-colors hover:bg-white disabled:cursor-not-allowed disabled:opacity-50"
+                className="flex min-h-12 items-center justify-center gap-2 rounded-xl bg-gold px-6 text-xs font-bold uppercase tracking-wider text-black transition-colors hover:bg-white focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white disabled:cursor-not-allowed disabled:opacity-50 sm:min-h-11"
               >
                 {saving ? (
                   <Loader2 size={14} className="animate-spin" />
@@ -429,7 +429,7 @@ export default function AdminPromoCodesPage() {
                     type="button"
                     onClick={() => openEditForm(promo)}
                     disabled={isBusy}
-                    className="flex min-h-10 items-center justify-center gap-2 rounded-xl border border-white/15 px-4 text-[10px] font-bold uppercase tracking-wider text-white/60 transition-colors hover:border-gold/40 hover:text-gold disabled:opacity-40"
+                    className="flex min-h-11 items-center justify-center gap-2 rounded-xl border border-white/15 px-4 text-[10px] font-bold uppercase tracking-wider text-white/60 transition-colors hover:border-gold/40 hover:text-gold focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-gold disabled:opacity-40"
                   >
                     <Pencil size={12} />
                     Edit
@@ -439,7 +439,7 @@ export default function AdminPromoCodesPage() {
                     type="button"
                     onClick={() => toggleActive(promo)}
                     disabled={isBusy}
-                    className={`flex min-h-10 items-center justify-center gap-2 rounded-xl border px-4 text-[10px] font-bold uppercase tracking-wider transition-colors disabled:opacity-40 ${
+                    className={`flex min-h-11 items-center justify-center gap-2 rounded-xl border px-4 text-[10px] font-bold uppercase tracking-wider transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-gold disabled:opacity-40 ${
                       promo.isActive
                         ? 'border-red-500/30 text-red-400 hover:bg-red-500/10'
                         : 'border-green-500/30 text-green-400 hover:bg-green-500/10'
@@ -459,7 +459,7 @@ export default function AdminPromoCodesPage() {
                     type="button"
                     onClick={() => handleDeletePromo(promo)}
                     disabled={isBusy}
-                    className="flex min-h-10 items-center justify-center gap-2 rounded-xl border border-white/15 px-4 text-[10px] font-bold uppercase tracking-wider text-white/45 transition-colors hover:border-red-500/50 hover:text-red-400 disabled:opacity-40"
+                    className="flex min-h-11 items-center justify-center gap-2 rounded-xl border border-white/15 px-4 text-[10px] font-bold uppercase tracking-wider text-white/50 transition-colors hover:border-red-500/50 hover:text-red-400 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-red-400 disabled:opacity-40"
                   >
                     <Trash2 size={12} />
                     Delete
