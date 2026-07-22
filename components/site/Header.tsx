@@ -101,11 +101,11 @@ export default function Header({ user }: { user: UserType | null }) {
             {/* Logo */}
             <Link href="/" className="z-50 flex items-center" aria-label="Qureshi's home">
               <Image
-                src="/images/Qureshi's Nav.png"
+                src="/images/qureshis-navbar-logo.png"
                 alt="Qureshi's Masala & Spices"
-                width={160}
-                height={40}
-                className="h-auto w-[132px] object-contain sm:w-[160px]"
+                width={542}
+                height={192}
+                className="h-auto w-[122px] object-contain sm:w-[150px]"
                 priority
               />
             </Link>
@@ -287,11 +287,11 @@ export default function Header({ user }: { user: UserType | null }) {
               <div className="flex items-center justify-between px-6 py-5 border-b border-white/10">
                 <Link href="/" onClick={() => setIsMobileMenuOpen(false)}>
                   <Image
-                    src="/images/Qureshi's Nav.png"
-                    alt="Qureshi's Masala"
-                    width={140}
-                    height={32}
-                    className="object-contain"
+                    src="/images/qureshis-navbar-logo.png"
+                    alt="Qureshi's Masala & Spices"
+                    width={542}
+                    height={192}
+                    className="h-auto w-[132px] object-contain"
                   />
                 </Link>
                 <button
