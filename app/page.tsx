@@ -4,6 +4,7 @@ import { getProducts } from '@/lib/actions'
 import HeroSection from '@/components/site/HeroSection'
 import Slideshow from '@/components/site/Slideshow'
 import InfiniteProductCarousel from '@/components/site/InfiniteProductCarousel'
+import CinematicShopCTA from '@/components/site/CinematicShopCTA'
 import type { Product } from '@/types'
 
 export const dynamic = 'force-dynamic'
@@ -499,27 +500,7 @@ export default async function HomePage() {
         </div>
       </section>
 
-      {/* CTA */}
-      <section className="relative overflow-hidden border-y border-gold/25 bg-[#5b1718] px-4 py-20 text-center sm:px-8 sm:py-32">
-        {/* Faded background text */}
-        <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
-          <span className="select-none font-display text-[80px] uppercase tracking-[0.15em] text-black/15 sm:text-[200px] md:text-[300px]">
-            SPICE
-          </span>
-        </div>
-        
-        <div className="relative z-10 max-w-3xl mx-auto">
-          <h2 className="royal-title mb-8 text-5xl sm:text-7xl lg:text-8xl">
-            Bring the flavour<br />home today.
-          </h2>
-          <Link href="/shop" className="royal-button group">
-            Shop the Full Range
-            <svg className="w-2.5 h-2.5 sm:w-3 sm:h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M17 8l4 4m0 0l-4 4m4-4H3"/>
-            </svg>
-          </Link>
-        </div>
-      </section>
+      <CinematicShopCTA products={products.slice(0, 3)} />
     </>
   )
 }

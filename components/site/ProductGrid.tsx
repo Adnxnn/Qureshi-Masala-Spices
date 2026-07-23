@@ -29,7 +29,7 @@ const formatWeight = (grams: number) => {
 // Skeleton component
 function ProductSkeleton() {
   return (
-    <div className="relative flex flex-col rounded-[3px] border border-gold/10 bg-black/40 p-4 sm:p-6">
+    <div className="relative flex flex-col bg-transparent p-2 sm:p-3">
       <div className="animate-pulse">
         <div className="mb-4 sm:mb-6 flex justify-center">
           <div className="flex aspect-square w-full items-center justify-center rounded-[3px] bg-gradient-to-br from-zinc-900 to-zinc-950 p-4 sm:p-6">
@@ -255,17 +255,17 @@ export default function ProductGrid({ products, loading = false }: { products: P
                   router.push(`/product/${p.slug || generateSlug(p.name)}`)
                 }
               }}
-              className="cursor-pointer"
+              className="h-full cursor-pointer rounded-[3px] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-gold focus-visible:ring-offset-4 focus-visible:ring-offset-black"
             >
               <motion.div
-                className={`group relative flex h-full flex-col overflow-hidden rounded-[3px] border border-gold/12 bg-gradient-to-b from-dark to-black transition-[border-color,transform,box-shadow] duration-300 hover:-translate-y-1 hover:border-gold/35 hover:shadow-[0_24px_70px_rgba(0,0,0,0.5)] ${isOutOfStock ? 'opacity-70' : ''}`}
+                className={`group relative flex h-full flex-col overflow-hidden rounded-[3px] bg-white/[0.018] transition-[background-color,transform,box-shadow] duration-300 hover:-translate-y-1 hover:bg-white/[0.032] hover:shadow-[0_28px_80px_rgba(0,0,0,0.34)] ${isOutOfStock ? 'opacity-70' : ''}`}
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.5, delay: i * 0.05 }}
               >
                 {/* Product Image */}
                 <div className="p-4 sm:p-6 flex justify-center">
-                  <div className="relative flex aspect-square w-full items-center justify-center overflow-hidden rounded-[2px] border border-white/[0.04] bg-[radial-gradient(circle_at_50%_42%,rgba(91,23,24,0.18),transparent_52%),#0c0907]">
+                  <div className="relative flex aspect-square w-full items-center justify-center overflow-hidden rounded-[3px] bg-[radial-gradient(circle_at_50%_38%,rgba(199,161,90,0.08),transparent_25%),radial-gradient(circle_at_50%_55%,rgba(91,23,24,0.16),transparent_54%),#0c0a08] shadow-[0_22px_55px_rgba(0,0,0,0.22)]">
                     {p.image_url ? (
                       <Image
                         src={p.image_url}
@@ -322,14 +322,12 @@ export default function ProductGrid({ products, loading = false }: { products: P
                 {/* Content */}
                 <div className="px-4 sm:px-6 pb-4 sm:pb-6 flex flex-col flex-1">
                   <div className="mb-3 sm:mb-4">
-                    <h3 className="line-clamp-2 font-display text-lg font-semibold leading-[1.02] text-white transition-colors duration-200 group-hover:text-gold-light sm:text-xl md:text-2xl">
+                    <h3 className="line-clamp-2 min-h-[2.04em] font-display text-lg font-semibold leading-[1.02] text-white transition-colors duration-200 group-hover:text-gold-light sm:text-xl md:text-2xl">
                       {p.name}
                     </h3>
-                    {p.short_description && (
-                      <p className="text-white/40 text-xs mt-1.5 line-clamp-2">
-                        {p.short_description}
-                      </p>
-                    )}
+                    <p className="mt-1.5 min-h-[2.5rem] line-clamp-2 text-xs leading-5 text-white/40">
+                      {p.short_description || '\u00a0'}
+                    </p>
                   </div>
 
                   {/* Weight pills */}

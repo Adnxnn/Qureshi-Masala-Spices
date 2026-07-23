@@ -441,6 +441,15 @@ a {
   text-transform: none;
 }
 
+.cinematic-cta-grid {
+  background-image:
+    linear-gradient(rgba(255, 255, 255, 0.022) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(255, 255, 255, 0.022) 1px, transparent 1px);
+  background-size: 72px 72px;
+  mask-image: radial-gradient(circle at 74% 48%, black 0%, transparent 62%);
+  -webkit-mask-image: radial-gradient(circle at 74% 48%, black 0%, transparent 62%);
+}
+
 @media (prefers-reduced-motion: reduce) {
   html { scroll-behavior: auto; }
 

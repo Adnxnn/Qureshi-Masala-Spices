@@ -3,7 +3,7 @@ import { useState, useEffect } from 'react'
 import Link from 'next/link'
 import Image from 'next/image'
 import { usePathname } from 'next/navigation'
-import { motion, AnimatePresence } from 'framer-motion'
+import { motion, AnimatePresence, useReducedMotion } from 'framer-motion'
 import { 
   ShoppingBag, 
   User, 
@@ -53,6 +53,7 @@ export default function Header({ user }: { user: UserType | null }) {
   const [isScrolled, setIsScrolled] = useState(false)
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false)
   const [activeMega, setActiveMega] = useState<string | null>(null)
+  const prefersReducedMotion = useReducedMotion()
   
   const count = mounted ? totalItems() : 0
 
@@ -77,10 +78,16 @@ export default function Header({ user }: { user: UserType | null }) {
     if (!isMobileMenuOpen) return
 
     const previousOverflow = document.body.style.overflow
+    const closeOnEscape = (event: KeyboardEvent) => {
+      if (event.key === 'Escape') setIsMobileMenuOpen(false)
+    }
+
     document.body.style.overflow = 'hidden'
+    window.addEventListener('keydown', closeOnEscape)
 
     return () => {
       document.body.style.overflow = previousOverflow
+      window.removeEventListener('keydown', closeOnEscape)
     }
   }, [isMobileMenuOpen])
 
@@ -262,9 +269,10 @@ export default function Header({ user }: { user: UserType | null }) {
               {/* Mobile Menu Toggle */}
               <button
                 onClick={() => setIsMobileMenuOpen(true)}
-                className="flex size-10 items-center justify-center text-white/70 transition-colors hover:text-gold focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-gold lg:hidden"
+                className="flex size-11 items-center justify-center rounded-[3px] border border-white/[0.09] bg-[#14110e] text-white shadow-[0_10px_30px_rgba(0,0,0,0.28)] transition-[background-color,border-color,color,transform] duration-200 hover:border-gold/35 hover:bg-[#1b1612] hover:text-gold active:scale-[0.97] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-gold lg:hidden"
                 aria-label="Open menu"
                 aria-expanded={isMobileMenuOpen}
+                aria-controls="mobile-site-menu"
               >
                 <Menu size={24} />
               </button>
@@ -277,13 +285,31 @@ export default function Header({ user }: { user: UserType | null }) {
       <AnimatePresence>
         {isMobileMenuOpen && (
           <motion.div
-            initial={{ x: '100%' }}
-            animate={{ x: 0 }}
-            exit={{ x: '100%' }}
-            transition={{ duration: 0.3, ease: 'easeOut' }}
-            className="fixed inset-0 z-50 bg-[radial-gradient(circle_at_100%_0%,rgba(91,23,24,0.34),transparent_24rem),#080705] lg:hidden"
+            initial={{ opacity: prefersReducedMotion ? 1 : 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: prefersReducedMotion ? 1 : 0 }}
+            transition={{ duration: prefersReducedMotion ? 0 : 0.2, ease: 'easeOut' }}
+            className="fixed inset-0 z-50 lg:hidden"
           >
-            <div className="flex flex-col h-full">
+            <button
+              type="button"
+              className="absolute inset-0 cursor-default bg-black/[0.82]"
+              onClick={() => setIsMobileMenuOpen(false)}
+              aria-label="Close menu"
+              tabIndex={-1}
+            />
+
+            <motion.aside
+              initial={{ x: prefersReducedMotion ? 0 : '100%' }}
+              animate={{ x: 0 }}
+              exit={{ x: prefersReducedMotion ? 0 : '100%' }}
+              transition={{ duration: prefersReducedMotion ? 0 : 0.28, ease: [0.16, 1, 0.3, 1] }}
+              role="dialog"
+              aria-modal="true"
+              aria-label="Site navigation"
+              id="mobile-site-menu"
+              className="absolute inset-y-0 right-0 flex w-[min(92vw,26rem)] flex-col overflow-hidden border-l border-white/[0.08] bg-[#0b0908] shadow-[-32px_0_90px_rgba(0,0,0,0.64)]"
+            >
               <div className="flex items-center justify-between border-b border-gold/20 px-6 py-5">
                 <Link href="/" onClick={() => setIsMobileMenuOpen(false)}>
                   <Image
@@ -296,6 +322,7 @@ export default function Header({ user }: { user: UserType | null }) {
                 </Link>
                 <button
                   onClick={() => setIsMobileMenuOpen(false)}
+                  autoFocus
                   className="flex size-11 items-center justify-center rounded-[2px] text-white/70 transition-colors hover:bg-white/5 hover:text-gold focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-gold"
                   aria-label="Close menu"
                 >
@@ -303,8 +330,8 @@ export default function Header({ user }: { user: UserType | null }) {
                 </button>
               </div>
 
-              <div className="flex-1 overscroll-contain overflow-y-auto px-6 py-8">
-                <nav className="flex flex-col gap-3 border-y border-gold/15 py-5">
+              <div className="min-h-0 flex-1 overscroll-contain overflow-y-auto px-6 py-8">
+                <nav className="flex flex-col gap-3 border-y border-white/[0.07] py-5">
                   {navLinks.map((link) => (
                     <Link
                       key={link.href}
@@ -321,11 +348,11 @@ export default function Header({ user }: { user: UserType | null }) {
                   ))}
                 </nav>
 
-                <div className="mt-10 border-t border-white/10 pt-8">
+                <div className="mt-10 border-t border-white/[0.07] pt-8">
                   <h3 className="mb-4 text-xs font-bold uppercase tracking-[0.3em] text-gold">
                     {user ? `Hello, ${user.full_name.split(' ')[0]}` : 'Your Account'}
                   </h3>
-                  <div className="divide-y divide-gold/10 border-y border-gold/15 bg-white/[0.018]">
+                  <div className="divide-y divide-white/[0.06] border-y border-white/[0.07] bg-white/[0.018]">
                     {user ? (
                       <>
                         <Link
@@ -367,7 +394,7 @@ export default function Header({ user }: { user: UserType | null }) {
                   </div>
                 </div>
 
-                <div className="mt-10 pt-8 border-t border-white/10">
+                <div className="mt-10 border-t border-white/[0.07] pt-8">
                   <h3 className="text-gold text-xs font-bold tracking-[0.3em] uppercase mb-4">Products</h3>
                   <div className="grid grid-cols-2 gap-3">
                     {products.slice(0, 6).map((product) => (
@@ -384,7 +411,7 @@ export default function Header({ user }: { user: UserType | null }) {
                 </div>
               </div>
 
-              <div className="border-t border-gold/20 p-6">
+              <div className="border-t border-white/[0.08] bg-[#0d0b09] p-6">
                 <Link
                   href="/order"
                   onClick={() => setIsMobileMenuOpen(false)}
@@ -394,7 +421,7 @@ export default function Header({ user }: { user: UserType | null }) {
                   View Cart ({count})
                 </Link>
               </div>
-            </div>
+            </motion.aside>
           </motion.div>
         )}
       </AnimatePresence>

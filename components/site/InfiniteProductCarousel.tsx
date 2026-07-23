@@ -71,7 +71,7 @@ export default function InfiniteProductCarousel({ products }: InfiniteProductCar
     <div className="overflow-hidden">
       <div
         ref={containerRef}
-        className="flex gap-4 md:gap-6 overflow-x-auto hide-scrollbar"
+        className="flex items-stretch gap-4 overflow-x-auto md:gap-6 hide-scrollbar"
         style={{
           scrollbarWidth: 'none',
           msOverflowStyle: 'none',
@@ -81,10 +81,10 @@ export default function InfiniteProductCarousel({ products }: InfiniteProductCar
         {allProducts.map((product, idx) => (
           <div
             key={`${product.id}-${idx}`}
-            className="flex-shrink-0 w-[150px] sm:w-[190px] md:w-[230px]"
+            className="flex w-[150px] flex-shrink-0 self-stretch sm:w-[190px] md:w-[230px]"
           >
-            <div className="group overflow-hidden rounded-[3px] border border-gold/15 bg-gradient-to-b from-dark to-black transition-[border-color,transform] duration-300 hover:-translate-y-1 hover:border-gold/40">
-              <div className="relative aspect-[3/4] bg-[radial-gradient(circle_at_50%_42%,rgba(91,23,24,0.22),transparent_48%),#0c0907] p-4">
+            <div className="group flex w-full flex-col overflow-hidden bg-transparent transition-transform duration-300 hover:-translate-y-1">
+              <div className="relative aspect-[3/4] overflow-hidden rounded-[3px] bg-[radial-gradient(circle_at_50%_40%,rgba(199,161,90,0.09),transparent_24%),radial-gradient(circle_at_50%_55%,rgba(91,23,24,0.18),transparent_52%),#0c0a08] p-4 shadow-[0_28px_70px_rgba(0,0,0,0.3)]">
                 <Image
                   src={product.image_url}
                   alt={product.name}
@@ -93,11 +93,11 @@ export default function InfiniteProductCarousel({ products }: InfiniteProductCar
                   priority={idx < 6}
                 />
               </div>
-              <div className="p-3 md:p-4 text-center">
-                <h3 className="font-display text-base font-semibold leading-tight text-white sm:text-lg md:text-xl">
+              <div className="flex min-h-[82px] flex-1 flex-col items-center px-2 pb-2 pt-4 text-center sm:min-h-[92px] md:px-3 md:pt-5">
+                <h3 className="line-clamp-2 min-h-[2.1em] font-display text-base font-semibold leading-[1.05] text-white sm:text-lg md:text-xl">
                   {product.name}
                 </h3>
-                <p className="text-[8px] sm:text-[9px] md:text-[10px] tracking-[0.35em] uppercase text-white/35 mt-1 md:mt-2">
+                <p className="mt-2 text-[8px] uppercase tracking-[0.28em] text-white/35 sm:text-[9px] md:text-[10px]">
                   {product.category}
                 </p>
               </div>
