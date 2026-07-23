@@ -53,7 +53,7 @@ export default async function AdminDashboard() {
         <p className="mb-1.5 text-[10px] font-semibold uppercase tracking-[0.22em] text-gold md:hidden">
           Overview
         </p>
-        <h1 className="font-display text-3xl uppercase tracking-wider text-white sm:text-4xl">
+        <h1 className="royal-title text-5xl sm:text-6xl">
           Dashboard
         </h1>
       </div>
@@ -62,7 +62,7 @@ export default async function AdminDashboard() {
         {stats.map((stat) => (
           <section
             key={stat.label}
-            className="min-w-0 rounded-xl border border-white/10 bg-dark p-4 sm:p-5"
+            className="min-w-0 rounded-[2px] border border-white/10 bg-dark p-4 sm:p-5"
           >
             <div className="mb-2 truncate text-[10px] font-medium uppercase tracking-[0.16em] text-white/45 sm:text-[11px] sm:tracking-[0.2em]">
               {stat.label}
@@ -88,7 +88,7 @@ export default async function AdminDashboard() {
         </Link>
       </div>
 
-      <section className="overflow-hidden rounded-xl border border-white/10 bg-dark">
+      <section className="overflow-hidden rounded-[2px] border border-white/10 bg-dark">
         <div className="hidden overflow-x-auto md:block">
           <table className="w-full min-w-[760px] text-sm">
             <thead>

@@ -47,12 +47,12 @@ export default function SiteLayout({ children }: { children: React.ReactNode }) 
         style={{
           background: isScrolled ? 'rgba(10,10,10,0.95)' : 'transparent',
           backdropFilter: isScrolled ? 'blur(24px)' : 'none',
-          borderBottom: isScrolled ? '1px solid rgba(245,197,24,0.15)' : 'none'
+          borderBottom: isScrolled ? '1px solid rgba(199,161,90,0.18)' : 'none'
         }}
       >
         <Link href="/" className="flex items-center">
           <Image
-            src="/images/Qureshi's Nav.png"
+            src="/images/qureshis-navbar-logo.png"
             alt="Qureshi's Masala"
             width={160}
             height={40}
@@ -114,14 +114,14 @@ export default function SiteLayout({ children }: { children: React.ReactNode }) 
             animate={{ opacity: 1, y: 0 }}
             exit={{ opacity: 0, y: -50 }}
             transition={{ duration: 0.3, ease: 'easeOut' }}
-            className="fixed inset-0 z-40 bg-black/95 backdrop-blur-xl pt-28 px-6 md:hidden"
+            className="fixed inset-0 z-40 bg-[linear-gradient(145deg,#080705,#290a0b)] px-6 pt-28 backdrop-blur-xl md:hidden"
           >
             <div className="flex flex-col gap-6">
               {navLinks.map(([href, label]) => (
                 <Link
                   key={href}
                   href={href}
-                  className={`text-3xl font-display tracking-widest uppercase transition-colors ${
+                  className={`font-display text-5xl transition-colors ${
                     pathname === href ? 'text-gold' : 'text-white/70 hover:text-white'
                   }`}
                   onClick={() => setMobileMenuOpen(false)}

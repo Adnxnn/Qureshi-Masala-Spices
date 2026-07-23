@@ -42,7 +42,7 @@ Please get back to me soon!`
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-b from-black via-zinc-950 to-black pt-24 pb-20">
+    <div className="royal-page royal-grain min-h-screen pb-20 pt-24">
       <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
         {/* Hero */}
         <motion.div
@@ -51,11 +51,11 @@ Please get back to me soon!`
           transition={{ duration: 0.6 }}
           className="text-center mb-16"
         >
-          <div className="text-[11px] tracking-[0.4em] uppercase text-gold mb-4">
+          <div className="royal-eyebrow mb-4">
             Get in Touch
           </div>
-          <h1 className="font-display text-4xl sm:text-5xl md:text-6xl uppercase mb-6">
-            Contact Us
+          <h1 className="royal-title mb-6 text-5xl sm:text-6xl md:text-7xl">
+            Let&apos;s talk spice.
           </h1>
           <p className="text-white/60 text-base sm:text-lg md:text-xl max-w-2xl mx-auto">
             Have a question or want to get in touch? We&apos;d love to hear from you!
@@ -71,13 +71,13 @@ Please get back to me soon!`
             className="lg:col-span-4"
           >
             <div className="space-y-6">
-              <div className="bg-black/40 border border-white/10 rounded-2xl p-6 sm:p-8">
+              <div className="royal-panel p-6 sm:p-8">
                 <div className="flex items-center gap-4 mb-4">
                   <div className="w-12 h-12 rounded-full bg-gold/10 border border-gold/30 flex items-center justify-center">
                     <Phone className="text-gold" size={20} />
                   </div>
                   <div>
-                    <h3 className="font-display text-xl uppercase mb-1">Phone</h3>
+                    <h3 className="mb-1 font-display text-3xl">Phone</h3>
                     <a
                       href={`tel:${SITE.whatsappNumber}`}
                       className="text-white/60 hover:text-gold transition-colors duration-300"
@@ -88,13 +88,13 @@ Please get back to me soon!`
                 </div>
               </div>
 
-              <div className="bg-black/40 border border-white/10 rounded-2xl p-6 sm:p-8">
+              <div className="royal-panel p-6 sm:p-8">
                 <div className="flex items-center gap-4 mb-4">
                   <div className="w-12 h-12 rounded-full bg-gold/10 border border-gold/30 flex items-center justify-center">
                     <MessageCircle className="text-gold" size={20} />
                   </div>
                   <div>
-                    <h3 className="font-display text-xl uppercase mb-1">WhatsApp</h3>
+                    <h3 className="mb-1 font-display text-3xl">WhatsApp</h3>
                     <a
                       href={`https://wa.me/${SITE.whatsappNumber}`}
                       target="_blank"
@@ -107,13 +107,13 @@ Please get back to me soon!`
                 </div>
               </div>
 
-              <div className="bg-black/40 border border-white/10 rounded-2xl p-6 sm:p-8">
+              <div className="royal-panel p-6 sm:p-8">
                 <div className="flex items-center gap-4 mb-4">
                   <div className="w-12 h-12 rounded-full bg-gold/10 border border-gold/30 flex items-center justify-center">
                     <Mail className="text-gold" size={20} />
                   </div>
                   <div>
-                    <h3 className="font-display text-xl uppercase mb-1">Email</h3>
+                    <h3 className="mb-1 font-display text-3xl">Email</h3>
                     <a
                       href={`mailto:${SITE.email}`}
                       className="text-white/60 hover:text-gold transition-colors duration-300"
@@ -157,9 +157,9 @@ Please get back to me soon!`
             transition={{ duration: 0.6, delay: 0.3 }}
             className="lg:col-span-8"
           >
-            <div className="bg-black/40 border border-white/10 rounded-2xl p-6 sm:p-8 md:p-10">
-              <h2 className="font-display text-2xl sm:text-3xl uppercase mb-6">
-                Send Us a Message
+            <div className="royal-panel p-6 sm:p-8 md:p-10">
+              <h2 className="mb-6 font-display text-4xl text-cream sm:text-5xl">
+                Send us a message.
               </h2>
               <form onSubmit={handleSubmit} className="space-y-6">
                 <div className="grid sm:grid-cols-2 gap-6">
@@ -173,7 +173,7 @@ Please get back to me soon!`
                       required
                       value={formData.name}
                       onChange={(e) => setFormData({ ...formData, name: e.target.value })}
-                      className="w-full bg-black/50 border border-white/10 text-white px-4 sm:px-6 py-3.5 sm:py-4 rounded-xl focus:outline-none focus:border-gold/50 focus:ring-1 focus:ring-gold/20 transition-all duration-300"
+                      className="royal-field px-4 py-3.5 sm:px-6 sm:py-4"
                       placeholder="Your name"
                     />
                   </div>
@@ -187,7 +187,7 @@ Please get back to me soon!`
                       required
                       value={formData.phone}
                       onChange={(e) => setFormData({ ...formData, phone: e.target.value })}
-                      className="w-full bg-black/50 border border-white/10 text-white px-4 sm:px-6 py-3.5 sm:py-4 rounded-xl focus:outline-none focus:border-gold/50 focus:ring-1 focus:ring-gold/20 transition-all duration-300"
+                      className="royal-field px-4 py-3.5 sm:px-6 sm:py-4"
                       placeholder="Your phone number"
                     />
                   </div>
@@ -203,7 +203,7 @@ Please get back to me soon!`
                     required
                     value={formData.email}
                     onChange={(e) => setFormData({ ...formData, email: e.target.value })}
-                    className="w-full bg-black/50 border border-white/10 text-white px-4 sm:px-6 py-3.5 sm:py-4 rounded-xl focus:outline-none focus:border-gold/50 focus:ring-1 focus:ring-gold/20 transition-all duration-300"
+                    className="royal-field px-4 py-3.5 sm:px-6 sm:py-4"
                     placeholder="Your email address"
                   />
                 </div>
@@ -217,7 +217,7 @@ Please get back to me soon!`
                     required
                     value={formData.enquiryType}
                     onChange={(e) => setFormData({ ...formData, enquiryType: e.target.value })}
-                    className="w-full bg-black/50 border border-white/10 text-white px-4 sm:px-6 py-3.5 sm:py-4 rounded-xl focus:outline-none focus:border-gold/50 focus:ring-1 focus:ring-gold/20 transition-all duration-300"
+                    className="royal-field px-4 py-3.5 sm:px-6 sm:py-4"
                   >
                     <option value="">Select an enquiry type</option>
                     {ENQUIRY_TYPES.map((type) => (
@@ -236,7 +236,7 @@ Please get back to me soon!`
                     required
                     value={formData.subject}
                     onChange={(e) => setFormData({ ...formData, subject: e.target.value })}
-                    className="w-full bg-black/50 border border-white/10 text-white px-4 sm:px-6 py-3.5 sm:py-4 rounded-xl focus:outline-none focus:border-gold/50 focus:ring-1 focus:ring-gold/20 transition-all duration-300"
+                    className="royal-field px-4 py-3.5 sm:px-6 sm:py-4"
                     placeholder="Subject"
                   />
                 </div>
@@ -251,7 +251,7 @@ Please get back to me soon!`
                     rows={5}
                     value={formData.message}
                     onChange={(e) => setFormData({ ...formData, message: e.target.value })}
-                    className="w-full bg-black/50 border border-white/10 text-white px-4 sm:px-6 py-3.5 sm:py-4 rounded-xl focus:outline-none focus:border-gold/50 focus:ring-1 focus:ring-gold/20 transition-all duration-300 resize-none"
+                    className="royal-field resize-none px-4 py-3.5 sm:px-6 sm:py-4"
                     placeholder="Your message..."
                   />
                 </div>
@@ -259,7 +259,7 @@ Please get back to me soon!`
                 <button
                   type="submit"
                   disabled={isSubmitting}
-                  className="w-full bg-gold hover:bg-gold-light text-black flex items-center justify-center gap-2 px-8 py-4 text-[10px] sm:text-xs font-bold tracking-[0.3em] uppercase transition-all duration-300 disabled:opacity-50 rounded-xl"
+                  className="royal-button w-full px-8 py-4 disabled:opacity-50"
                 >
                   <Send size={16} />
                   {isSubmitting ? 'Opening WhatsApp...' : 'Send Message'}

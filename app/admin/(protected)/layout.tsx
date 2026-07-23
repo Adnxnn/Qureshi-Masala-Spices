@@ -69,12 +69,12 @@ export default async function AdminLayout({
   ]
 
   return (
-    <div className="admin-panel flex min-h-screen bg-[#0d0d0d]">
+    <div className="admin-panel royal-grain flex min-h-screen bg-[#080705]">
       <AdminSidebarClient navItems={navItems} />
 
       <main
         id="admin-main-content"
-        className="admin-mobile-content min-w-0 flex-1 overflow-x-hidden"
+        className="admin-mobile-content min-w-0 flex-1 overflow-x-hidden bg-[radial-gradient(circle_at_82%_0%,rgba(91,23,24,0.12),transparent_26rem)]"
       >
         <div className="mx-auto w-full max-w-[1600px] px-4 pb-8 pt-5 sm:px-6 sm:pb-10 sm:pt-7 md:p-8">
           {children}

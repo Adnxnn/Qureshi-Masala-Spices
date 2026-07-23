@@ -224,7 +224,7 @@ export default function AdminPromoCodesPage() {
           <p className="mb-2 text-[10px] font-bold uppercase tracking-[0.25em] text-gold">
             Shared discounts
           </p>
-          <h1 className="font-display text-3xl uppercase tracking-wider text-white sm:text-4xl">
+          <h1 className="royal-title text-5xl sm:text-6xl">
             Promo Codes
           </h1>
           <p className="mt-2 max-w-xl text-sm leading-6 text-white/40">
@@ -236,7 +236,7 @@ export default function AdminPromoCodesPage() {
         <button
           type="button"
           onClick={openCreateForm}
-          className="flex min-h-12 w-full items-center justify-center gap-2 rounded-xl bg-gold px-5 text-xs font-bold uppercase tracking-wider text-black transition-colors hover:bg-white focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white sm:min-h-11 sm:w-auto"
+          className="flex min-h-12 w-full items-center justify-center gap-2 rounded-[2px] bg-gold px-5 text-xs font-bold uppercase tracking-wider text-black transition-colors hover:bg-white focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white sm:min-h-11 sm:w-auto"
         >
           {showForm && !editingId ? <X size={14} /> : <Plus size={14} />}
           {showForm && !editingId ? 'Cancel' : 'Add Promo Code'}
@@ -244,7 +244,7 @@ export default function AdminPromoCodesPage() {
       </div>
 
       {showForm && (
-        <section className="mb-8 overflow-hidden rounded-2xl border border-white/10 bg-dark">
+        <section className="mb-8 overflow-hidden rounded-[3px] border border-white/10 bg-dark">
           <div className="border-b border-white/10 bg-gradient-to-r from-gold/10 to-transparent px-5 py-4 sm:px-6">
             <h2 className="text-sm font-semibold tracking-wide text-white">
               {editingId ? 'Edit Promo Code' : 'Create New Promo Code'}
@@ -273,7 +273,7 @@ export default function AdminPromoCodesPage() {
                     }))
                   }
                   placeholder="WELCOME10"
-                  className="min-h-11 w-full rounded-xl border border-white/10 bg-black px-3 text-sm uppercase text-white outline-none placeholder:text-white/20 focus:border-gold"
+                  className="min-h-11 w-full rounded-[2px] border border-white/10 bg-black px-3 text-sm uppercase text-white outline-none placeholder:text-white/20 focus:border-gold"
                 />
               </label>
 
@@ -293,7 +293,7 @@ export default function AdminPromoCodesPage() {
                     }))
                   }
                   placeholder="10"
-                  className="min-h-11 w-full rounded-xl border border-white/10 bg-black px-3 text-sm text-white outline-none placeholder:text-white/20 focus:border-gold"
+                  className="min-h-11 w-full rounded-[2px] border border-white/10 bg-black px-3 text-sm text-white outline-none placeholder:text-white/20 focus:border-gold"
                 />
               </label>
 
@@ -311,7 +311,7 @@ export default function AdminPromoCodesPage() {
                         | 'fixed',
                     }))
                   }
-                  className="min-h-11 w-full rounded-xl border border-white/10 bg-black px-3 text-sm text-white outline-none focus:border-gold"
+                  className="min-h-11 w-full rounded-[2px] border border-white/10 bg-black px-3 text-sm text-white outline-none focus:border-gold"
                 >
                   <option value="percentage">Percentage (%)</option>
                   <option value="fixed">Fixed amount (₹)</option>
@@ -333,7 +333,7 @@ export default function AdminPromoCodesPage() {
                     }))
                   }
                   placeholder="100"
-                  className="min-h-11 w-full rounded-xl border border-white/10 bg-black px-3 text-sm text-white outline-none placeholder:text-white/20 focus:border-gold"
+                  className="min-h-11 w-full rounded-[2px] border border-white/10 bg-black px-3 text-sm text-white outline-none placeholder:text-white/20 focus:border-gold"
                 />
               </label>
             </div>
@@ -342,7 +342,7 @@ export default function AdminPromoCodesPage() {
               <button
                 type="button"
                 onClick={resetForm}
-                className="min-h-12 rounded-xl border border-white/10 px-5 text-xs font-bold uppercase tracking-wider text-white/60 transition-colors hover:bg-white/5 hover:text-white focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-gold sm:min-h-11"
+                className="min-h-12 rounded-[2px] border border-white/10 px-5 text-xs font-bold uppercase tracking-wider text-white/60 transition-colors hover:bg-white/5 hover:text-white focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-gold sm:min-h-11"
               >
                 Cancel
               </button>
@@ -351,7 +351,7 @@ export default function AdminPromoCodesPage() {
                 type="button"
                 onClick={handleSavePromo}
                 disabled={saving}
-                className="flex min-h-12 items-center justify-center gap-2 rounded-xl bg-gold px-6 text-xs font-bold uppercase tracking-wider text-black transition-colors hover:bg-white focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white disabled:cursor-not-allowed disabled:opacity-50 sm:min-h-11"
+                className="flex min-h-12 items-center justify-center gap-2 rounded-[2px] bg-gold px-6 text-xs font-bold uppercase tracking-wider text-black transition-colors hover:bg-white focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white disabled:cursor-not-allowed disabled:opacity-50 sm:min-h-11"
               >
                 {saving ? (
                   <Loader2 size={14} className="animate-spin" />
@@ -377,7 +377,7 @@ export default function AdminPromoCodesPage() {
           return (
             <article
               key={promo.id}
-              className={`rounded-2xl border bg-dark p-4 transition-opacity sm:p-5 ${
+              className={`rounded-[3px] border bg-dark p-4 transition-opacity sm:p-5 ${
                 promo.isActive
                   ? 'border-white/10'
                   : 'border-white/5 opacity-60'
@@ -385,7 +385,7 @@ export default function AdminPromoCodesPage() {
             >
               <div className="flex flex-col gap-5 lg:flex-row lg:items-center lg:justify-between">
                 <div className="flex min-w-0 flex-col gap-4 sm:flex-row sm:items-center sm:gap-6">
-                  <div className="flex min-w-0 items-center gap-3 rounded-xl border border-gold/30 bg-gold/10 px-4 py-3">
+                  <div className="flex min-w-0 items-center gap-3 rounded-[2px] border border-gold/30 bg-gold/10 px-4 py-3">
                     <Tag size={15} className="shrink-0 text-gold" />
                     <span className="truncate font-mono text-base font-bold text-gold sm:text-lg">
                       {promo.code}
@@ -429,7 +429,7 @@ export default function AdminPromoCodesPage() {
                     type="button"
                     onClick={() => openEditForm(promo)}
                     disabled={isBusy}
-                    className="flex min-h-11 items-center justify-center gap-2 rounded-xl border border-white/15 px-4 text-[10px] font-bold uppercase tracking-wider text-white/60 transition-colors hover:border-gold/40 hover:text-gold focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-gold disabled:opacity-40"
+                    className="flex min-h-11 items-center justify-center gap-2 rounded-[2px] border border-white/15 px-4 text-[10px] font-bold uppercase tracking-wider text-white/60 transition-colors hover:border-gold/40 hover:text-gold focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-gold disabled:opacity-40"
                   >
                     <Pencil size={12} />
                     Edit
@@ -439,7 +439,7 @@ export default function AdminPromoCodesPage() {
                     type="button"
                     onClick={() => toggleActive(promo)}
                     disabled={isBusy}
-                    className={`flex min-h-11 items-center justify-center gap-2 rounded-xl border px-4 text-[10px] font-bold uppercase tracking-wider transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-gold disabled:opacity-40 ${
+                    className={`flex min-h-11 items-center justify-center gap-2 rounded-[2px] border px-4 text-[10px] font-bold uppercase tracking-wider transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-gold disabled:opacity-40 ${
                       promo.isActive
                         ? 'border-red-500/30 text-red-400 hover:bg-red-500/10'
                         : 'border-green-500/30 text-green-400 hover:bg-green-500/10'
@@ -459,7 +459,7 @@ export default function AdminPromoCodesPage() {
                     type="button"
                     onClick={() => handleDeletePromo(promo)}
                     disabled={isBusy}
-                    className="flex min-h-11 items-center justify-center gap-2 rounded-xl border border-white/15 px-4 text-[10px] font-bold uppercase tracking-wider text-white/50 transition-colors hover:border-red-500/50 hover:text-red-400 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-red-400 disabled:opacity-40"
+                    className="flex min-h-11 items-center justify-center gap-2 rounded-[2px] border border-white/15 px-4 text-[10px] font-bold uppercase tracking-wider text-white/50 transition-colors hover:border-red-500/50 hover:text-red-400 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-red-400 disabled:opacity-40"
                   >
                     <Trash2 size={12} />
                     Delete
@@ -471,7 +471,7 @@ export default function AdminPromoCodesPage() {
         })}
 
         {promoCodes.length === 0 && (
-          <div className="rounded-2xl border border-dashed border-white/10 py-16 text-center">
+          <div className="rounded-[3px] border border-dashed border-white/10 py-16 text-center">
             <Tag className="mx-auto mb-4 text-white/15" size={32} />
             <p className="text-sm text-white/30">
               No promo codes yet. Create your first shared discount.

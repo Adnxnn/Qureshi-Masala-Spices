@@ -83,18 +83,18 @@ export default function InfiniteProductCarousel({ products }: InfiniteProductCar
             key={`${product.id}-${idx}`}
             className="flex-shrink-0 w-[150px] sm:w-[190px] md:w-[230px]"
           >
-            <div className="bg-gradient-to-br from-dark to-black border border-white/5 rounded-xl overflow-hidden group hover:border-gold/30 transition-all duration-500 hover:shadow-[0_0_40px_rgba(245,197,24,0.15)]">
-              <div className="aspect-[3/4] relative bg-gray-800">
+            <div className="group overflow-hidden rounded-[3px] border border-gold/15 bg-gradient-to-b from-dark to-black transition-[border-color,transform] duration-300 hover:-translate-y-1 hover:border-gold/40">
+              <div className="relative aspect-[3/4] bg-[radial-gradient(circle_at_50%_42%,rgba(91,23,24,0.22),transparent_48%),#0c0907] p-4">
                 <Image
                   src={product.image_url}
                   alt={product.name}
                   fill
-                  className="object-cover group-hover:scale-105 transition-transform duration-500"
+                  className="object-contain p-3 drop-shadow-[0_22px_24px_rgba(0,0,0,0.58)] transition-transform duration-500 group-hover:-translate-y-1 group-hover:scale-[1.04]"
                   priority={idx < 6}
                 />
               </div>
               <div className="p-3 md:p-4 text-center">
-                <h3 className="font-display text-xs sm:text-sm md:text-base uppercase text-white tracking-wide">
+                <h3 className="font-display text-base font-semibold leading-tight text-white sm:text-lg md:text-xl">
                   {product.name}
                 </h3>
                 <p className="text-[8px] sm:text-[9px] md:text-[10px] tracking-[0.35em] uppercase text-white/35 mt-1 md:mt-2">

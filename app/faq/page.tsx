@@ -83,7 +83,7 @@ export default function FAQPage() {
     : FAQ_DATA.filter(item => item.category === selectedCategory)
 
   return (
-    <div className="min-h-screen bg-gradient-to-b from-black via-zinc-950 to-black pt-24 pb-20">
+    <div className="royal-page royal-grain min-h-screen pb-20 pt-24">
       <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
         {/* Hero */}
         <motion.div
@@ -92,11 +92,11 @@ export default function FAQPage() {
           transition={{ duration: 0.6 }}
           className="text-center mb-12"
         >
-          <div className="text-[11px] tracking-[0.4em] uppercase text-gold mb-4">
+          <div className="royal-eyebrow mb-4">
             FAQ
           </div>
-          <h1 className="font-display text-4xl sm:text-5xl md:text-6xl uppercase mb-6">
-            Frequently Asked Questions
+          <h1 className="royal-title mb-6 text-5xl sm:text-6xl md:text-7xl">
+            Questions, answered.
           </h1>
           <p className="text-white/60 text-base sm:text-lg md:text-xl max-w-2xl mx-auto">
             Find answers to common questions about our products and services
@@ -118,7 +118,7 @@ export default function FAQPage() {
                   setSelectedCategory(category)
                   setOpenId(null)
                 }}
-                className={`px-5 py-2.5 text-[10px] sm:text-xs font-bold tracking-[0.25em] uppercase transition-all duration-300 rounded-xl border ${
+                className={`min-h-11 rounded-[2px] border px-5 py-2.5 text-[10px] font-bold uppercase tracking-[0.22em] transition-colors duration-300 sm:text-xs ${
                   selectedCategory === category
                     ? 'border-gold text-gold bg-gold/10'
                     : 'border-white/10 text-white/40 hover:border-white/30 hover:text-white/70'
@@ -161,16 +161,16 @@ export default function FAQPage() {
           transition={{ duration: 0.6, delay: 0.4 }}
           className="mt-16 text-center"
         >
-          <div className="bg-black/40 border border-white/10 rounded-2xl p-8 sm:p-12">
-            <h2 className="font-display text-2xl sm:text-3xl uppercase mb-4">
-              Still Have Questions?
+          <div className="royal-panel p-8 sm:p-12">
+            <h2 className="royal-title mb-4 text-4xl sm:text-5xl">
+              Still have questions?
             </h2>
             <p className="text-white/60 mb-6 max-w-md mx-auto">
               If you couldn&apos;t find the answer you were looking for, feel free to contact us!
             </p>
             <a
               href="/contact"
-              className="inline-flex items-center gap-2 bg-gold hover:bg-gold-light text-black px-8 py-4 text-[10px] sm:text-xs font-bold tracking-[0.3em] uppercase transition-all duration-300 rounded-xl"
+              className="royal-button px-8 py-4"
             >
               Contact Us
             </a>
@@ -187,7 +187,7 @@ function FAQItem({ faq, isOpen, onToggle }: { faq: FAQItem; isOpen: boolean; onT
       initial={{ opacity: 0, y: 20 }}
       whileInView={{ opacity: 1, y: 0 }}
       viewport={{ once: true }}
-      className="bg-black/40 border border-white/10 hover:border-white/20 transition-all duration-300 rounded-2xl overflow-hidden"
+      className="royal-panel overflow-hidden rounded-[3px] transition-colors duration-300 hover:border-gold/25"
     >
       <button
         onClick={onToggle}

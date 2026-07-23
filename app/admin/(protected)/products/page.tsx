@@ -104,14 +104,14 @@ export default function AdminProductsPage() {
           <p className="mb-1.5 text-[10px] font-semibold uppercase tracking-[0.22em] text-gold md:hidden">
             Catalogue management
           </p>
-          <h1 className="font-display text-3xl uppercase tracking-wider text-white sm:text-4xl">
+          <h1 className="royal-title text-5xl sm:text-6xl">
             Products
           </h1>
         </div>
         <button
           type="button"
           onClick={() => setShowAddForm(!showAddForm)}
-          className="flex min-h-12 w-full items-center justify-center gap-2 rounded-xl bg-gold px-5 text-xs font-bold uppercase tracking-wider text-black transition-colors hover:bg-white focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white sm:min-h-11 sm:w-auto"
+          className="flex min-h-12 w-full items-center justify-center gap-2 rounded-[2px] bg-gold px-5 text-xs font-bold uppercase tracking-wider text-black transition-colors hover:bg-white focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white sm:min-h-11 sm:w-auto"
         >
           {showAddForm ? <X size={15} aria-hidden="true" /> : <Plus size={15} aria-hidden="true" />}
           {showAddForm ? 'Cancel' : 'Add Product'}
@@ -121,14 +121,14 @@ export default function AdminProductsPage() {
       {error ? (
         <div
           role="alert"
-          className="mb-6 rounded-xl border border-red-500/30 bg-red-500/10 p-4 text-sm leading-6 text-red-300"
+          className="mb-6 rounded-[2px] border border-red-500/30 bg-red-500/10 p-4 text-sm leading-6 text-red-300"
         >
           {error}
         </div>
       ) : null}
 
       {showAddForm && (
-        <section className="mb-8 overflow-hidden rounded-2xl border border-white/10 bg-[#111]">
+        <section className="mb-8 overflow-hidden rounded-[3px] border border-white/10 bg-[#111]">
           <div className="border-b border-white/10 bg-gradient-to-r from-gold/10 to-transparent px-4 py-4 sm:px-6">
             <h2 className="text-sm font-semibold tracking-wider text-white">New Product</h2>
             <p className="mt-1 text-xs leading-5 text-white/40">
@@ -144,7 +144,7 @@ export default function AdminProductsPage() {
                 value={formData.name}
                 onChange={(e) => setFormData({ ...formData, name: e.target.value })}
                 placeholder="Chicken Masala"
-                className="min-h-12 w-full rounded-xl border border-white/10 bg-black px-3 py-2 text-white focus:border-gold focus:outline-none sm:min-h-11 sm:text-sm"
+                className="min-h-12 w-full rounded-[2px] border border-white/10 bg-black px-3 py-2 text-white focus:border-gold focus:outline-none sm:min-h-11 sm:text-sm"
                 required
               />
             </div>
@@ -156,7 +156,7 @@ export default function AdminProductsPage() {
                 value={formData.short_description}
                 onChange={(e) => setFormData({ ...formData, short_description: e.target.value })}
                 placeholder="Bold chicken curry blend"
-                className="min-h-12 w-full rounded-xl border border-white/10 bg-black px-3 py-2 text-white focus:border-gold focus:outline-none sm:min-h-11 sm:text-sm"
+                className="min-h-12 w-full rounded-[2px] border border-white/10 bg-black px-3 py-2 text-white focus:border-gold focus:outline-none sm:min-h-11 sm:text-sm"
                 required
               />
             </div>
@@ -168,7 +168,7 @@ export default function AdminProductsPage() {
                 value={formData.image_url}
                 onChange={(e) => setFormData({ ...formData, image_url: e.target.value })}
                 placeholder="https://example.com/image.jpg"
-                className="min-h-12 w-full rounded-xl border border-white/10 bg-black px-3 py-2 text-white focus:border-gold focus:outline-none sm:min-h-11 sm:text-sm"
+                className="min-h-12 w-full rounded-[2px] border border-white/10 bg-black px-3 py-2 text-white focus:border-gold focus:outline-none sm:min-h-11 sm:text-sm"
               />
             </div>
             <div>
@@ -179,7 +179,7 @@ export default function AdminProductsPage() {
                 value={formData.accent_color}
                 onChange={(e) => setFormData({ ...formData, accent_color: e.target.value })}
                 placeholder="#E8730A"
-                className="min-h-12 w-full rounded-xl border border-white/10 bg-black px-3 py-2 text-white focus:border-gold focus:outline-none sm:min-h-11 sm:text-sm"
+                className="min-h-12 w-full rounded-[2px] border border-white/10 bg-black px-3 py-2 text-white focus:border-gold focus:outline-none sm:min-h-11 sm:text-sm"
               />
             </div>
             <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
@@ -189,7 +189,7 @@ export default function AdminProductsPage() {
                   name="category"
                   value={formData.category}
                   onChange={(e) => setFormData({ ...formData, category: e.target.value })}
-                  className="min-h-12 w-full rounded-xl border border-white/10 bg-black px-3 py-2 text-white focus:border-gold focus:outline-none sm:min-h-11 sm:text-sm"
+                  className="min-h-12 w-full rounded-[2px] border border-white/10 bg-black px-3 py-2 text-white focus:border-gold focus:outline-none sm:min-h-11 sm:text-sm"
                 >
                   <option value="chicken">Chicken</option>
                   <option value="seafood">Seafood</option>
@@ -205,7 +205,7 @@ export default function AdminProductsPage() {
                   value={formData.stock_qty}
                   onChange={(e) => setFormData({ ...formData, stock_qty: e.target.value })}
                   placeholder="100"
-                  className="min-h-12 w-full rounded-xl border border-white/10 bg-black px-3 py-2 text-white focus:border-gold focus:outline-none sm:min-h-11 sm:text-sm"
+                  className="min-h-12 w-full rounded-[2px] border border-white/10 bg-black px-3 py-2 text-white focus:border-gold focus:outline-none sm:min-h-11 sm:text-sm"
                 />
               </div>
             </div>
@@ -217,7 +217,7 @@ export default function AdminProductsPage() {
                 value={formData.tags}
                 onChange={(e) => setFormData({ ...formData, tags: e.target.value })}
                 placeholder="smoky,bold,spicy"
-                className="min-h-12 w-full rounded-xl border border-white/10 bg-black px-3 py-2 text-white focus:border-gold focus:outline-none sm:min-h-11 sm:text-sm"
+                className="min-h-12 w-full rounded-[2px] border border-white/10 bg-black px-3 py-2 text-white focus:border-gold focus:outline-none sm:min-h-11 sm:text-sm"
               />
             </div>
             <div>
@@ -228,7 +228,7 @@ export default function AdminProductsPage() {
                 value={formData.badge}
                 onChange={(e) => setFormData({ ...formData, badge: e.target.value })}
                 placeholder="New"
-                className="min-h-12 w-full rounded-xl border border-white/10 bg-black px-3 py-2 text-white focus:border-gold focus:outline-none sm:min-h-11 sm:text-sm"
+                className="min-h-12 w-full rounded-[2px] border border-white/10 bg-black px-3 py-2 text-white focus:border-gold focus:outline-none sm:min-h-11 sm:text-sm"
               />
             </div>
             <div>
@@ -239,13 +239,13 @@ export default function AdminProductsPage() {
                 value={formData.description}
                 onChange={(e) => setFormData({ ...formData, description: e.target.value })}
                 placeholder="Full product description..."
-                className="w-full resize-none rounded-xl border border-white/10 bg-black px-3 py-3 text-white focus:border-gold focus:outline-none sm:text-sm"
+                className="w-full resize-none rounded-[2px] border border-white/10 bg-black px-3 py-3 text-white focus:border-gold focus:outline-none sm:text-sm"
               />
             </div>
             <button
               type="submit"
               disabled={saving}
-              className="mt-2 flex min-h-12 w-full items-center justify-center gap-2 rounded-xl bg-gold px-5 text-xs font-bold uppercase tracking-wider text-black transition-colors hover:bg-white disabled:cursor-wait disabled:opacity-60"
+              className="mt-2 flex min-h-12 w-full items-center justify-center gap-2 rounded-[2px] bg-gold px-5 text-xs font-bold uppercase tracking-wider text-black transition-colors hover:bg-white disabled:cursor-wait disabled:opacity-60"
             >
               {saving ? <Loader2 size={15} className="animate-spin" aria-hidden="true" /> : null}
               {saving ? 'Creating Product…' : 'Create Product'}
@@ -265,7 +265,7 @@ export default function AdminProductsPage() {
             <ProductItem key={product.id} product={product} />
           ))}
           {products.length === 0 ? (
-            <div className="rounded-xl border border-dashed border-white/10 py-16 text-center text-sm text-white/35">
+            <div className="rounded-[2px] border border-dashed border-white/10 py-16 text-center text-sm text-white/35">
               No products found.
             </div>
           ) : null}

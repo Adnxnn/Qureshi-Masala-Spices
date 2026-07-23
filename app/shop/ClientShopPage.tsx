@@ -1,5 +1,6 @@
 'use client'
 import { useState, useMemo } from 'react'
+import Image from 'next/image'
 import { Search, ArrowUpDown } from 'lucide-react'
 import ProductGrid from '@/components/site/ProductGrid'
 import type { Product } from '@/types'
@@ -59,21 +60,24 @@ export default function ClientShopPage({ initialProducts }: { initialProducts: P
   }, [initialProducts, selectedCategory, searchQuery, sortBy])
 
   return (
-    <div className="min-h-screen bg-gradient-to-b from-black via-zinc-950 to-black pt-24 sm:pt-32 pb-20 sm:pb-28 px-4 sm:px-6 lg:px-8">
+    <div className="royal-page royal-grain px-4 pb-20 pt-24 sm:px-6 sm:pb-28 sm:pt-32 lg:px-8">
       <div className="max-w-7xl mx-auto relative">
         {/* Decorative background logo */}
-        <div className="absolute top-6 sm:top-10 left-1/2 -translate-x-1/2 w-[250px] sm:w-[350px] sm:w-[600px] lg:w-[900px] pointer-events-none select-none z-0 opacity-[0.08]">
-          <img
+        <div className="pointer-events-none absolute left-1/2 top-6 z-0 w-[250px] -translate-x-1/2 select-none opacity-[0.035] sm:top-10 sm:w-[600px] lg:w-[900px]">
+          <Image
             src="/images/Qureshi's Nav.png"
             alt=""
-            className="w-full h-auto"
+            width={900}
+            height={228}
+            className="h-auto w-full"
           />
         </div>
         
         {/* Header */}
         <div className="mb-8 sm:mb-12 relative z-10">
-          <h1 className="font-display text-3xl sm:text-4xl md:text-5xl lg:text-6xl uppercase text-white mb-3 sm:mb-4">Our Spices</h1>
-          <p className="text-white/50 text-sm sm:text-base md:text-lg max-w-2xl">Explore our collection of authentic, handcrafted spice blends made with traditional recipes.</p>
+          <p className="royal-eyebrow mb-3">The Qureshi&apos;s collection</p>
+          <h1 className="royal-title mb-3 text-5xl sm:mb-4 sm:text-6xl md:text-7xl lg:text-8xl">A spice for every story.</h1>
+          <p className="max-w-2xl text-sm leading-relaxed text-muted sm:text-base md:text-lg">Explore our collection of authentic, handcrafted spice blends made with traditional recipes.</p>
         </div>
 
         {/* Filters - All in One Horizontal Line */}
@@ -87,7 +91,7 @@ export default function ClientShopPage({ initialProducts }: { initialProducts: P
                 placeholder="Search products..."
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
-                className="w-full bg-black/40 border border-white/10 text-white pl-11 sm:pr-5 pr-4 py-3.5 sm:py-4 rounded-2xl focus:outline-none focus:border-gold/50 focus:ring-1 focus:ring-gold/20 transition-all duration-300 placeholder:text-white/20 text-sm sm:text-base backdrop-blur-sm hover:border-white/20"
+                className="royal-field py-3.5 pl-11 pr-4 text-sm placeholder:text-white/20 sm:py-4 sm:pr-5 sm:text-base"
               />
             </div>
 
@@ -97,10 +101,10 @@ export default function ClientShopPage({ initialProducts }: { initialProducts: P
                 <button
                   key={cat.value}
                   onClick={() => setSelectedCategory(cat.value)}
-                  className={`flex-shrink-0 px-4 sm:px-5 py-2.5 sm:py-3 text-[9px] sm:text-[10px] font-bold tracking-[0.3em] uppercase transition-all duration-300 rounded-2xl border ${
+                  className={`min-h-11 flex-shrink-0 rounded-[2px] border px-4 py-2.5 text-[9px] font-bold uppercase tracking-[0.24em] transition-colors sm:px-5 sm:py-3 sm:text-[10px] ${
                     selectedCategory === cat.value
-                      ? 'border-gold text-gold bg-gold/10 shadow-[0_0_20px_rgba(245,197,24,0.15)]'
-                      : 'border-white/10 text-gold hover:border-white/20 hover:text-white/70 bg-black/40 hover:bg-black/60'
+                      ? 'border-gold/65 bg-gold/10 text-gold-light'
+                      : 'border-white/10 bg-black/30 text-muted hover:border-gold/30 hover:text-cream'
                   }`}
                 >
                   {cat.label}
@@ -115,7 +119,7 @@ export default function ClientShopPage({ initialProducts }: { initialProducts: P
                 <select
                   value={sortBy}
                   onChange={(e) => setSortBy(e.target.value)}
-                  className="w-full bg-black/40 border border-white/10 text-white px-4 sm:px-5 py-3.5 sm:py-4 rounded-2xl focus:outline-none focus:border-gold/50 focus:ring-1 focus:ring-gold/20 transition-all duration-300 appearance-none cursor-pointer text-sm sm:text-base backdrop-blur-sm hover:border-white/20"
+                  className="royal-field cursor-pointer appearance-none px-4 py-3.5 text-sm sm:px-5 sm:py-4 sm:text-base"
                 >
                   <option value="featured">Featured</option>
                   <option value="price-low">Price: Low → High</option>
@@ -142,8 +146,8 @@ export default function ClientShopPage({ initialProducts }: { initialProducts: P
             <ProductGrid products={filteredProducts} loading={false} />
           </div>
         ) : (
-          <div className="text-center py-20 sm:py-32 bg-black/30 border border-white/10 rounded-3xl backdrop-blur-sm">
-            <div className="font-display text-3xl sm:text-4xl md:text-5xl text-white/30 mb-4 sm:mb-5">No products found</div>
+          <div className="royal-panel py-20 text-center sm:py-32">
+            <div className="font-display text-4xl text-white/30 sm:mb-5 sm:text-5xl md:text-6xl">No products found.</div>
             <p className="text-white/20 text-sm sm:text-base md:text-lg max-w-md mx-auto">Try adjusting your filters or search query to find what you're looking for.</p>
           </div>
         )}

@@ -6,6 +6,7 @@ import { useRouter } from 'next/navigation'
 import { useForm } from 'react-hook-form'
 import { CheckCircle2, Eye, EyeOff, UserPlus } from 'lucide-react'
 import { registerUser } from '@/lib/actions'
+import AuthBackdrop from '@/components/site/AuthBackdrop'
 
 type RegisterFormValues = {
   full_name: string
@@ -50,10 +51,11 @@ export default function RegisterPage() {
 
   if (confirmationEmail) {
     return (
-      <div className="min-h-screen bg-dark px-4 pb-16 pt-14 sm:px-6 sm:pt-24">
-        <div className="mx-auto max-w-md rounded-2xl border border-gold/25 bg-white/[0.04] p-6 text-center sm:p-9">
+      <div className="royal-auth-stage royal-grain px-4 pb-16 pt-14 sm:px-6 sm:pt-24">
+        <AuthBackdrop />
+        <div className="royal-auth-card relative z-10 mx-auto max-w-md p-6 text-center sm:p-9">
           <CheckCircle2 className="mx-auto mb-5 text-gold" size={42} aria-hidden="true" />
-          <h1 className="font-display text-4xl tracking-wide text-white">Check Your Email</h1>
+          <h1 className="royal-title text-5xl">Check your email.</h1>
           <p className="mt-3 text-sm leading-6 text-white/60">
             We created your account and sent a confirmation link to{' '}
             <span className="font-semibold text-white">{confirmationEmail}</span>.
@@ -63,7 +65,7 @@ export default function RegisterPage() {
           </p>
           <Link
             href="/login"
-            className="mt-7 inline-flex min-h-12 w-full items-center justify-center rounded-xl bg-gold px-5 font-bold text-black transition hover:bg-gold-light focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-gold focus-visible:ring-offset-2 focus-visible:ring-offset-dark"
+            className="royal-button mt-7 w-full"
           >
             Continue to Sign In
           </Link>
@@ -73,26 +75,27 @@ export default function RegisterPage() {
   }
 
   return (
-    <div className="min-h-screen bg-dark px-4 pb-16 pt-14 sm:px-6 sm:pb-20 sm:pt-24">
-      <div className="mx-auto w-full max-w-lg">
+    <div className="royal-auth-stage royal-grain px-4 pb-16 pt-14 sm:px-6 sm:pb-20 sm:pt-24">
+      <AuthBackdrop />
+      <div className="relative z-10 mx-auto w-full max-w-lg">
         <div className="mb-7 text-center sm:mb-9">
-          <p className="mb-3 text-[11px] font-bold uppercase tracking-[0.28em] text-gold">
+          <p className="royal-eyebrow mb-3">
             Join Qureshi&apos;s
           </p>
-          <h1 className="font-display text-4xl tracking-wide text-white sm:text-5xl">
-            Create Account
+          <h1 className="royal-title text-5xl sm:text-6xl">
+            Create your account.
           </h1>
           <p className="mt-2 text-sm text-white/55 sm:text-base">
             Save your delivery details and keep every order in one place.
           </p>
         </div>
 
-        <div className="rounded-2xl border border-white/10 bg-white/[0.04] p-5 sm:p-8">
+        <div className="royal-auth-card p-5 sm:p-8">
           <form onSubmit={handleSubmit(onSubmit)} className="space-y-5" noValidate>
             {formError ? (
               <div
                 role="alert"
-                className="rounded-xl border border-red-400/25 bg-red-500/10 px-4 py-3 text-sm leading-6 text-red-300"
+                className="rounded-[2px] border border-red-400/25 bg-red-500/10 px-4 py-3 text-sm leading-6 text-red-300"
               >
                 {formError}
               </div>
@@ -108,7 +111,7 @@ export default function RegisterPage() {
                 autoComplete="name"
                 aria-invalid={errors.full_name ? 'true' : 'false'}
                 {...register('full_name', { required: 'Full name is required.' })}
-                className="min-h-12 w-full rounded-xl border border-white/10 bg-black/25 px-4 text-base text-white outline-none transition placeholder:text-white/30 focus-visible:border-gold focus-visible:ring-2 focus-visible:ring-gold/20"
+                className="royal-field px-4 text-base placeholder:text-white/30"
                 placeholder="Your full name"
               />
               {errors.full_name ? (
@@ -138,7 +141,7 @@ export default function RegisterPage() {
                       message: 'Enter a valid email address.',
                     },
                   })}
-                  className="min-h-12 w-full rounded-xl border border-white/10 bg-black/25 px-4 text-base text-white outline-none transition placeholder:text-white/30 focus-visible:border-gold focus-visible:ring-2 focus-visible:ring-gold/20"
+                  className="royal-field px-4 text-base placeholder:text-white/30"
                   placeholder="name@example.com"
                 />
                 {errors.email ? (
@@ -162,7 +165,7 @@ export default function RegisterPage() {
                     required: 'Phone number is required.',
                     minLength: { value: 10, message: 'Enter a valid phone number.' },
                   })}
-                  className="min-h-12 w-full rounded-xl border border-white/10 bg-black/25 px-4 text-base text-white outline-none transition placeholder:text-white/30 focus-visible:border-gold focus-visible:ring-2 focus-visible:ring-gold/20"
+                  className="royal-field px-4 text-base placeholder:text-white/30"
                   placeholder="+91 98765 43210"
                 />
                 {errors.phone ? (
@@ -191,7 +194,7 @@ export default function RegisterPage() {
                         message: 'Use at least 6 characters.',
                       },
                     })}
-                    className="min-h-12 w-full rounded-xl border border-white/10 bg-black/25 px-4 pr-12 text-base text-white outline-none transition placeholder:text-white/30 focus-visible:border-gold focus-visible:ring-2 focus-visible:ring-gold/20"
+                    className="royal-field px-4 pr-12 text-base placeholder:text-white/30"
                     placeholder="At least 6 characters"
                   />
                   <button
@@ -223,7 +226,7 @@ export default function RegisterPage() {
                     required: 'Confirm your password.',
                     validate: (value) => value === getValues('password') || 'Passwords do not match.',
                   })}
-                  className="min-h-12 w-full rounded-xl border border-white/10 bg-black/25 px-4 text-base text-white outline-none transition placeholder:text-white/30 focus-visible:border-gold focus-visible:ring-2 focus-visible:ring-gold/20"
+                  className="royal-field px-4 text-base placeholder:text-white/30"
                   placeholder="Enter it again"
                 />
                 {errors.confirm_password ? (
@@ -246,7 +249,7 @@ export default function RegisterPage() {
                     rows={3}
                     autoComplete="street-address"
                     {...register('address')}
-                    className="w-full rounded-xl border border-white/10 bg-black/25 px-4 py-3 text-base text-white outline-none transition placeholder:text-white/30 focus-visible:border-gold focus-visible:ring-2 focus-visible:ring-gold/20"
+                    className="royal-field px-4 py-3 text-base placeholder:text-white/30"
                     placeholder="House, street and area"
                   />
                 </div>
@@ -259,7 +262,7 @@ export default function RegisterPage() {
                       type="text"
                       autoComplete="address-level2"
                       {...register('city')}
-                      className="min-h-12 w-full rounded-xl border border-white/10 bg-black/25 px-4 text-base text-white outline-none transition placeholder:text-white/30 focus-visible:border-gold focus-visible:ring-2 focus-visible:ring-gold/20"
+                      className="royal-field px-4 text-base placeholder:text-white/30"
                       placeholder="City"
                     />
                   </div>
@@ -271,7 +274,7 @@ export default function RegisterPage() {
                       inputMode="numeric"
                       autoComplete="postal-code"
                       {...register('pincode')}
-                      className="min-h-12 w-full rounded-xl border border-white/10 bg-black/25 px-4 text-base text-white outline-none transition placeholder:text-white/30 focus-visible:border-gold focus-visible:ring-2 focus-visible:ring-gold/20"
+                      className="royal-field px-4 text-base placeholder:text-white/30"
                       placeholder="571201"
                     />
                   </div>
@@ -282,7 +285,7 @@ export default function RegisterPage() {
             <button
               type="submit"
               disabled={isSubmitting}
-              className="flex min-h-12 w-full items-center justify-center gap-2 rounded-xl bg-gold px-5 font-bold text-black transition hover:bg-gold-light focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-gold focus-visible:ring-offset-2 focus-visible:ring-offset-dark disabled:cursor-wait disabled:opacity-60"
+              className="royal-button w-full disabled:cursor-wait disabled:opacity-60"
             >
               <UserPlus size={18} />
               {isSubmitting ? 'Creating account…' : 'Create Account'}

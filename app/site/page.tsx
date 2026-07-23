@@ -6,6 +6,7 @@ import Carousel from '@/components/site/Carousel'
 import Link from 'next/link'
 import { motion } from 'framer-motion'
 import { useEffect, useState } from 'react'
+import { Award, FlaskConical, Leaf, ShieldCheck, type LucideIcon } from 'lucide-react'
 import type { Product } from '@/types'
 
 export default function HomePage() {
@@ -25,11 +26,11 @@ export default function HomePage() {
   }, [])
 
   return (
-    <>
+    <div className="royal-page royal-grain">
       <HeroSection />
 
       {/* STATS BAR */}
-      <div className="bg-gradient-to-r from-gold via-yellow-500 to-gold py-6 px-4 sm:px-8">
+      <div className="border-y border-gold/20 bg-gold px-4 py-6 sm:px-8">
         <div className="max-w-7xl mx-auto flex flex-wrap justify-center gap-8 sm:gap-12">
           {[
             { num: '100%', label: 'Natural' },
@@ -85,7 +86,7 @@ export default function HomePage() {
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
               transition={{ delay: 0.1 }}
-              className="font-display text-4xl sm:text-6xl md:text-7xl uppercase leading-none mb-4"
+              className="royal-title mb-4 text-5xl sm:text-6xl md:text-7xl"
             >
               Crafted for <span className="text-gradient-gold">Perfection</span>
             </motion.h2>
@@ -132,25 +133,28 @@ export default function HomePage() {
           </div>
 
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 sm:gap-8">
-            {[
-              { icon: '🌿', title: '100% Natural', desc: 'No artificial colours, flavours or fillers. Just pure spices.' },
-              { icon: '⚗️', title: 'Small Batch',  desc: 'Ground in small quantities to lock in maximum aroma and flavour.' },
-              { icon: '🏅', title: 'Premium Grade', desc: 'Whole spices sourced directly from origin farms across India.' },
-              { icon: '🚫', title: 'No Preservatives', desc: 'Clean label. What you see is exactly what you get.' },
-            ].map((feature, i) => (
+            {([
+              { icon: Leaf, title: '100% Natural', desc: 'No artificial colours, flavours or fillers. Just pure spices.' },
+              { icon: FlaskConical, title: 'Small Batch',  desc: 'Ground in small quantities to lock in maximum aroma and flavour.' },
+              { icon: Award, title: 'Premium Grade', desc: 'Whole spices sourced directly from origin farms across India.' },
+              { icon: ShieldCheck, title: 'No Preservatives', desc: 'Clean label. What you see is exactly what you get.' },
+            ] as Array<{ icon: LucideIcon; title: string; desc: string }>).map((feature, i) => {
+              const FeatureIcon = feature.icon
+              return (
               <motion.div
                 key={feature.title}
                 initial={{ opacity: 0, y: 30 }}
                 whileInView={{ opacity: 1, y: 0 }}
                 viewport={{ once: true }}
                 transition={{ delay: i * 0.1, duration: 0.5 }}
-                className="p-8 bg-black/40 border border-white/5 hover:border-gold/30 transition-all duration-300 rounded-2xl group"
+                className="royal-panel group rounded-[3px] p-8 transition-colors duration-300 hover:border-gold/30"
               >
-                <div className="text-5xl mb-6 group-hover:scale-110 transition-transform duration-300">{feature.icon}</div>
+                <FeatureIcon aria-hidden="true" className="mb-6 size-9 text-gold transition-transform duration-300 group-hover:-translate-y-1" strokeWidth={1.35} />
                 <div className="text-sm font-bold tracking-[0.2em] uppercase text-white mb-3">{feature.title}</div>
                 <div className="text-sm text-white/40 leading-relaxed">{feature.desc}</div>
               </motion.div>
-            ))}
+              )
+            })}
           </div>
         </div>
       </section>
@@ -197,7 +201,7 @@ export default function HomePage() {
       </section>
 
       {/* CTA */}
-      <section className="bg-gradient-to-r from-gold via-yellow-500 to-gold py-16 sm:py-24 px-4 sm:px-8 text-center relative overflow-hidden">
+      <section className="relative overflow-hidden border-y border-gold/20 bg-[linear-gradient(125deg,#290a0b,#5b1718_52%,#24100f)] px-4 py-16 text-center sm:px-8 sm:py-24">
         <div className="absolute inset-0 font-display text-[8rem] sm:text-[12rem] text-black/5 flex items-center justify-center pointer-events-none tracking-widest">
           PURE FLAVOUR
         </div>
@@ -207,17 +211,17 @@ export default function HomePage() {
           viewport={{ once: true }}
           className="relative z-10"
         >
-          <h2 className="font-display text-4xl sm:text-6xl md:text-7xl text-black uppercase leading-none mb-4">
+          <h2 className="royal-title mb-4 text-5xl sm:text-6xl md:text-7xl">
             Bring the Flavour<br />Home Today
           </h2>
-          <p className="text-black/60 font-serif italic mb-10 max-w-xl mx-auto">
+          <p className="mx-auto mb-10 max-w-xl font-serif italic text-cream/60">
             Experience the authentic taste of Qureshi's Masala in your kitchen.
           </p>
-          <Link href="/shop" className="inline-block bg-black text-gold px-10 sm:px-16 py-4 sm:py-5 text-xs font-bold tracking-[0.3em] uppercase hover:bg-zinc-900 transition-all duration-300 shadow-[0_0_40px_rgba(0,0,0,0.2)]">
+          <Link href="/shop" className="royal-button px-10 py-4 sm:px-16 sm:py-5">
             Shop Now
           </Link>
         </motion.div>
       </section>
-    </>
+    </div>
   )
 }

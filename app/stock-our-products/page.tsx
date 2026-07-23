@@ -3,6 +3,7 @@
 import { useState } from 'react';
 import Slideshow from '@/components/site/Slideshow';
 import { motion } from 'framer-motion';
+import { MessageCircle } from 'lucide-react';
 
 export default function DealershipPage() {
   const [name, setName] = useState('');
@@ -19,7 +20,7 @@ export default function DealershipPage() {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-b from-black via-zinc-950 to-black pt-28 pb-20">
+    <div className="royal-page royal-grain min-h-screen pb-20 pt-28">
       <div className="container mx-auto px-4 sm:px-6 lg:px-8">
         {/* Hero Section */}
         <motion.div
@@ -28,8 +29,9 @@ export default function DealershipPage() {
           transition={{ duration: 0.5 }}
           className="text-center mb-16"
         >
-          <h1 className="font-display text-4xl sm:text-5xl md:text-6xl uppercase leading-tight mb-6">
-            Stock <span className="text-gradient-gold">Our Products</span>
+          <p className="royal-eyebrow mb-4">Retail partnerships</p>
+          <h1 className="royal-title mb-6 text-5xl sm:text-6xl md:text-7xl">
+            Stock <span className="text-gradient-gold">our products.</span>
           </h1>
           <p className="text-white/60 text-base sm:text-lg max-w-3xl mx-auto leading-relaxed">
             Are you interested in stocking Qureshi's Masala products in your shop, market, or supermarket? 
@@ -55,7 +57,6 @@ export default function DealershipPage() {
                 ]}
                 aspectRatio="aspect-[12/9]"
               />
-              <div className="absolute -bottom-4 -right-4 w-24 h-24 bg-gold/10 rounded-full blur-2xl"></div>
             </div>
           </motion.div>
 
@@ -66,8 +67,8 @@ export default function DealershipPage() {
             transition={{ duration: 0.5, delay: 0.3 }}
             className="lg:col-span-5"
           >
-            <div className="bg-gradient-to-br from-zinc-900/80 to-zinc-950/95 backdrop-blur-xl p-6 sm:p-8 rounded-2xl border border-white/10 shadow-2xl">
-              <h3 className="font-display text-2xl sm:text-3xl font-bold text-white mb-2 text-center">
+            <div className="royal-panel p-6 sm:p-8">
+              <h3 className="mb-2 text-center font-display text-4xl font-bold text-cream sm:text-5xl">
                 WhatsApp <span className="text-gold">Enquiry</span>
               </h3>
               <p className="mb-8 text-white/50 text-center text-sm">
@@ -84,7 +85,7 @@ export default function DealershipPage() {
                     type="text"
                     id="name"
                     name="name"
-                    className="w-full bg-black/50 border border-white/10 rounded-xl px-4 py-3.5 text-white placeholder-white/30 focus:outline-none focus:border-gold/50 focus:ring-1 focus:ring-gold/20 transition-all text-sm"
+                    className="royal-field px-4 py-3.5 text-sm placeholder-white/30"
                     placeholder="Your Full Name"
                     value={name}
                     onChange={(e) => setName(e.target.value)}
@@ -100,7 +101,7 @@ export default function DealershipPage() {
                     type="tel"
                     id="phone"
                     name="phone"
-                    className="w-full bg-black/50 border border-white/10 rounded-xl px-4 py-3.5 text-white placeholder-white/30 focus:outline-none focus:border-gold/50 focus:ring-1 focus:ring-gold/20 transition-all text-sm"
+                    className="royal-field px-4 py-3.5 text-sm placeholder-white/30"
                     placeholder="+91 98765 43210"
                     value={phone}
                     onChange={(e) => setPhone(e.target.value)}
@@ -116,7 +117,7 @@ export default function DealershipPage() {
                     type="email"
                     id="email"
                     name="email"
-                    className="w-full bg-black/50 border border-white/10 rounded-xl px-4 py-3.5 text-white placeholder-white/30 focus:outline-none focus:border-gold/50 focus:ring-1 focus:ring-gold/20 transition-all text-sm"
+                    className="royal-field px-4 py-3.5 text-sm placeholder-white/30"
                     placeholder="your@email.com"
                     value={email}
                     onChange={(e) => setEmail(e.target.value)}
@@ -131,7 +132,7 @@ export default function DealershipPage() {
                   <select
                     id="shopType"
                     name="shopType"
-                    className="w-full bg-black/50 border border-white/10 rounded-xl px-4 py-3.5 text-white focus:outline-none focus:border-gold/50 focus:ring-1 focus:ring-gold/20 transition-all text-sm"
+                    className="royal-field px-4 py-3.5 text-sm"
                     value={shopType}
                     onChange={(e) => setShopType(e.target.value)}
                   >
@@ -161,7 +162,7 @@ export default function DealershipPage() {
                         id="shopAddress"
                         name="shopAddress"
                         rows={3}
-                        className="w-full bg-black/50 border border-white/10 rounded-xl px-4 py-3.5 text-white placeholder-white/30 focus:outline-none focus:border-gold/50 focus:ring-1 focus:ring-gold/20 transition-all text-sm resize-none"
+                        className="royal-field resize-none px-4 py-3.5 text-sm placeholder-white/30"
                         placeholder="Enter your shop address"
                         value={shopAddress}
                         onChange={(e) => setShopAddress(e.target.value)}
@@ -177,7 +178,7 @@ export default function DealershipPage() {
                         id="shopDetails"
                         name="shopDetails"
                         rows={3}
-                        className="w-full bg-black/50 border border-white/10 rounded-xl px-4 py-3.5 text-white placeholder-white/30 focus:outline-none focus:border-gold/50 focus:ring-1 focus:ring-gold/20 transition-all text-sm resize-none"
+                        className="royal-field resize-none px-4 py-3.5 text-sm placeholder-white/30"
                         placeholder="Tell us more about your business"
                         value={shopDetails}
                         onChange={(e) => setShopDetails(e.target.value)}
@@ -190,11 +191,9 @@ export default function DealershipPage() {
                 <button
                   type="button"
                   onClick={handleWhatsAppClick}
-                  className="w-full bg-gradient-to-r from-green-600 to-green-700 hover:from-green-700 hover:to-green-800 text-white font-bold py-4 px-6 rounded-xl transition-all duration-300 flex items-center justify-center gap-3 mt-6 shadow-[0_0_20px_rgba(34,197,94,0.25)] hover:shadow-[0_0_30px_rgba(34,197,94,0.4)]"
+                  className="mt-6 flex min-h-12 w-full items-center justify-center gap-3 rounded-[2px] border border-green-500/35 bg-green-700 px-6 py-4 font-bold text-white transition-colors duration-300 hover:bg-green-600"
                 >
-                  <svg className="w-6 h-6" fill="currentColor" viewBox="0 0 24 24">
-                    <path d="M.057 24l1.687-6.163c-.995-1.542-1.558-3.327-1.558-5.176 0-6.501 5.267-11.769 11.77-11.769 3.242 0 6.306 1.272 8.653 3.619s3.619 5.411 3.619 8.653c0 6.501-5.267 11.769-11.77 11.769-.875 0-1.748-.118-2.585-.342L.057 24zm6.597-3.807c.36-.184.72-.368 1.08-.552l1.687-.843c1.748.995 3.784 1.558 5.82 1.558 4.675 0 8.471-3.796 8.471-8.47s-3.796-8.47-8.47-8.47-8.47 3.796-8.47 8.47c0 1.968.663 3.844 1.84 5.378l-.843 1.687c-.184.36-.368.72-.552 1.08l-1.687.843zM12 5c3.309 0 6 2.691 6 6s-2.691 6-6 6-6-2.691-6-6 2.691-6 6-6zm-2 9h4c.552 0 1-.448 1-1s-.448-1-1-1h-4c-.552 0-1 .448-1 1s.448 1-1 1z"/>
-                  </svg>
+                  <MessageCircle aria-hidden="true" className="size-5" />
                   <span className="text-sm tracking-[0.2em] uppercase">WhatsApp Us</span>
                 </button>
               </form>

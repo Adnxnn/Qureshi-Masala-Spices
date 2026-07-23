@@ -99,7 +99,7 @@ export default function AdminSidebarClient({
         id="admin-mobile-navigation"
         aria-label="Admin navigation"
         aria-hidden={mobileNavigationHidden}
-        className={`admin-mobile-drawer fixed inset-y-0 left-0 z-50 flex w-[calc(100vw-3rem)] max-w-xs flex-shrink-0 flex-col border-r border-white/10 bg-[#0d0d0d] shadow-2xl transition-transform duration-300 ease-out md:sticky md:top-0 md:h-screen md:w-64 md:translate-x-0 md:shadow-none ${
+        className={`admin-mobile-drawer fixed inset-y-0 left-0 z-50 flex w-[calc(100vw-3rem)] max-w-xs flex-shrink-0 flex-col border-r border-gold/15 bg-[#0b0806] shadow-2xl transition-transform duration-300 ease-out md:sticky md:top-0 md:h-screen md:w-64 md:translate-x-0 md:shadow-none ${
           sidebarOpen
             ? 'translate-x-0'
             : '-translate-x-full md:translate-x-0'
@@ -107,7 +107,7 @@ export default function AdminSidebarClient({
       >
         <div className="flex min-h-16 items-center justify-between border-b border-white/10 px-4 md:min-h-0 md:p-6">
           <div>
-            <div className="font-display text-xl tracking-widest text-white">
+            <div className="font-display text-3xl leading-none text-cream">
               QURESHI&apos;S
             </div>
 
@@ -120,7 +120,7 @@ export default function AdminSidebarClient({
             type="button"
             onClick={() => setSidebarOpen(false)}
             tabIndex={mobileNavigationHidden ? -1 : undefined}
-            className="flex h-11 w-11 items-center justify-center rounded-xl text-white/60 transition-colors hover:bg-white/10 hover:text-white focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-gold md:hidden"
+            className="flex h-11 w-11 items-center justify-center rounded-[2px] text-white/60 transition-colors hover:bg-white/10 hover:text-white focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-gold md:hidden"
             aria-label="Close admin menu"
           >
             <X size={22} aria-hidden="true" />
@@ -141,10 +141,10 @@ export default function AdminSidebarClient({
                 href={href}
                 onClick={() => setSidebarOpen(false)}
                 tabIndex={mobileNavigationHidden ? -1 : undefined}
-                className={`flex min-h-12 items-center gap-3 rounded-xl px-4 py-3 text-sm font-medium transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-gold ${
+                className={`flex min-h-12 items-center gap-3 rounded-[2px] px-4 py-3 text-sm font-medium transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-gold ${
                   isActive
-                    ? 'bg-gold text-black'
-                    : 'text-white/60 hover:bg-white/5 hover:text-white'
+                    ? 'border border-gold/45 bg-gold/10 text-gold-light'
+                    : 'border border-transparent text-white/60 hover:border-white/10 hover:bg-white/5 hover:text-white'
                 }`}
                 aria-current={isActive ? 'page' : undefined}
               >
@@ -159,7 +159,7 @@ export default function AdminSidebarClient({
           <Link
             href="/"
             tabIndex={mobileNavigationHidden ? -1 : undefined}
-            className="flex min-h-12 items-center gap-3 rounded-xl px-4 py-3 text-sm font-medium text-white/55 transition-colors hover:bg-white/5 hover:text-white focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-gold"
+            className="flex min-h-12 items-center gap-3 rounded-[2px] px-4 py-3 text-sm font-medium text-white/55 transition-colors hover:bg-white/5 hover:text-white focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-gold"
           >
             <ExternalLink size={18} aria-hidden="true" />
             View website
@@ -168,11 +168,11 @@ export default function AdminSidebarClient({
       </aside>
 
       {/* Mobile app bar */}
-      <header className="admin-mobile-header fixed inset-x-0 top-0 z-30 flex min-h-16 items-center border-b border-white/10 bg-[#0d0d0d]/95 px-3 backdrop-blur-xl md:hidden">
+      <header className="admin-mobile-header fixed inset-x-0 top-0 z-30 flex min-h-16 items-center border-b border-gold/15 bg-[#080705]/95 px-3 backdrop-blur-xl md:hidden">
         <button
           type="button"
           onClick={() => setSidebarOpen(true)}
-          className="flex h-11 w-11 flex-shrink-0 items-center justify-center rounded-xl text-white transition-colors hover:bg-white/10 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-gold"
+          className="flex h-11 w-11 flex-shrink-0 items-center justify-center rounded-[2px] text-white transition-colors hover:bg-white/10 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-gold"
           aria-label="Open admin menu"
           aria-expanded={sidebarOpen}
           aria-controls="admin-mobile-navigation"

@@ -6,6 +6,7 @@ import Link from 'next/link'
 import { useRouter } from 'next/navigation'
 import { Eye, EyeOff, LockKeyhole } from 'lucide-react'
 import { adminLoginUser } from '@/lib/actions'
+import AuthBackdrop from '@/components/site/AuthBackdrop'
 
 export const dynamic = 'force-dynamic'
 
@@ -35,8 +36,9 @@ export default function AdminLogin() {
   }
 
   return (
-    <div className="flex min-h-[100svh] items-center justify-center bg-[#0a0a0a] px-4 py-8 sm:px-6">
-      <div className="w-full max-w-sm">
+    <div className="royal-auth-stage royal-grain flex min-h-[100svh] items-center justify-center px-4 py-8 sm:px-6">
+      <AuthBackdrop />
+      <div className="relative z-10 w-full max-w-sm">
         <div className="mb-7 text-center sm:mb-9">
           <Image
             src="/images/Qureshi's Nav.png"
@@ -50,7 +52,7 @@ export default function AdminLogin() {
             <LockKeyhole size={15} aria-hidden="true" />
             Admin access
           </div>
-          <h1 className="mt-3 font-display text-4xl tracking-wide text-white">Sign In</h1>
+          <h1 className="royal-title mt-3 text-5xl">Private access.</h1>
           <p className="mt-2 text-sm leading-6 text-white/50">
             Use the email and password of your approved admin account.
           </p>
@@ -58,13 +60,13 @@ export default function AdminLogin() {
 
         <form
           onSubmit={handleLogin}
-          className="space-y-5 rounded-2xl border border-white/10 bg-white/[0.04] p-5 sm:p-7"
+          className="royal-auth-card space-y-5 p-5 sm:p-7"
           noValidate
         >
           {error ? (
             <div
               role="alert"
-              className="rounded-xl border border-red-400/25 bg-red-500/10 px-4 py-3 text-sm leading-6 text-red-300"
+              className="rounded-[2px] border border-red-400/25 bg-red-500/10 px-4 py-3 text-sm leading-6 text-red-300"
             >
               {error}
             </div>
@@ -85,7 +87,7 @@ export default function AdminLogin() {
               value={email}
               onChange={(event) => setEmail(event.target.value)}
               required
-              className="min-h-12 w-full rounded-xl border border-white/10 bg-black/25 px-4 text-base text-white outline-none transition placeholder:text-white/30 focus-visible:border-gold focus-visible:ring-2 focus-visible:ring-gold/20"
+              className="royal-field px-4 text-base placeholder:text-white/30"
               placeholder="admin@example.com"
             />
           </div>
@@ -103,7 +105,7 @@ export default function AdminLogin() {
                 value={password}
                 onChange={(event) => setPassword(event.target.value)}
                 required
-                className="min-h-12 w-full rounded-xl border border-white/10 bg-black/25 px-4 pr-12 text-base text-white outline-none transition placeholder:text-white/30 focus-visible:border-gold focus-visible:ring-2 focus-visible:ring-gold/20"
+                className="royal-field px-4 pr-12 text-base placeholder:text-white/30"
                 placeholder="Enter your password"
               />
               <button
@@ -120,7 +122,7 @@ export default function AdminLogin() {
           <button
             type="submit"
             disabled={loading}
-            className="min-h-12 w-full rounded-xl bg-gold px-5 text-sm font-bold uppercase tracking-[0.15em] text-black transition hover:bg-gold-light focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-gold focus-visible:ring-offset-2 focus-visible:ring-offset-[#0a0a0a] disabled:cursor-wait disabled:opacity-60"
+            className="royal-button w-full disabled:cursor-wait disabled:opacity-60"
           >
             {loading ? 'Signing in…' : 'Open Admin Panel'}
           </button>

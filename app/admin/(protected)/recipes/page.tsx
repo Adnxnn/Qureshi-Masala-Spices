@@ -213,7 +213,7 @@ export default function AdminRecipesPage() {
           <p className="mb-1.5 text-[10px] font-semibold uppercase tracking-[0.22em] text-gold md:hidden">
             Content management
           </p>
-          <h1 className="font-display text-3xl uppercase tracking-wider text-white sm:text-4xl">
+          <h1 className="royal-title text-5xl sm:text-6xl">
             Recipes
           </h1>
         </div>
@@ -228,7 +228,7 @@ export default function AdminRecipesPage() {
               setShowForm(true)
             }
           }}
-          className="flex min-h-12 w-full items-center justify-center gap-2 rounded-xl bg-gold px-5 py-2.5 text-xs font-bold uppercase tracking-wider text-black transition-colors hover:bg-white focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white sm:min-h-11 sm:w-auto"
+          className="flex min-h-12 w-full items-center justify-center gap-2 rounded-[2px] bg-gold px-5 py-2.5 text-xs font-bold uppercase tracking-wider text-black transition-colors hover:bg-white focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white sm:min-h-11 sm:w-auto"
         >
           <Plus size={14} aria-hidden="true" />
           {showForm ? 'Cancel' : 'Add Recipe'}
@@ -236,7 +236,7 @@ export default function AdminRecipesPage() {
       </div>
 
       {showForm && (
-        <div className="mb-8 scroll-mt-24 rounded-2xl border border-white/10 bg-[#111] p-4 sm:p-6">
+        <div className="mb-8 scroll-mt-24 rounded-[3px] border border-white/10 bg-[#111] p-4 sm:p-6">
           <h2 className="mb-5 text-sm font-semibold tracking-wider text-white">
             {editingId ? 'Edit Recipe' : 'New Recipe'}
           </h2>
@@ -608,13 +608,13 @@ export default function AdminRecipesPage() {
                     }
                   }}
                   placeholder="Add an ingredient..."
-                  className="min-h-12 min-w-0 flex-1 rounded-xl border border-white/10 bg-black px-3 py-2 text-white focus:border-gold focus:outline-none sm:min-h-11 sm:text-sm"
+                  className="min-h-12 min-w-0 flex-1 rounded-[2px] border border-white/10 bg-black px-3 py-2 text-white focus:border-gold focus:outline-none sm:min-h-11 sm:text-sm"
                 />
 
                 <button
                   type="button"
                   onClick={handleAddIngredient}
-                  className="min-h-12 rounded-xl bg-white/10 px-4 py-2 text-xs font-bold text-white transition-colors hover:bg-white/20 sm:min-h-11"
+                  className="min-h-12 rounded-[2px] bg-white/10 px-4 py-2 text-xs font-bold text-white transition-colors hover:bg-white/20 sm:min-h-11"
                 >
                   Add
                 </button>
@@ -625,7 +625,7 @@ export default function AdminRecipesPage() {
                   (ingredient, index) => (
                     <li
                       key={`${ingredient.text}-${index}`}
-                      className="flex items-center justify-between gap-2 rounded-xl border border-white/5 bg-black/50 px-3 py-2"
+                      className="flex items-center justify-between gap-2 rounded-[2px] border border-white/5 bg-black/50 px-3 py-2"
                     >
                       <span className="min-w-0 break-words text-xs leading-5 text-white/80">
                         {ingredient.text}
@@ -662,13 +662,13 @@ export default function AdminRecipesPage() {
                     }
                   }}
                   placeholder="Add a preparation step..."
-                  className="min-h-12 min-w-0 flex-1 rounded-xl border border-white/10 bg-black px-3 py-2 text-white focus:border-gold focus:outline-none sm:min-h-11 sm:text-sm"
+                  className="min-h-12 min-w-0 flex-1 rounded-[2px] border border-white/10 bg-black px-3 py-2 text-white focus:border-gold focus:outline-none sm:min-h-11 sm:text-sm"
                 />
 
                 <button
                   type="button"
                   onClick={handleAddStep}
-                  className="min-h-12 rounded-xl bg-white/10 px-4 py-2 text-xs font-bold text-white transition-colors hover:bg-white/20 sm:min-h-11"
+                  className="min-h-12 rounded-[2px] bg-white/10 px-4 py-2 text-xs font-bold text-white transition-colors hover:bg-white/20 sm:min-h-11"
                 >
                   Add
                 </button>
@@ -679,7 +679,7 @@ export default function AdminRecipesPage() {
                   (step, index) => (
                     <li
                       key={`${step.text}-${index}`}
-                      className="flex items-start justify-between gap-2 rounded-xl border border-white/5 bg-black/50 px-3 py-2"
+                      className="flex items-start justify-between gap-2 rounded-[2px] border border-white/5 bg-black/50 px-3 py-2"
                     >
                       <div className="min-w-0 flex items-start gap-3">
                         <span className="mt-0.5 text-xs font-bold text-gold">
@@ -768,7 +768,7 @@ export default function AdminRecipesPage() {
               <button
                 type="submit"
                 disabled={isSaving}
-                className="flex min-h-12 flex-1 items-center justify-center gap-2 rounded-xl bg-gold py-2.5 text-xs font-bold uppercase tracking-wider text-black transition-colors hover:bg-white focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white disabled:cursor-wait disabled:opacity-70 sm:min-h-11"
+                className="flex min-h-12 flex-1 items-center justify-center gap-2 rounded-[2px] bg-gold py-2.5 text-xs font-bold uppercase tracking-wider text-black transition-colors hover:bg-white focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white disabled:cursor-wait disabled:opacity-70 sm:min-h-11"
               >
                 {isSaving && (
                   <Loader2
@@ -789,7 +789,7 @@ export default function AdminRecipesPage() {
                 type="button"
                 onClick={closeForm}
                 disabled={isSaving}
-                className="min-h-12 rounded-xl bg-white/10 px-6 py-2.5 text-xs font-bold uppercase tracking-wider text-white transition-colors hover:bg-white/20 disabled:opacity-50 sm:min-h-11"
+                className="min-h-12 rounded-[2px] bg-white/10 px-6 py-2.5 text-xs font-bold uppercase tracking-wider text-white transition-colors hover:bg-white/20 disabled:opacity-50 sm:min-h-11"
               >
                 Cancel
               </button>
@@ -802,7 +802,7 @@ export default function AdminRecipesPage() {
         {recipes.map((recipe) => (
           <article
             key={recipe.id}
-            className="overflow-hidden rounded-xl border border-white/10 bg-[#111] p-4"
+            className="overflow-hidden rounded-[2px] border border-white/10 bg-[#111] p-4"
           >
             {recipe.thumbnail_url && (
               <div className="mb-4 h-40 overflow-hidden rounded border border-white/5">

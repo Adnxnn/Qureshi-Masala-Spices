@@ -6,7 +6,7 @@ import { ArrowRight, ChefHat, Heart, Leaf, Shield, Sparkles } from 'lucide-react
 
 export default function OurStoryPage() {
   return (
-    <div className="min-h-screen bg-gradient-to-b from-black via-zinc-950 to-black">
+    <div className="royal-page royal-grain min-h-screen">
       {/* Hero */}
       <section className="relative pt-32 pb-24 overflow-hidden">
         <div className="absolute inset-0 opacity-20">
@@ -26,12 +26,12 @@ export default function OurStoryPage() {
             transition={{ duration: 0.8, ease: 'easeOut' }}
             className="text-center"
           >
-            <div className="text-[11px] tracking-[0.4em] uppercase text-gold mb-6">
+            <div className="royal-eyebrow mb-6">
               Our Story
             </div>
-            <h1 className="font-display text-4xl sm:text-5xl md:text-6xl lg:text-7xl uppercase leading-tight mb-6">
-              More Than Masala<br />
-              <span className="text-gradient-gold">A Tradition Shared</span>
+            <h1 className="royal-title mb-6 text-5xl sm:text-6xl md:text-7xl lg:text-8xl">
+              More than masala.<br />
+              <span className="text-gradient-gold">A tradition shared.</span>
             </h1>
             <p className="text-white/60 text-base sm:text-lg md:text-xl max-w-2xl mx-auto font-serif italic">
               Crafted with love, passed down through generations
@@ -73,8 +73,8 @@ export default function OurStoryPage() {
               <div className="text-[11px] tracking-[0.4em] uppercase text-gold mb-4">
                 Who We Are
               </div>
-              <h2 className="font-display text-3xl sm:text-4xl md:text-5xl uppercase mb-6">
-                The Story Behind
+              <h2 className="royal-title mb-6 text-4xl sm:text-5xl md:text-6xl">
+                The story behind every blend.
               </h2>
               <p className="text-white/60 text-sm sm:text-base md:text-lg leading-relaxed mb-4">
                 At Qureshi&apos;s Masala &amp; Spices, every blend is more than just a mix of spices—it&apos;s a celebration of tradition, family, and the rich culinary heritage that has been passed down through generations.
@@ -91,7 +91,7 @@ export default function OurStoryPage() {
       </section>
 
       {/* Values */}
-      <section className="py-20 px-4 sm:px-6 lg:px-8 bg-gradient-to-b from-zinc-950/50 to-black">
+      <section className="border-y border-gold/10 bg-oxblood-deep/10 px-4 py-20 sm:px-6 lg:px-8">
         <div className="max-w-6xl mx-auto">
           <motion.div
             initial={{ opacity: 0, y: 30 }}
@@ -102,8 +102,8 @@ export default function OurStoryPage() {
             <div className="text-[11px] tracking-[0.4em] uppercase text-gold mb-4">
               Our Values
             </div>
-            <h2 className="font-display text-3xl sm:text-4xl md:text-5xl uppercase">
-              What Drives Us
+            <h2 className="royal-title text-4xl sm:text-5xl md:text-6xl">
+              What drives us.
             </h2>
           </motion.div>
           <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-6 sm:gap-8">
@@ -136,12 +136,12 @@ export default function OurStoryPage() {
                 viewport={{ once: true }}
                 transition={{ duration: 0.5, delay: index * 0.1 }}
                 whileHover={{ y: -8 }}
-                className="bg-black/40 border border-white/10 hover:border-gold/30 rounded-2xl p-6 sm:p-8 text-center transition-all duration-300"
+                className="royal-panel rounded-[3px] p-6 text-center transition-colors duration-300 hover:border-gold/30 sm:p-8"
               >
                 <div className="w-16 h-16 mx-auto mb-5 bg-black/50 border border-white/10 rounded-full flex items-center justify-center">
                   {item.icon}
                 </div>
-                <h3 className="font-display text-xl sm:text-2xl uppercase mb-3">{item.title}</h3>
+                <h3 className="mb-3 font-display text-2xl text-cream sm:text-3xl">{item.title}</h3>
                 <p className="text-white/50 text-sm leading-relaxed">{item.description}</p>
               </motion.div>
             ))}
@@ -161,8 +161,8 @@ export default function OurStoryPage() {
             <div className="text-[11px] tracking-[0.4em] uppercase text-gold mb-4">
               Our Process
             </div>
-            <h2 className="font-display text-3xl sm:text-4xl md:text-5xl uppercase">
-              From Farm to Kitchen
+            <h2 className="royal-title text-4xl sm:text-5xl md:text-6xl">
+              From farm to kitchen.
             </h2>
           </motion.div>
           <div className="space-y-8 sm:space-y-12">
@@ -202,7 +202,7 @@ export default function OurStoryPage() {
                   </div>
                 </div>
                 <div className="flex-1 pt-2">
-                  <h3 className="font-display text-2xl sm:text-3xl uppercase mb-3">{item.title}</h3>
+                  <h3 className="mb-3 font-display text-3xl text-cream sm:text-4xl">{item.title}</h3>
                   <p className="text-white/50 text-sm sm:text-base leading-relaxed">{item.description}</p>
                 </div>
               </motion.div>
@@ -212,25 +212,25 @@ export default function OurStoryPage() {
       </section>
 
       {/* CTA */}
-      <section className="py-20 px-4 sm:px-6 lg:px-8 bg-gold">
-        <div className="max-w-4xl mx-auto text-center text-black">
+      <section className="border-y border-gold/20 bg-[linear-gradient(125deg,#290a0b,#5b1718_52%,#24100f)] px-4 py-20 sm:px-6 lg:px-8">
+        <div className="mx-auto max-w-4xl text-center text-cream">
           <motion.div
             initial={{ opacity: 0, y: 30 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
             transition={{ duration: 0.6 }}
           >
-            <h2 className="font-display text-3xl sm:text-4xl md:text-5xl uppercase mb-6">
-              Experience Our Tradition
+            <h2 className="royal-title mb-6 text-4xl sm:text-5xl md:text-6xl">
+              Experience our tradition.
             </h2>
-            <p className="text-black/70 text-base sm:text-lg md:text-xl mb-10 max-w-2xl mx-auto">
+            <p className="mx-auto mb-10 max-w-2xl text-base text-cream/65 sm:text-lg md:text-xl">
               Bring the authentic taste of Qureshi&apos;s Masala &amp; Spices to your kitchen today.
             </p>
             <div className="flex flex-col sm:flex-row gap-4 sm:gap-5 justify-center">
-              <Link href="/shop" className="bg-black text-gold px-8 sm:px-10 py-4 sm:py-5 text-[10px] sm:text-xs font-bold tracking-[0.3em] uppercase hover:bg-zinc-900 transition-all duration-300 rounded-2xl">
+              <Link href="/shop" className="royal-button px-8 py-4 sm:px-10 sm:py-5">
                 Shop Now
               </Link>
-              <Link href="/our-heritage" className="border-2 border-black text-black px-8 sm:px-10 py-4 sm:py-5 text-[10px] sm:text-xs font-bold tracking-[0.3em] uppercase hover:bg-black hover:text-gold transition-all duration-300 rounded-2xl">
+              <Link href="/our-heritage" className="royal-button-secondary px-8 py-4 sm:px-10 sm:py-5">
                 Our Heritage
               </Link>
             </div>

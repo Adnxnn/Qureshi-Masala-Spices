@@ -90,10 +90,10 @@ export default function Header({ user }: { user: UserType | null }) {
       <motion.header
         initial={{ y: -100 }}
         animate={{ y: 0 }}
-        className={`fixed top-0 left-0 right-0 z-40 transition-all duration-300 ${
+        className={`fixed left-0 right-0 top-0 z-40 border-b transition-[background-color,border-color,padding] duration-300 ${
           isScrolled 
-            ? 'bg-[#0a0a0a]/95 backdrop-blur-md border-b border-white/10 py-3' 
-            : 'bg-transparent py-5'
+            ? 'border-gold/20 bg-[#080705]/94 py-2.5 backdrop-blur-xl'
+            : 'border-gold/10 bg-gradient-to-b from-black/80 to-transparent py-4'
         }`}
       >
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -111,7 +111,7 @@ export default function Header({ user }: { user: UserType | null }) {
             </Link>
 
             {/* Desktop Nav */}
-            <nav className="hidden lg:flex items-center gap-8">
+            <nav className="hidden items-center gap-7 lg:flex xl:gap-9">
               {navLinks.map((link) => (
                 <div
                   key={link.href}
@@ -121,10 +121,10 @@ export default function Header({ user }: { user: UserType | null }) {
                 >
                   <Link
                     href={link.href}
-                    className={`flex items-center gap-1 text-xs sm:text-sm font-bold tracking-[0.25em] uppercase transition-colors ${
+                    className={`flex items-center gap-1 text-[11px] font-semibold tracking-[0.14em] uppercase transition-colors ${
                       pathname.startsWith(link.href) 
-                        ? 'text-[#C9A84C]' 
-                        : 'text-white/70 hover:text-[#C9A84C]'
+                        ? 'text-gold'
+                        : 'text-white/70 hover:text-gold'
                     }`}
                   >
                     {link.label}
@@ -147,18 +147,18 @@ export default function Header({ user }: { user: UserType | null }) {
                           animate={{ opacity: 1, y: 0 }}
                           exit={{ opacity: 0, y: 10 }}
                           transition={{ duration: 0.2 }}
-                          className="absolute top-full left-1/2 -translate-x-1/2 mt-4 w-[900px] bg-[#111] border border-white/10 rounded-2xl shadow-2xl overflow-hidden"
+                          className="absolute left-1/2 top-full mt-4 w-[900px] -translate-x-1/2 overflow-hidden rounded-[3px] border border-gold/20 bg-[#100d0a]/98 shadow-[0_30px_90px_rgba(0,0,0,0.6)] backdrop-blur-xl"
                         >
                           <div className="grid grid-cols-12 gap-6 p-8">
                             {/* Shop by Product */}
                             <div className="col-span-4">
-                              <h3 className="text-[#C9A84C] text-[11px] font-bold tracking-[0.3em] uppercase mb-4">Shop by Product</h3>
+                              <h3 className="text-gold text-[11px] font-bold tracking-[0.3em] uppercase mb-4">Shop by Product</h3>
                               <ul className="space-y-3">
                                 {products.map((product) => (
                                   <li key={product.href}>
                                     <Link
                                       href={product.href}
-                                      className="text-white/70 hover:text-[#C9A84C] transition-colors text-sm block"
+                                      className="text-white/70 hover:text-gold transition-colors text-sm block"
                                     >
                                       {product.name}
                                     </Link>
@@ -167,7 +167,7 @@ export default function Header({ user }: { user: UserType | null }) {
                                 <li className="pt-2">
                                   <Link
                                     href="/shop"
-                                    className="inline-flex items-center gap-2 bg-gradient-to-r from-[#C9A84C] to-[#E8A020] text-black px-4 py-2 text-[10px] font-bold tracking-[0.3em] uppercase hover:from-[#E8A020] hover:to-[#C9A84C] transition-all duration-300 rounded-xl"
+                                    className="royal-button px-4 py-2"
                                   >
                                     Explore the Products
                                     <ChevronDown size={14} className="rotate-[-90deg]" />
@@ -178,13 +178,13 @@ export default function Header({ user }: { user: UserType | null }) {
 
                             {/* Recipes */}
                             <div className="col-span-4">
-                              <h3 className="text-[#C9A84C] text-[11px] font-bold tracking-[0.3em] uppercase mb-4">Recipes</h3>
+                              <h3 className="text-gold text-[11px] font-bold tracking-[0.3em] uppercase mb-4">Recipes</h3>
                               <ul className="space-y-3">
                                 {recipeLinks.map((recipe) => (
                                   <li key={recipe.href}>
                                     <Link
                                       href={recipe.href}
-                                      className="text-white/70 hover:text-[#C9A84C] transition-colors text-sm block"
+                                      className="text-white/70 hover:text-gold transition-colors text-sm block"
                                     >
                                       {recipe.name}
                                     </Link>
@@ -195,20 +195,20 @@ export default function Header({ user }: { user: UserType | null }) {
 
                             {/* Featured & Image */}
                             <div className="col-span-4">
-                              <h3 className="text-[#C9A84C] text-[11px] font-bold tracking-[0.3em] uppercase mb-4">Featured</h3>
+                              <h3 className="text-gold text-[11px] font-bold tracking-[0.3em] uppercase mb-4">Featured</h3>
                               <ul className="space-y-3 mb-6">
                                 {featuredLinks.map((item) => (
                                   <li key={item.href}>
                                     <Link
                                       href={item.href}
-                                      className="text-white/70 hover:text-[#C9A84C] transition-colors text-sm block"
+                                      className="text-white/70 hover:text-gold transition-colors text-sm block"
                                     >
                                       {item.name}
                                     </Link>
                                   </li>
                                 ))}
                               </ul>
-                              <div className="bg-gradient-to-br from-[#6B1A1A]/30 to-[#C9A84C]/10 rounded-xl p-4 border border-white/5">
+                              <div className="border-y border-gold/20 bg-gradient-to-r from-[#5b1718]/25 to-transparent p-4">
                                 <p className="text-white/70 text-xs leading-relaxed">
                                   Discover our full range of authentic, freshly ground masalas crafted with care.
                                 </p>
@@ -227,34 +227,34 @@ export default function Header({ user }: { user: UserType | null }) {
             <div className="flex items-center gap-1 sm:gap-3 lg:gap-5">
               <button
                 aria-label="Search"
-                className="hidden size-10 items-center justify-center text-white/70 transition-colors hover:text-[#C9A84C] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#C9A84C] sm:flex"
+                className="hidden size-10 items-center justify-center text-white/70 transition-colors hover:text-gold focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-gold sm:flex"
               >
                 <Search size={18} />
               </button>
               <Link
                 href={user ? '/account' : '/login?next=/account'}
                 aria-label={user ? 'Open my account' : 'Sign in'}
-                className="flex size-10 items-center justify-center text-white/70 transition-colors hover:text-[#C9A84C] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#C9A84C]"
+                className="flex size-10 items-center justify-center text-white/70 transition-colors hover:text-gold focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-gold"
               >
                 <User size={20} />
               </Link>
               <Link
                 href="/order"
                 aria-label={`View cart with ${count} item${count === 1 ? '' : 's'}`}
-                className="group relative flex min-h-10 min-w-10 items-center justify-center gap-2 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#C9A84C] sm:px-1"
+                className="group relative flex min-h-10 min-w-10 items-center justify-center gap-2 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-gold sm:px-1"
               >
-                <ShoppingBag size={18} className="text-white/70 group-hover:text-[#C9A84C] transition-colors" />
+                <ShoppingBag size={18} className="text-white/70 group-hover:text-gold transition-colors" />
                 {count > 0 && (
                   <motion.span
                     key={count}
                     initial={{ scale: 0 }}
                     animate={{ scale: 1 }}
-                    className="absolute -top-2 -right-2 w-5 h-5 rounded-full bg-[#C9A84C] text-black text-[10px] font-bold flex items-center justify-center"
+                    className="absolute -top-2 -right-2 w-5 h-5 rounded-full bg-gold text-black text-[10px] font-bold flex items-center justify-center"
                   >
                     {count}
                   </motion.span>
                 )}
-                <span className="text-xs tracking-[0.25em] uppercase text-white/60 group-hover:text-[#C9A84C] transition-colors hidden sm:block">
+                <span className="text-xs tracking-[0.25em] uppercase text-white/60 group-hover:text-gold transition-colors hidden sm:block">
                   Cart
                 </span>
               </Link>
@@ -262,7 +262,7 @@ export default function Header({ user }: { user: UserType | null }) {
               {/* Mobile Menu Toggle */}
               <button
                 onClick={() => setIsMobileMenuOpen(true)}
-                className="flex size-10 items-center justify-center text-white/70 transition-colors hover:text-[#C9A84C] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#C9A84C] lg:hidden"
+                className="flex size-10 items-center justify-center text-white/70 transition-colors hover:text-gold focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-gold lg:hidden"
                 aria-label="Open menu"
                 aria-expanded={isMobileMenuOpen}
               >
@@ -281,10 +281,10 @@ export default function Header({ user }: { user: UserType | null }) {
             animate={{ x: 0 }}
             exit={{ x: '100%' }}
             transition={{ duration: 0.3, ease: 'easeOut' }}
-            className="fixed inset-0 z-50 bg-[#0a0a0a] lg:hidden"
+            className="fixed inset-0 z-50 bg-[radial-gradient(circle_at_100%_0%,rgba(91,23,24,0.34),transparent_24rem),#080705] lg:hidden"
           >
             <div className="flex flex-col h-full">
-              <div className="flex items-center justify-between px-6 py-5 border-b border-white/10">
+              <div className="flex items-center justify-between border-b border-gold/20 px-6 py-5">
                 <Link href="/" onClick={() => setIsMobileMenuOpen(false)}>
                   <Image
                     src="/images/qureshis-navbar-logo.png"
@@ -296,7 +296,7 @@ export default function Header({ user }: { user: UserType | null }) {
                 </Link>
                 <button
                   onClick={() => setIsMobileMenuOpen(false)}
-                  className="text-white/70 hover:text-[#C9A84C] transition-colors"
+                  className="flex size-11 items-center justify-center rounded-[2px] text-white/70 transition-colors hover:bg-white/5 hover:text-gold focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-gold"
                   aria-label="Close menu"
                 >
                   <X size={24} />
@@ -304,16 +304,16 @@ export default function Header({ user }: { user: UserType | null }) {
               </div>
 
               <div className="flex-1 overscroll-contain overflow-y-auto px-6 py-8">
-                <nav className="flex flex-col gap-6">
+                <nav className="flex flex-col gap-3 border-y border-gold/15 py-5">
                   {navLinks.map((link) => (
                     <Link
                       key={link.href}
                       href={link.href}
                       onClick={() => setIsMobileMenuOpen(false)}
-                      className={`text-lg font-bold tracking-[0.15em] uppercase transition-colors ${
+                      className={`font-display text-[2rem] font-semibold leading-none tracking-[-0.02em] transition-colors ${
                         pathname.startsWith(link.href) 
-                          ? 'text-[#C9A84C]' 
-                          : 'text-white hover:text-[#C9A84C]'
+                          ? 'text-gold'
+                          : 'text-white hover:text-gold'
                       }`}
                     >
                       {link.label}
@@ -322,16 +322,16 @@ export default function Header({ user }: { user: UserType | null }) {
                 </nav>
 
                 <div className="mt-10 border-t border-white/10 pt-8">
-                  <h3 className="mb-4 text-xs font-bold uppercase tracking-[0.3em] text-[#C9A84C]">
+                  <h3 className="mb-4 text-xs font-bold uppercase tracking-[0.3em] text-gold">
                     {user ? `Hello, ${user.full_name.split(' ')[0]}` : 'Your Account'}
                   </h3>
-                  <div className="divide-y divide-white/10 rounded-xl border border-white/10 bg-white/[0.03]">
+                  <div className="divide-y divide-gold/10 border-y border-gold/15 bg-white/[0.018]">
                     {user ? (
                       <>
                         <Link
                           href="/account#profile"
                           onClick={() => setIsMobileMenuOpen(false)}
-                          className="flex min-h-12 items-center gap-3 px-4 text-sm text-white/80 transition hover:bg-white/5 hover:text-[#C9A84C]"
+                          className="flex min-h-12 items-center gap-3 px-4 text-sm text-white/80 transition hover:bg-white/5 hover:text-gold"
                         >
                           <User size={18} aria-hidden="true" />
                           Profile &amp; saved address
@@ -339,7 +339,7 @@ export default function Header({ user }: { user: UserType | null }) {
                         <Link
                           href="/account#orders"
                           onClick={() => setIsMobileMenuOpen(false)}
-                          className="flex min-h-12 items-center gap-3 px-4 text-sm text-white/80 transition hover:bg-white/5 hover:text-[#C9A84C]"
+                          className="flex min-h-12 items-center gap-3 px-4 text-sm text-white/80 transition hover:bg-white/5 hover:text-gold"
                         >
                           <ShoppingBag size={18} aria-hidden="true" />
                           Order history
@@ -350,7 +350,7 @@ export default function Header({ user }: { user: UserType | null }) {
                         <Link
                           href="/login?next=/account"
                           onClick={() => setIsMobileMenuOpen(false)}
-                          className="flex min-h-12 items-center gap-3 px-4 text-sm font-semibold text-white transition hover:bg-white/5 hover:text-[#C9A84C]"
+                          className="flex min-h-12 items-center gap-3 px-4 text-sm font-semibold text-white transition hover:bg-white/5 hover:text-gold"
                         >
                           <User size={18} aria-hidden="true" />
                           Sign in
@@ -358,7 +358,7 @@ export default function Header({ user }: { user: UserType | null }) {
                         <Link
                           href="/register"
                           onClick={() => setIsMobileMenuOpen(false)}
-                          className="flex min-h-12 items-center px-4 text-sm text-white/70 transition hover:bg-white/5 hover:text-[#C9A84C]"
+                          className="flex min-h-12 items-center px-4 text-sm text-white/70 transition hover:bg-white/5 hover:text-gold"
                         >
                           Create account
                         </Link>
@@ -368,14 +368,14 @@ export default function Header({ user }: { user: UserType | null }) {
                 </div>
 
                 <div className="mt-10 pt-8 border-t border-white/10">
-                  <h3 className="text-[#C9A84C] text-xs font-bold tracking-[0.3em] uppercase mb-4">Products</h3>
+                  <h3 className="text-gold text-xs font-bold tracking-[0.3em] uppercase mb-4">Products</h3>
                   <div className="grid grid-cols-2 gap-3">
                     {products.slice(0, 6).map((product) => (
                       <Link
                         key={product.href}
                         href={product.href}
                         onClick={() => setIsMobileMenuOpen(false)}
-                        className="text-white/70 hover:text-[#C9A84C] transition-colors text-sm block"
+                        className="text-white/70 hover:text-gold transition-colors text-sm block"
                       >
                         {product.name}
                       </Link>
@@ -384,11 +384,11 @@ export default function Header({ user }: { user: UserType | null }) {
                 </div>
               </div>
 
-              <div className="p-6 border-t border-white/10">
+              <div className="border-t border-gold/20 p-6">
                 <Link
                   href="/order"
                   onClick={() => setIsMobileMenuOpen(false)}
-                  className="flex items-center justify-center gap-2 w-full bg-[#C9A84C] text-black px-6 py-3.5 rounded-xl font-bold tracking-[0.2em] uppercase text-sm hover:bg-[#E8A020] transition-colors"
+                  className="royal-button w-full"
                 >
                   <ShoppingBag size={18} />
                   View Cart ({count})

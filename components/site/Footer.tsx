@@ -6,21 +6,21 @@ export default function Footer() {
   const currentYear = new Date().getFullYear()
 
   return (
-    <footer className="bg-[#0a0a0a] border-t border-white/10">
+    <footer className="royal-grain relative overflow-hidden border-t border-gold/20 bg-[#080705]">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12 sm:py-16">
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-8 lg:gap-12">
           {/* Brand Info */}
           <div className="lg:col-span-2">
             <Link href="/" className="inline-block mb-4">
               <Image
-                src="/images/Qureshi's Nav.png"
+                src="/images/qureshis-navbar-logo.png"
                 alt="Qureshi's Masala & Spices"
-                width={160}
-                height={40}
-                className="object-contain"
+                width={542}
+                height={192}
+                className="h-auto w-[190px] object-contain"
               />
             </Link>
-            <p className="text-white/50 text-sm sm:text-base leading-relaxed mb-6 max-w-md">
+            <p className="mb-6 max-w-md text-sm leading-7 text-cream/55 sm:text-base">
               A Legacy of Flavour, Crafted with Passion. Small-batch masalas made with authentic recipes and premium ingredients.
             </p>
             <div className="flex items-center gap-4">
@@ -28,7 +28,7 @@ export default function Footer() {
                 href="https://www.instagram.com/qureshis_masala" 
                 target="_blank" 
                 rel="noopener noreferrer"
-                className="text-white/50 hover:text-[#C9A84C] transition-colors"
+                className="text-white/50 hover:text-gold transition-colors"
               >
                 Instagram
               </a>
@@ -36,13 +36,13 @@ export default function Footer() {
                 href="https://wa.me/918762117816"
                 target="_blank" 
                 rel="noopener noreferrer"
-                className="text-white/50 hover:text-[#C9A84C] transition-colors"
+                className="text-white/50 hover:text-gold transition-colors"
               >
                 WhatsApp
               </a>
               <a 
                 href={`mailto:${SITE.email}`}
-                className="text-white/50 hover:text-[#C9A84C] transition-colors"
+                className="text-white/50 hover:text-gold transition-colors"
               >
                 Email
               </a>
@@ -51,7 +51,7 @@ export default function Footer() {
 
           {/* Shop Column */}
           <div>
-            <h3 className="text-[#C9A84C] text-[11px] font-bold tracking-[0.3em] uppercase mb-4">Shop</h3>
+            <h3 className="text-gold text-[11px] font-bold tracking-[0.3em] uppercase mb-4">Shop</h3>
             <ul className="space-y-2.5">
               <li>
                 <Link href="/shop" className="text-white/50 hover:text-white transition-colors text-sm">Shop All</Link>
@@ -70,7 +70,7 @@ export default function Footer() {
 
           {/* Learn Column */}
           <div>
-            <h3 className="text-[#C9A84C] text-[11px] font-bold tracking-[0.3em] uppercase mb-4">Learn</h3>
+            <h3 className="text-gold text-[11px] font-bold tracking-[0.3em] uppercase mb-4">Learn</h3>
             <ul className="space-y-2.5">
               <li>
                 <Link href="/our-story" className="text-white/50 hover:text-white transition-colors text-sm">Our Story</Link>
@@ -89,7 +89,7 @@ export default function Footer() {
 
           {/* Business & Support Column */}
           <div>
-            <h3 className="text-[#C9A84C] text-[11px] font-bold tracking-[0.3em] uppercase mb-4">Business</h3>
+            <h3 className="text-gold text-[11px] font-bold tracking-[0.3em] uppercase mb-4">Business</h3>
             <ul className="space-y-2.5 mb-6">
               <li>
                 <Link href="/stock-our-products" className="text-white/50 hover:text-white transition-colors text-sm">Stock Our Products</Link>
@@ -99,7 +99,7 @@ export default function Footer() {
               </li>
             </ul>
             
-            <h3 className="text-[#C9A84C] text-[11px] font-bold tracking-[0.3em] uppercase mb-4">Support</h3>
+            <h3 className="text-gold text-[11px] font-bold tracking-[0.3em] uppercase mb-4">Support</h3>
             <ul className="space-y-2.5">
               <li>
                 <Link href="/order" className="text-white/50 hover:text-white transition-colors text-sm">Ordering Info</Link>
@@ -115,7 +115,7 @@ export default function Footer() {
         </div>
 
         {/* Bottom Bar */}
-        <div className="mt-12 pt-8 border-t border-white/10 flex flex-col sm:flex-row items-center justify-between gap-4">
+        <div className="mt-12 flex flex-col items-center justify-between gap-4 border-t border-gold/15 pt-8 sm:flex-row">
           <p className="text-white/30 text-xs sm:text-sm">
             © {currentYear} Qureshi's Masala & Spices. All rights reserved.
           </p>

@@ -119,7 +119,7 @@ function CheckoutInput({
         autoComplete={autoComplete}
         placeholder={placeholder}
         {...register(id)}
-        className={`min-h-12 w-full min-w-0 rounded-xl border bg-[#11100f] px-4 text-sm text-[#f5efe6] outline-none transition-colors placeholder:text-[#f5efe6]/20 ${
+        className={`min-h-12 w-full min-w-0 rounded-[2px] border bg-[#11100f] px-4 text-sm text-[#f5efe6] outline-none transition-colors placeholder:text-[#f5efe6]/20 ${
           error
             ? "border-red-400/50 focus:border-red-400"
             : "border-white/10 focus:border-[#c9a45f]/70"
@@ -147,7 +147,7 @@ function CheckoutProgress({
     <div
       role="tablist"
       aria-label="Checkout steps"
-      className="grid w-full grid-cols-2 gap-1 rounded-2xl border border-white/10 bg-black/25 p-1.5 shadow-lg shadow-black/10 sm:w-auto sm:min-w-[310px]"
+      className="grid w-full grid-cols-2 gap-1 rounded-[3px] border border-gold/15 bg-black/25 p-1.5 shadow-lg shadow-black/10 sm:w-auto sm:min-w-[310px]"
     >
       <button
         type="button"
@@ -155,7 +155,7 @@ function CheckoutProgress({
         aria-selected={!deliveryActive}
         aria-controls="cart-step-panel"
         onClick={() => onStepChange("cart")}
-        className={`flex min-h-11 min-w-0 items-center justify-center gap-2 rounded-xl px-3 text-[10px] font-bold uppercase tracking-[0.14em] transition-colors sm:px-5 ${
+        className={`flex min-h-11 min-w-0 items-center justify-center gap-2 rounded-[2px] px-3 text-[10px] font-bold uppercase tracking-[0.14em] transition-colors sm:px-5 ${
           !deliveryActive
             ? "bg-[#c9a45f] text-[#130d08] shadow-md shadow-black/20"
             : "text-[#f5efe6]/55 hover:bg-white/5 hover:text-[#f5efe6]"
@@ -193,7 +193,7 @@ function CheckoutProgress({
         aria-disabled={!hasItems}
         disabled={!hasItems}
         onClick={() => onStepChange("delivery")}
-        className={`flex min-h-11 min-w-0 items-center justify-center gap-2 rounded-xl px-3 text-[10px] font-bold uppercase tracking-[0.14em] transition-colors sm:px-5 ${
+        className={`flex min-h-11 min-w-0 items-center justify-center gap-2 rounded-[2px] px-3 text-[10px] font-bold uppercase tracking-[0.14em] transition-colors sm:px-5 ${
           deliveryActive
             ? "bg-[#c9a45f] text-[#130d08] shadow-md shadow-black/20"
             : "text-[#f5efe6]/55 hover:bg-white/5 hover:text-[#f5efe6] disabled:cursor-not-allowed disabled:opacity-30 disabled:hover:bg-transparent"
@@ -233,7 +233,7 @@ function TrustStrip() {
   ];
 
   return (
-    <div className="grid grid-cols-1 divide-y divide-white/10 rounded-2xl border border-white/10 bg-white/[0.025] sm:grid-cols-3 sm:divide-x sm:divide-y-0">
+    <div className="grid grid-cols-1 divide-y divide-white/10 rounded-[3px] border border-gold/10 bg-white/[0.025] sm:grid-cols-3 sm:divide-x sm:divide-y-0">
       {items.map((item) => {
         const Icon = item.icon;
 
@@ -360,14 +360,13 @@ function OrderSuccess({
   openWhatsApp: () => void;
 }) {
   return (
-    <div className="relative min-h-screen w-full overflow-x-hidden bg-[#0b0a09] pb-16 pt-24">
+    <div className="royal-page royal-grain relative min-h-screen w-full overflow-x-hidden pb-16 pt-24">
       <div className="pointer-events-none absolute inset-0 overflow-hidden">
-        <div className="absolute -right-32 top-20 h-80 w-80 rounded-full bg-[#6b1a1a]/15 blur-[100px]" />
-        <div className="absolute -left-32 top-72 h-80 w-80 rounded-full bg-[#c9a45f]/10 blur-[110px]" />
+        <div className="absolute inset-x-[8%] top-0 h-px bg-gradient-to-r from-transparent via-gold/35 to-transparent" />
       </div>
 
       <div className="relative mx-auto w-full max-w-3xl px-4 sm:px-6">
-        <div className="rounded-3xl border border-white/10 bg-[#11100f]/95 p-5 shadow-2xl shadow-black/40 sm:p-8">
+        <div className="royal-panel rounded-[3px] p-5 sm:p-8">
           <div className="text-center">
             <div className="mx-auto mb-6 flex h-20 w-20 items-center justify-center rounded-full border border-green-400/20 bg-green-400/10 text-green-300">
               <CheckCircle2 size={36} />
@@ -377,8 +376,8 @@ function OrderSuccess({
               Order request received
             </p>
 
-            <h1 className="font-display text-3xl uppercase text-[#f5efe6] sm:text-5xl">
-              Thank You
+            <h1 className="royal-title text-5xl sm:text-6xl">
+              Thank you.
             </h1>
 
             <p className="mx-auto mt-4 max-w-md text-sm leading-6 text-[#f5efe6]/45">
@@ -715,7 +714,7 @@ Please confirm this order.`,
 
   if (loading) {
     return (
-      <div className="flex min-h-screen w-full items-center justify-center overflow-x-hidden bg-[#0b0a09] px-4">
+      <div className="royal-page flex min-h-screen w-full items-center justify-center overflow-x-hidden px-4">
         <div className="text-center">
           <div className="mx-auto h-10 w-10 animate-spin rounded-full border-2 border-white/10 border-t-[#c9a45f]" />
 
@@ -740,12 +739,8 @@ Please confirm this order.`,
   }
 
   return (
-    <div className="relative min-h-screen w-full overflow-x-hidden bg-[#0b0a09] pb-32 pt-24 sm:pt-28 lg:pb-20">
+    <div className="royal-page royal-grain relative min-h-screen w-full overflow-x-hidden pb-32 pt-24 sm:pt-28 lg:pb-20">
       <div className="pointer-events-none absolute inset-0 overflow-hidden">
-        <div className="absolute -right-40 top-10 h-[420px] w-[420px] rounded-full bg-[#6b1a1a]/15 blur-[120px]" />
-
-        <div className="absolute -left-40 top-[520px] h-[380px] w-[380px] rounded-full bg-[#c9a45f]/10 blur-[120px]" />
-
         <div className="absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-[#c9a45f]/30 to-transparent" />
       </div>
 
@@ -761,7 +756,7 @@ Please confirm this order.`,
                 </span>
               </div>
 
-              <h1 className="break-words font-display text-4xl uppercase leading-none text-[#f5efe6] sm:text-5xl md:text-6xl">
+              <h1 className="royal-title break-words text-5xl sm:text-6xl md:text-7xl">
                 {checkoutStep === "cart" ? "Your Cart" : "Place Your Order"}
               </h1>
 
@@ -793,7 +788,7 @@ Please confirm this order.`,
           >
             <section className="min-w-0 lg:col-span-8">
               {!user && (
-                <div className="mb-5 overflow-hidden rounded-2xl border border-[#c9a45f]/15 bg-gradient-to-r from-[#6b1a1a]/15 to-[#c9a45f]/5 p-4 sm:p-5">
+                <div className="mb-5 overflow-hidden rounded-[3px] border border-[#c9a45f]/15 bg-gradient-to-r from-[#6b1a1a]/15 to-[#c9a45f]/5 p-4 sm:p-5">
                   <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
                     <div className="min-w-0">
                       <p className="text-sm font-semibold text-[#f5efe6]">
@@ -826,13 +821,13 @@ Please confirm this order.`,
               )}
 
               {items.length === 0 ? (
-                <div className="flex min-h-[420px] flex-col items-center justify-center rounded-3xl border border-white/10 bg-[#11100f]/90 px-5 text-center shadow-xl shadow-black/20">
+                <div className="royal-panel flex min-h-[420px] flex-col items-center justify-center rounded-[3px] px-5 text-center">
                   <div className="mb-6 flex h-20 w-20 items-center justify-center rounded-full border border-[#c9a45f]/20 bg-[#c9a45f]/10 text-[#c9a45f]">
                     <ShoppingBag size={32} />
                   </div>
 
-                  <h2 className="font-display text-3xl uppercase text-[#f5efe6]">
-                    Your cart is empty
+                  <h2 className="royal-title text-4xl">
+                    Your cart is empty.
                   </h2>
 
                   <p className="mt-3 max-w-sm text-sm leading-6 text-[#f5efe6]/40">
@@ -849,7 +844,7 @@ Please confirm this order.`,
                   </Link>
                 </div>
               ) : (
-                <div className="w-full min-w-0 overflow-hidden rounded-3xl border border-white/10 bg-[#11100f]/90 shadow-xl shadow-black/20">
+                <div className="royal-panel w-full min-w-0 overflow-hidden rounded-[3px]">
                   <div className="flex items-center justify-between gap-4 border-b border-white/10 px-4 py-4 sm:px-6 sm:py-5">
                     <div>
                       <p className="text-[10px] font-bold uppercase tracking-[0.25em] text-[#c9a45f]">
@@ -883,7 +878,7 @@ Please confirm this order.`,
             {items.length > 0 && (
               <aside className="min-w-0 lg:col-span-4">
                 <div className="lg:sticky lg:top-24">
-                  <div className="overflow-hidden rounded-3xl border border-white/10 bg-[#11100f]/95 shadow-2xl shadow-black/30">
+                  <div className="royal-panel overflow-hidden rounded-[3px]">
                     <div className="relative overflow-hidden border-b border-white/10 bg-gradient-to-br from-[#6b1a1a]/30 to-[#c9a45f]/10 px-5 py-6">
                       <div className="absolute -right-10 -top-10 h-32 w-32 rounded-full border border-[#c9a45f]/10" />
 
@@ -1050,7 +1045,7 @@ Please confirm this order.`,
                 Back to Cart
               </button>
 
-              <div className="overflow-hidden rounded-3xl border border-white/10 bg-[#11100f]/95 shadow-xl shadow-black/20">
+              <div className="royal-panel overflow-hidden rounded-[3px]">
                 <div className="border-b border-white/10 bg-gradient-to-r from-[#6b1a1a]/15 to-transparent px-5 py-5 sm:px-7">
                   <div className="flex items-center gap-3">
                     <span className="flex h-10 w-10 items-center justify-center rounded-full bg-[#c9a45f]/10 text-[#c9a45f]">
@@ -1058,7 +1053,7 @@ Please confirm this order.`,
                     </span>
 
                     <div>
-                      <h2 className="font-display text-xl uppercase text-[#f5efe6] sm:text-2xl">
+                      <h2 className="font-display text-3xl text-[#f5efe6] sm:text-4xl">
                         Delivery Details
                       </h2>
 
@@ -1174,7 +1169,7 @@ Please confirm this order.`,
 
             <aside className="min-w-0 lg:col-span-4">
               <div className="lg:sticky lg:top-24">
-                <div className="overflow-hidden rounded-3xl border border-white/10 bg-[#11100f]/95 shadow-2xl shadow-black/30">
+                <div className="royal-panel overflow-hidden rounded-[3px]">
                   <div className="border-b border-white/10 px-5 py-5">
                     <p className="text-[10px] font-bold uppercase tracking-[0.25em] text-[#c9a45f]">
                       Final Summary

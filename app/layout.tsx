@@ -16,14 +16,14 @@ export const metadata: Metadata = {
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
-    <html lang="en">
-      <body className="bg-[#0a0a0a] text-white antialiased">
+    <html lang="en" className="bg-black">
+      <body className="bg-black text-cream antialiased">
         <ClientLayout>{children}</ClientLayout>
         <Toaster
           position="top-center"
           toastOptions={{
-            style: { background: '#141414', color: '#fff', border: '1px solid rgba(245,197,24,0.2)' },
-            success: { iconTheme: { primary: '#F5C518', secondary: '#000' } },
+            style: { background: '#17110e', color: '#f4ede0', border: '1px solid rgba(224,200,137,0.22)', borderRadius: '3px' },
+            success: { iconTheme: { primary: '#c7a15a', secondary: '#080705' } },
           }}
         />
       </body>

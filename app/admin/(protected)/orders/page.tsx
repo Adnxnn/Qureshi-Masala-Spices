@@ -79,7 +79,7 @@ export default function AdminOrdersPage() {
           <p className="mb-1.5 text-[10px] font-semibold uppercase tracking-[0.22em] text-gold md:hidden">
             Order management
           </p>
-          <h1 className="font-display text-3xl uppercase tracking-wider text-white sm:text-4xl">
+          <h1 className="royal-title text-5xl sm:text-6xl">
             Orders
           </h1>
         </div>
@@ -105,7 +105,7 @@ export default function AdminOrdersPage() {
           {orders.map((order) => (
             <article
               key={order.id}
-              className="overflow-hidden rounded-xl border border-white/10 bg-dark p-4 sm:p-5"
+              className="overflow-hidden rounded-[2px] border border-white/10 bg-dark p-4 sm:p-5"
             >
               <div className="mb-4 flex flex-col gap-4 sm:flex-row sm:items-start sm:justify-between">
                 <div className="min-w-0">
@@ -198,7 +198,7 @@ export default function AdminOrdersPage() {
                       event.target.value as OrderStatus
                     )
                   }
-                  className="min-h-12 w-full rounded-xl border border-white/10 bg-black px-3 py-2 text-white focus:border-gold focus:outline-none disabled:opacity-50 sm:min-h-11 sm:w-auto sm:text-sm"
+                  className="min-h-12 w-full rounded-[2px] border border-white/10 bg-black px-3 py-2 text-white focus:border-gold focus:outline-none disabled:opacity-50 sm:min-h-11 sm:w-auto sm:text-sm"
                 >
                   {STATUS_OPTIONS.map((status) => (
                     <option key={status} value={status}>

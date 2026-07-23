@@ -66,15 +66,15 @@ export default function RecipesPage() {
   }, [searchQuery, allRecipes])
 
   return (
-    <div className="min-h-screen w-full overflow-x-hidden bg-gradient-to-b from-black via-zinc-950 to-black pb-20 pt-24">
+    <div className="royal-page royal-grain min-h-screen w-full overflow-x-hidden pb-20 pt-24">
       <div className="mx-auto w-full max-w-6xl px-4 sm:px-6 lg:px-8">
         <header className="mb-10 text-center sm:mb-16">
-          <div className="mb-4 text-[11px] uppercase tracking-[0.4em] text-gold">
+          <div className="royal-eyebrow mb-4">
             Recipes
           </div>
 
-          <h1 className="mb-6 font-display text-4xl uppercase sm:text-5xl md:text-6xl">
-            Cook Like a Pro
+          <h1 className="royal-title mb-6 text-5xl sm:text-6xl md:text-7xl">
+            Cook with character.
           </h1>
 
           <p className="mx-auto max-w-2xl text-base text-white/60 sm:text-lg md:text-xl">
@@ -98,7 +98,7 @@ export default function RecipesPage() {
             onChange={(event) =>
               setSearchQuery(event.target.value)
             }
-            className="w-full rounded-2xl border border-white/10 bg-black/40 py-3.5 pl-12 pr-5 text-base text-white backdrop-blur-sm transition-all duration-300 placeholder:text-white/20 focus:border-gold/50 focus:outline-none focus:ring-1 focus:ring-gold/20"
+            className="royal-field py-3.5 pl-12 pr-5 text-base placeholder:text-white/20"
           />
         </div>
 
@@ -143,7 +143,7 @@ function RecipeCard({ recipe }: { recipe: any }) {
       href={`/recipes/${recipe.slug}`}
       className="group block h-full w-full min-w-0"
     >
-      <article className="flex h-full w-full min-w-0 flex-col overflow-hidden rounded-2xl border border-white/10 bg-black/40 transition-colors duration-300 hover:border-gold/30">
+      <article className="royal-panel flex h-full w-full min-w-0 flex-col overflow-hidden rounded-[3px] transition-colors duration-300 hover:border-gold/30">
         <div className="relative h-56 w-full overflow-hidden">
           {imageUrl ? (
             <Image
@@ -167,13 +167,13 @@ function RecipeCard({ recipe }: { recipe: any }) {
 
           <div className="absolute inset-x-4 bottom-4 flex flex-wrap gap-2">
             {recipe.cuisine_or_category && (
-              <span className="inline-block rounded-full bg-gold px-3 py-1 text-[10px] font-bold uppercase tracking-[0.2em] text-black">
+              <span className="inline-block rounded-[2px] border border-gold/60 bg-gold/90 px-3 py-1 text-[10px] font-bold uppercase tracking-[0.2em] text-black">
                 {recipe.cuisine_or_category}
               </span>
             )}
 
             {recipe.is_vegetarian && (
-              <span className="inline-block rounded-full border border-green-500/30 bg-green-500/20 px-3 py-1 text-[10px] font-bold uppercase tracking-[0.2em] text-green-400">
+              <span className="inline-block rounded-[2px] border border-green-500/30 bg-green-500/20 px-3 py-1 text-[10px] font-bold uppercase tracking-[0.2em] text-green-400">
                 Vegetarian
               </span>
             )}
@@ -181,7 +181,7 @@ function RecipeCard({ recipe }: { recipe: any }) {
         </div>
 
         <div className="flex min-w-0 flex-grow flex-col p-5 sm:p-6">
-          <h2 className="mb-2 break-words font-display text-2xl uppercase transition-colors duration-300 group-hover:text-gold sm:text-3xl">
+          <h2 className="mb-2 break-words font-display text-3xl text-cream transition-colors duration-300 group-hover:text-gold sm:text-4xl">
             {recipe.name}
           </h2>
 

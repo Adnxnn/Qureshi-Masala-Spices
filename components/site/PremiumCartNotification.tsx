@@ -66,7 +66,7 @@ const NotificationCard = ({
       animate={{ opacity: 1, y: 0, scale: 1 }}
       exit={{ opacity: 0, y: 10, scale: 0.95 }}
       transition={{ type: 'spring', stiffness: 400, damping: 35, duration: 0.4 }}
-      className="pointer-events-auto w-full sm:w-[380px] bg-black/70 backdrop-blur-2xl border border-gold/25 rounded-2xl shadow-[0_10px_40px_rgba(0,0,0,0.5)] p-4 relative overflow-hidden"
+      className="royal-panel pointer-events-auto relative w-full overflow-hidden rounded-[3px] border-gold/25 p-4 backdrop-blur-2xl sm:w-[380px]"
     >
       {/* Subtle gold dust particles */}
       <div className="absolute inset-0 pointer-events-none overflow-hidden">
@@ -77,7 +77,7 @@ const NotificationCard = ({
         {/* Product Image */}
         <div className="flex-shrink-0">
           {notification.productImage ? (
-            <div className="w-12 h-12 rounded-xl overflow-hidden shadow-[0_4px_15px_rgba(0,0,0,0.3)]">
+            <div className="h-12 w-12 overflow-hidden rounded-[2px] shadow-[0_4px_15px_rgba(0,0,0,0.3)]">
               <Image
                 src={notification.productImage}
                 alt={notification.productName}
@@ -87,7 +87,7 @@ const NotificationCard = ({
               />
             </div>
           ) : (
-            <div className="w-12 h-12 rounded-xl bg-zinc-800 border border-gold/30 flex items-center justify-center shadow-[0_4px_15px_rgba(0,0,0,0.3)]">
+            <div className="flex h-12 w-12 items-center justify-center rounded-[2px] border border-gold/30 bg-zinc-800 shadow-[0_4px_15px_rgba(0,0,0,0.3)]">
               <CheckCircle2 className="text-gold" size={20} />
             </div>
           )}

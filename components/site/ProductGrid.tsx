@@ -4,7 +4,7 @@ import Image from 'next/image'
 import Link from 'next/link'
 import { useRouter } from 'next/navigation'
 import { motion, AnimatePresence } from 'framer-motion'
-import { ShoppingBag, ArrowRight, X, Plus, Eye, Sparkles } from 'lucide-react'
+import { ShoppingBag, ArrowRight, X, Plus, Eye } from 'lucide-react'
 import { useCart } from '@/lib/cart'
 import { useCartNotifications } from '@/lib/cart-notifications'
 import type { Product, ProductVariant } from '@/types'
@@ -29,10 +29,10 @@ const formatWeight = (grams: number) => {
 // Skeleton component
 function ProductSkeleton() {
   return (
-    <div className="relative bg-black/40 p-4 sm:p-6 flex flex-col rounded-2xl border border-white/5">
+    <div className="relative flex flex-col rounded-[3px] border border-gold/10 bg-black/40 p-4 sm:p-6">
       <div className="animate-pulse">
         <div className="mb-4 sm:mb-6 flex justify-center">
-          <div className="bg-gradient-to-br from-zinc-900 to-zinc-950 p-4 sm:p-6 rounded-2xl w-full aspect-square flex items-center justify-center">
+          <div className="flex aspect-square w-full items-center justify-center rounded-[3px] bg-gradient-to-br from-zinc-900 to-zinc-950 p-4 sm:p-6">
             <div className="bg-white/10 h-20 sm:h-32 w-20 sm:w-32 rounded-full" />
           </div>
         </div>
@@ -82,21 +82,21 @@ function QuickViewModal({ product, onClose }: { product: Product; onClose: () =>
           animate={{ opacity: 1, scale: 1, y: 0 }}
           exit={{ opacity: 0, scale: 0.95, y: 40 }}
           transition={{ duration: 0.4, ease: [0.22, 1, 0.36, 1] }}
-          className="bg-gradient-to-br from-zinc-950 to-black w-full sm:max-w-4xl rounded-t-2xl sm:rounded-2xl border border-white/10 overflow-hidden max-h-[90vh] overflow-y-auto"
+          className="max-h-[90vh] w-full overflow-y-auto rounded-t-[3px] border border-gold/20 bg-gradient-to-b from-dark to-black shadow-[0_35px_100px_rgba(0,0,0,0.62)] sm:max-w-4xl sm:rounded-[3px]"
           onClick={(e) => e.stopPropagation()}
         >
           <div className="flex justify-between items-center p-4 sm:p-6 border-b border-white/10">
             <div>
-              <h3 className="font-display text-xl sm:text-2xl uppercase text-white">{product.name}</h3>
+              <h3 className="font-display text-2xl font-semibold text-white sm:text-3xl">{product.name}</h3>
               <p className="text-[9px] sm:text-[10px] uppercase text-white/30 mt-1 tracking-[0.3em]">{product.category}</p>
             </div>
-            <button onClick={onClose} className="text-white/40 hover:text-white hover:bg-white/10 p-2 rounded-xl transition-all">
+            <button onClick={onClose} className="flex size-11 items-center justify-center rounded-[2px] text-white/40 transition-colors hover:bg-white/5 hover:text-white" aria-label="Close quick view">
               <X size={20} />
             </button>
           </div>
 
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6 sm:gap-8 p-4 sm:p-6">
-            <div className="bg-gradient-to-br from-zinc-900/80 to-black rounded-2xl p-6 sm:p-8 flex items-center justify-center">
+            <div className="flex items-center justify-center rounded-[3px] border border-gold/10 bg-[radial-gradient(circle_at_50%_42%,rgba(91,23,24,0.2),transparent_52%),#0c0907] p-6 sm:p-8">
               <Image
                 src={product.image_url}
                 alt={product.name}
@@ -119,7 +119,7 @@ function QuickViewModal({ product, onClose }: { product: Product; onClose: () =>
                     <button
                       key={idx}
                       onClick={() => setSelectedVariantIndex(idx)}
-                      className={`flex-1 min-w-[90px] sm:min-w-[100px] px-4 sm:px-5 py-2.5 sm:py-3 text-[9px] sm:text-[10px] font-bold tracking-[0.3em] uppercase transition-all duration-300 rounded-xl border ${
+                      className={`min-h-11 min-w-[90px] flex-1 rounded-[2px] border px-4 py-2.5 text-[9px] font-bold uppercase tracking-[0.22em] transition-colors duration-200 sm:min-w-[100px] sm:px-5 sm:py-3 sm:text-[10px] ${
                         idx === selectedVariantIndex
                           ? 'border-gold text-gold bg-gold/10'
                           : 'border-white/10 text-white/40 hover:border-white/20 hover:text-white/70 bg-black/40'
@@ -150,11 +150,11 @@ function QuickViewModal({ product, onClose }: { product: Product; onClose: () =>
                   animate={{
                     scale: buttonState === 'pressed' ? 0.97 : buttonState === 'sparking' ? 1.03 : 1,
                     boxShadow: buttonState === 'sparking'
-                      ? '0 0 50px rgba(245,197,24,0.5)'
+                      ? '0 18px 48px rgba(0,0,0,0.48)'
                       : 'none',
                   }}
                   transition={{ type: 'spring', stiffness: 500, damping: 15 }}
-                  className="w-full flex items-center justify-center gap-2.5 bg-gradient-to-r from-gold to-yellow-400 text-black px-6 sm:px-7 py-3.5 sm:py-4 text-[10px] sm:text-xs font-bold tracking-[0.3em] uppercase hover:from-yellow-300 hover:to-gold transition-all duration-300 rounded-xl relative overflow-hidden"
+                  className="royal-button relative w-full overflow-hidden"
                 >
                   <ShoppingBag size={18} />
                   {adding ? 'Adding to Cart...' : 'Add to Cart'}
@@ -181,7 +181,7 @@ function QuickViewModal({ product, onClose }: { product: Product; onClose: () =>
                 <Link
                   href={`/product/${product.slug || generateSlug(product.name)}`}
                   onClick={onClose}
-                  className="w-full flex items-center justify-center gap-2.5 border border-white/10 text-white/50 hover:text-white hover:border-white/30 hover:bg-white/5 px-6 sm:px-7 py-3.5 sm:py-4 text-[10px] sm:text-xs font-bold tracking-[0.3em] uppercase transition-all duration-300 rounded-xl"
+                  className="royal-button-secondary w-full"
                 >
                   View Full Details
                   <ArrowRight size={14} />
@@ -258,21 +258,21 @@ export default function ProductGrid({ products, loading = false }: { products: P
               className="cursor-pointer"
             >
               <motion.div
-                className={`group relative bg-gradient-to-b from-zinc-900/80 to-black border border-white/5 rounded-2xl sm:rounded-3xl overflow-hidden hover:border-gold/30 hover:shadow-[0_20px_60px_rgba(0,0,0,0.6)] transition-all duration-500 flex flex-col ${isOutOfStock ? 'opacity-70' : ''}`}
+                className={`group relative flex h-full flex-col overflow-hidden rounded-[3px] border border-gold/12 bg-gradient-to-b from-dark to-black transition-[border-color,transform,box-shadow] duration-300 hover:-translate-y-1 hover:border-gold/35 hover:shadow-[0_24px_70px_rgba(0,0,0,0.5)] ${isOutOfStock ? 'opacity-70' : ''}`}
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.5, delay: i * 0.05 }}
               >
                 {/* Product Image */}
                 <div className="p-4 sm:p-6 flex justify-center">
-                  <div className="bg-gradient-to-br from-zinc-900 to-zinc-950 rounded-2xl sm:rounded-3xl w-full aspect-square flex items-center justify-center relative overflow-hidden">
+                  <div className="relative flex aspect-square w-full items-center justify-center overflow-hidden rounded-[2px] border border-white/[0.04] bg-[radial-gradient(circle_at_50%_42%,rgba(91,23,24,0.18),transparent_52%),#0c0907]">
                     {p.image_url ? (
                       <Image
                         src={p.image_url}
                         alt={p.name}
                         width={220}
                         height={220}
-                        className="max-h-full max-w-full object-contain transition-all duration-700 group-hover:scale-110 group-hover:-translate-y-1"
+                        className="max-h-full max-w-full object-contain p-3 drop-shadow-[0_22px_24px_rgba(0,0,0,0.58)] transition-transform duration-500 group-hover:-translate-y-1 group-hover:scale-[1.04]"
                         priority={i < 4}
                         placeholder="blur"
                         blurDataURL="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='220' height='220' viewBox='0 0 220 220'%3E%3Crect width='220' height='220' fill='%231f2937'/%3E%3C/svg%3E"
@@ -295,14 +295,15 @@ export default function ProductGrid({ products, loading = false }: { products: P
                         e.stopPropagation()
                         setQuickViewProduct(p)
                       }}
-                      className="absolute top-3 right-3 opacity-0 group-hover:opacity-100 transition-all duration-400 bg-black/80 hover:bg-gold hover:text-black text-white p-2.5 rounded-xl backdrop-blur-md border border-white/10 hover:border-gold"
+                      className="absolute right-3 top-3 flex size-11 items-center justify-center rounded-[2px] border border-gold/20 bg-black/75 text-white opacity-100 backdrop-blur-md transition-colors hover:border-gold hover:bg-gold hover:text-black sm:opacity-0 sm:group-focus-within:opacity-100 sm:group-hover:opacity-100"
+                      aria-label={`Quick view ${p.name}`}
                     >
                       <Eye size={16} />
                     </button>
 
                     {/* Category badge */}
                     <div className="absolute top-3 left-3">
-                      <span className="px-3 py-1.5 bg-black/80 backdrop-blur-md border border-white/10 rounded-full text-[9px] font-bold tracking-[0.25em] uppercase text-white/60">
+                      <span className="border border-gold/15 bg-black/80 px-3 py-1.5 text-[8px] font-bold uppercase tracking-[0.2em] text-white/60 backdrop-blur-md sm:text-[9px]">
                         {p.category}
                       </span>
                     </div>
@@ -321,7 +322,7 @@ export default function ProductGrid({ products, loading = false }: { products: P
                 {/* Content */}
                 <div className="px-4 sm:px-6 pb-4 sm:pb-6 flex flex-col flex-1">
                   <div className="mb-3 sm:mb-4">
-                    <h3 className="font-display text-sm sm:text-base md:text-lg uppercase leading-tight text-white line-clamp-2 group-hover:text-gold transition-colors duration-300">
+                    <h3 className="line-clamp-2 font-display text-lg font-semibold leading-[1.02] text-white transition-colors duration-200 group-hover:text-gold-light sm:text-xl md:text-2xl">
                       {p.name}
                     </h3>
                     {p.short_description && (
@@ -342,7 +343,7 @@ export default function ProductGrid({ products, loading = false }: { products: P
                           if (!isOutOfStock) handleSelectVariant(p.id, idx)
                         }}
                         disabled={isOutOfStock}
-                        className={`px-2.5 sm:px-3 py-1.5 text-[8px] sm:text-[9px] font-bold tracking-[0.25em] uppercase transition-all duration-300 rounded-lg border ${
+                        className={`min-h-9 rounded-[2px] border px-2.5 py-1.5 text-[8px] font-bold uppercase tracking-[0.18em] transition-colors duration-200 sm:px-3 sm:text-[9px] ${
                           selectedVariants[p.id] === idx
                             ? 'border-gold text-gold bg-gold/10'
                             : 'border-white/10 text-white/35 hover:border-white/20 hover:text-white/60 bg-black/40'
@@ -377,14 +378,14 @@ export default function ProductGrid({ products, loading = false }: { products: P
                       animate={{
                         scale: pressedProductId === p.id ? [1, 0.97, 1.03, 1] : 1,
                         boxShadow: pressedProductId === p.id
-                          ? '0 0 40px rgba(245,197,24,0.5)'
+                          ? '0 16px 42px rgba(0,0,0,0.5)'
                           : 'none',
                       }}
                       transition={{ type: 'spring', stiffness: 500, damping: 15 }}
-                      className={`w-full flex items-center justify-center gap-2 px-4 py-3 text-[9px] sm:text-[10px] font-bold tracking-[0.3em] uppercase transition-all duration-300 rounded-xl relative overflow-hidden ${
+                      className={`relative flex min-h-11 w-full items-center justify-center gap-2 overflow-hidden rounded-[2px] border px-4 py-3 text-[9px] font-bold uppercase tracking-[0.2em] transition-colors duration-200 sm:text-[10px] ${
                         isOutOfStock
-                          ? 'cursor-not-allowed bg-white/10 text-white/30'
-                          : 'bg-gradient-to-r from-gold to-yellow-400 text-black hover:from-yellow-300 hover:to-gold hover:shadow-[0_0_30px_rgba(245,197,24,0.4)] transition-all'
+                          ? 'cursor-not-allowed border-white/10 bg-white/5 text-white/30'
+                          : 'border-gold-light bg-gold text-black hover:bg-gold-light'
                       }`}
                     >
                       <Plus size={14} />

@@ -3,6 +3,7 @@
 import { useEffect, useState } from 'react'
 import Link from 'next/link'
 import { CheckCircle2, CircleAlert, LoaderCircle } from 'lucide-react'
+import AuthBackdrop from '@/components/site/AuthBackdrop'
 
 type ConfirmationState = 'checking' | 'confirmed' | 'expired' | 'failed'
 
@@ -41,14 +42,11 @@ export default function EmailConfirmedPage() {
   const isChecking = confirmationState === 'checking'
 
   return (
-    <div className="relative flex min-h-screen items-center justify-center overflow-hidden bg-dark px-4 pb-20 pt-24 sm:px-6 sm:pt-28">
-      <div
-        className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_50%_30%,rgba(245,197,24,0.10),transparent_34%)]"
-        aria-hidden="true"
-      />
+    <div className="royal-auth-stage royal-grain flex items-center justify-center px-4 pb-20 pt-24 sm:px-6 sm:pt-28">
+      <AuthBackdrop />
 
       <section
-        className="relative w-full max-w-md rounded-2xl border border-white/10 bg-[#111]/95 p-6 text-center shadow-2xl shadow-black/40 sm:p-9"
+        className="royal-auth-card relative z-10 w-full max-w-md p-6 text-center sm:p-9"
         aria-live="polite"
       >
         <div
@@ -72,10 +70,10 @@ export default function EmailConfirmedPage() {
           )}
         </div>
 
-        <p className="text-[11px] font-bold uppercase tracking-[0.28em] text-gold">
+        <p className="royal-eyebrow">
           Account verification
         </p>
-        <h1 className="mt-3 font-display text-4xl tracking-wide text-white sm:text-5xl">
+        <h1 className="royal-title mt-3 text-5xl sm:text-6xl">
           {isChecking
             ? 'Confirming Your Email'
             : confirmationState === 'confirmed'
@@ -97,13 +95,13 @@ export default function EmailConfirmedPage() {
           <div className="mt-8 space-y-3">
             <Link
               href="/login"
-              className="inline-flex min-h-12 w-full items-center justify-center rounded-xl bg-gold px-5 font-bold text-black transition hover:bg-gold-light focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-gold focus-visible:ring-offset-2 focus-visible:ring-offset-[#111]"
+              className="royal-button w-full"
             >
               Continue to Sign In
             </Link>
             <Link
               href="/"
-              className="inline-flex min-h-12 w-full items-center justify-center rounded-xl border border-white/10 px-5 font-semibold text-white/70 transition hover:border-gold/35 hover:text-gold focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-gold"
+              className="royal-button-secondary w-full"
             >
               Return to Home
             </Link>

@@ -5,21 +5,22 @@ const LAST_UPDATED = 'July 15, 2026'
 
 export default function TermsAndConditionsPage() {
   return (
-    <div className="min-h-screen bg-gradient-to-b from-black via-zinc-950 to-black pt-24 pb-20">
+    <div className="royal-page royal-grain min-h-screen pb-20 pt-24">
       <div className="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="mb-12">
-          <h1 className="font-display text-4xl sm:text-5xl md:text-6xl uppercase mb-4">
-            Terms and Conditions
+          <p className="royal-eyebrow mb-3">Legal</p>
+          <h1 className="royal-title mb-4 text-5xl sm:text-6xl md:text-7xl">
+            Terms and conditions.
           </h1>
           <p className="text-white/40 text-sm">Last Updated: {LAST_UPDATED}</p>
         </div>
 
-        <div className="space-y-8 text-white/70">
+        <div className="royal-prose space-y-8">
           <section>
             <p className="mb-4">
               Welcome to Qureshi&apos;s Masala &amp; Spices. Please read these Terms and Conditions carefully before using our website or services.
             </p>
-            <p className="text-yellow-400/80 text-sm italic mb-4">
+            <p className="mb-4 text-sm italic text-gold/70">
               Please note that these Terms and Conditions are a template and should be reviewed and updated by a legal professional before public launch.
             </p>
           </section>

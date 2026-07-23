@@ -135,7 +135,7 @@ export default function AccountPage() {
 
   if (loading) {
     return (
-      <div className="min-h-screen bg-dark px-4 pb-20 pt-16 sm:pt-24">
+      <div className="royal-page px-4 pb-20 pt-16 sm:pt-24">
         <div className="mx-auto max-w-4xl animate-pulse" aria-label="Loading account">
           <div className="h-10 w-52 rounded bg-white/10" />
           <div className="mt-3 h-5 w-72 max-w-full rounded bg-white/5" />
@@ -148,11 +148,11 @@ export default function AccountPage() {
 
   if (!user) {
     return (
-      <div className="min-h-screen bg-dark px-4 pb-20 pt-16 sm:pt-24">
+      <div className="royal-page royal-grain px-4 pb-20 pt-16 sm:pt-24">
         <div className="mx-auto max-w-lg text-center">
           <UserRound className="mx-auto mb-5 text-gold" size={40} aria-hidden="true" />
-          <h1 className="font-display text-4xl tracking-wide text-white sm:text-5xl">
-            Sign In to Your Account
+          <h1 className="royal-title text-5xl sm:text-6xl">
+            Your spice cabinet, remembered.
           </h1>
           <p className="mx-auto mt-3 max-w-md text-sm leading-6 text-white/55 sm:text-base">
             Your profile, saved delivery address and order history are kept securely in your account.
@@ -160,13 +160,13 @@ export default function AccountPage() {
           <div className="mt-8 flex flex-col gap-3 sm:flex-row sm:justify-center">
             <Link
               href="/login?next=/account"
-              className="inline-flex min-h-12 items-center justify-center rounded-xl bg-gold px-7 font-bold text-black transition hover:bg-gold-light focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-gold"
+              className="royal-button"
             >
               Sign In
             </Link>
             <Link
               href="/register"
-              className="inline-flex min-h-12 items-center justify-center rounded-xl border border-white/15 px-7 font-semibold text-white transition hover:border-gold/50 hover:text-gold focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-gold"
+              className="royal-button-secondary"
             >
               Create Account
             </Link>
@@ -177,20 +177,20 @@ export default function AccountPage() {
   }
 
   return (
-    <div className="min-h-screen bg-dark px-4 pb-20 pt-14 sm:px-6 sm:pt-24">
+    <div className="royal-page royal-grain px-4 pb-20 pt-14 sm:px-6 sm:pt-24">
       <div className="mx-auto max-w-4xl">
         <div className="mb-7 sm:mb-9">
-          <p className="mb-2 text-[11px] font-bold uppercase tracking-[0.28em] text-gold">
+          <p className="royal-eyebrow mb-2">
             Your Qureshi&apos;s account
           </p>
-          <h1 className="font-display text-4xl tracking-wide text-white sm:text-5xl">My Account</h1>
+          <h1 className="royal-title text-5xl sm:text-6xl">My account.</h1>
           <p className="mt-2 text-sm text-white/55 sm:text-base">Welcome back, {user.full_name}.</p>
         </div>
 
         <div
           role="tablist"
           aria-label="Account sections"
-          className="mb-6 grid grid-cols-2 gap-1 rounded-xl border border-white/10 bg-black/20 p-1 sm:mb-8"
+          className="mb-6 grid grid-cols-2 gap-1 rounded-[3px] border border-gold/15 bg-black/30 p-1 sm:mb-8"
         >
           <button
             type="button"
@@ -228,12 +228,12 @@ export default function AccountPage() {
           <section
             id="profile"
             role="tabpanel"
-            className="rounded-2xl border border-white/10 bg-white/[0.04] p-5 sm:p-8"
+            className="royal-panel p-5 sm:p-8"
           >
             <div className="mb-7 flex items-start gap-3 border-b border-white/10 pb-6">
               <MapPin className="mt-0.5 shrink-0 text-gold" size={21} aria-hidden="true" />
               <div>
-                <h2 className="font-display text-2xl tracking-wide text-white sm:text-3xl">
+                <h2 className="font-display text-3xl text-cream sm:text-4xl">
                   Profile &amp; Saved Address
                 </h2>
                 <p className="mt-1 text-sm leading-6 text-white/50">
@@ -254,7 +254,7 @@ export default function AccountPage() {
                     autoComplete="name"
                     aria-invalid={errors.full_name ? 'true' : 'false'}
                     {...register('full_name', { required: 'Name is required.' })}
-                    className="min-h-12 w-full rounded-xl border border-white/10 bg-black/25 px-4 text-base text-white outline-none transition focus-visible:border-gold focus-visible:ring-2 focus-visible:ring-gold/20"
+                    className="royal-field px-4 text-base"
                   />
                   {errors.full_name ? (
                     <p role="alert" className="mt-2 text-sm text-red-300">{errors.full_name.message}</p>
@@ -272,7 +272,7 @@ export default function AccountPage() {
                     autoComplete="tel"
                     aria-invalid={errors.phone ? 'true' : 'false'}
                     {...register('phone', { required: 'Phone number is required.' })}
-                    className="min-h-12 w-full rounded-xl border border-white/10 bg-black/25 px-4 text-base text-white outline-none transition focus-visible:border-gold focus-visible:ring-2 focus-visible:ring-gold/20"
+                    className="royal-field px-4 text-base"
                   />
                   {errors.phone ? (
                     <p role="alert" className="mt-2 text-sm text-red-300">{errors.phone.message}</p>
@@ -289,7 +289,7 @@ export default function AccountPage() {
                   type="email"
                   value={user.email}
                   disabled
-                  className="min-h-12 w-full cursor-not-allowed rounded-xl border border-white/10 bg-white/[0.03] px-4 text-base text-white/45"
+                  className="royal-field cursor-not-allowed px-4 text-base text-white/45"
                 />
               </div>
 
@@ -302,7 +302,7 @@ export default function AccountPage() {
                   rows={3}
                   autoComplete="street-address"
                   {...register('address')}
-                  className="w-full rounded-xl border border-white/10 bg-black/25 px-4 py-3 text-base text-white outline-none transition focus-visible:border-gold focus-visible:ring-2 focus-visible:ring-gold/20"
+                  className="royal-field px-4 py-3 text-base"
                   placeholder="House, street and area"
                 />
               </div>
@@ -315,7 +315,7 @@ export default function AccountPage() {
                     type="text"
                     autoComplete="address-level2"
                     {...register('city')}
-                    className="min-h-12 w-full rounded-xl border border-white/10 bg-black/25 px-4 text-base text-white outline-none transition focus-visible:border-gold focus-visible:ring-2 focus-visible:ring-gold/20"
+                    className="royal-field px-4 text-base"
                   />
                 </div>
                 <div>
@@ -326,7 +326,7 @@ export default function AccountPage() {
                     inputMode="numeric"
                     autoComplete="postal-code"
                     {...register('pincode')}
-                    className="min-h-12 w-full rounded-xl border border-white/10 bg-black/25 px-4 text-base text-white outline-none transition focus-visible:border-gold focus-visible:ring-2 focus-visible:ring-gold/20"
+                    className="royal-field px-4 text-base"
                   />
                 </div>
               </div>
@@ -335,7 +335,7 @@ export default function AccountPage() {
                 <button
                   type="submit"
                   disabled={isSubmitting}
-                  className="min-h-12 rounded-xl bg-gold px-7 font-bold text-black transition hover:bg-gold-light focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-gold disabled:cursor-wait disabled:opacity-60"
+                  className="royal-button disabled:cursor-wait disabled:opacity-60"
                 >
                   {isSubmitting ? 'Saving…' : 'Save Details'}
                 </button>
@@ -343,7 +343,7 @@ export default function AccountPage() {
                   type="button"
                   onClick={handleLogout}
                   disabled={loggingOut}
-                  className="flex min-h-12 items-center justify-center gap-2 rounded-xl border border-white/15 px-7 font-semibold text-white/70 transition hover:border-red-400/35 hover:text-red-300 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-red-300 disabled:cursor-wait disabled:opacity-60"
+                  className="royal-button-secondary flex gap-2 hover:border-red-400/35 hover:text-red-300 disabled:cursor-wait disabled:opacity-60"
                 >
                   <LogOut size={18} aria-hidden="true" />
                   {loggingOut ? 'Signing out…' : 'Sign Out'}
@@ -354,13 +354,13 @@ export default function AccountPage() {
         ) : (
           <section id="orders" role="tabpanel">
             {orders.length === 0 ? (
-              <div className="rounded-2xl border border-white/10 bg-white/[0.04] p-8 text-center sm:p-12">
+              <div className="royal-panel p-8 text-center sm:p-12">
                 <PackageCheck className="mx-auto mb-4 text-gold" size={36} aria-hidden="true" />
-                <h2 className="font-display text-3xl tracking-wide text-white">No Orders Yet</h2>
+                <h2 className="royal-title text-4xl">No orders yet.</h2>
                 <p className="mt-2 text-sm text-white/50">Your confirmed website orders will appear here.</p>
                 <Link
                   href="/shop"
-                  className="mt-7 inline-flex min-h-12 items-center justify-center rounded-xl bg-gold px-7 font-bold text-black transition hover:bg-gold-light focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-gold"
+                  className="royal-button mt-7"
                 >
                   Start Shopping
                 </Link>
@@ -368,7 +368,7 @@ export default function AccountPage() {
             ) : (
               <div className="space-y-4">
                 {orders.map((order) => (
-                  <article key={order.id} className="rounded-2xl border border-white/10 bg-white/[0.04] p-5 sm:p-6">
+                  <article key={order.id} className="royal-panel p-5 sm:p-6">
                     <div className="grid grid-cols-2 gap-4 border-b border-white/10 pb-5 sm:grid-cols-4">
                       <div>
                         <p className="text-xs uppercase tracking-wider text-white/40">Order ID</p>

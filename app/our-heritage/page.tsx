@@ -3,7 +3,7 @@ import { useState, useEffect } from 'react'
 import { motion } from 'framer-motion'
 import Image from 'next/image'
 import Slideshow from '@/components/site/Slideshow'
-import { ChevronRight, Leaf, Sparkles, Trophy, Calendar, ArrowRight } from 'lucide-react'
+import { Award, Calendar, ChevronRight, FlaskConical, HeartHandshake, Leaf, ArrowRight, type LucideIcon } from 'lucide-react'
 
 const TIMELINE_ITEMS = [
   {
@@ -33,11 +33,11 @@ const TIMELINE_ITEMS = [
   }
 ]
 
-const VALUES = [
-  { icon: '🌿', title: '100% Natural', description: 'No artificial colors, no preservatives, just pure spices sourced directly from farms.' },
-  { icon: '⚗️', title: 'Small Batch', description: 'Crafted in small quantities for consistency and quality, every blend is made with care.' },
-  { icon: '🏆', title: 'Premium Grade', description: 'Handpicked ingredients sourced for freshness and aroma, ensuring the best flavor in every dish.' },
-  { icon: '👨‍👩‍👧‍👦', title: 'Family Owned', description: 'A family business with values rooted in tradition and a passion for great food.' }
+const VALUES: Array<{ icon: LucideIcon; title: string; description: string }> = [
+  { icon: Leaf, title: '100% Natural', description: 'No artificial colors, no preservatives, just pure spices sourced directly from farms.' },
+  { icon: FlaskConical, title: 'Small Batch', description: 'Crafted in small quantities for consistency and quality, every blend is made with care.' },
+  { icon: Award, title: 'Premium Grade', description: 'Handpicked ingredients sourced for freshness and aroma, ensuring the best flavor in every dish.' },
+  { icon: HeartHandshake, title: 'Family Owned', description: 'A family business with values rooted in tradition and a passion for great food.' }
 ]
 
 export default function OurHeritagePage() {
@@ -52,7 +52,7 @@ export default function OurHeritagePage() {
   }, [])
 
   return (
-    <div className="min-h-screen bg-black text-white">
+    <div className="royal-page royal-grain min-h-screen text-cream">
       {/* HERO */}
       <section className="relative h-screen flex items-center justify-center overflow-hidden">
         <div className="absolute inset-0">
@@ -71,12 +71,12 @@ export default function OurHeritagePage() {
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.6 }}
           >
-            <div className="text-[11px] tracking-[0.5em] uppercase text-gold mb-6">
+            <div className="royal-eyebrow mb-6">
               Our Story
             </div>
-            <h1 className="font-display text-5xl md:text-7xl lg:text-9xl uppercase leading-tight mb-8">
-              A Legacy of <br />
-              <span className="text-gold">Flavor</span>
+            <h1 className="royal-title mb-8 text-6xl md:text-8xl lg:text-9xl">
+              A legacy of <br />
+              <span className="text-gold">flavour.</span>
             </h1>
             <p className="text-lg md:text-2xl text-white/60 max-w-2xl mx-auto mb-12 font-serif italic">
               Crafted in Coorg with a passion for authentic spices and shipped all over India.
@@ -84,7 +84,7 @@ export default function OurHeritagePage() {
             <motion.a
               href="#story"
               whileHover={{ scale: 1.05 }}
-              className="inline-flex items-center gap-2 bg-gold text-black px-10 py-5 font-bold tracking-[0.2em] uppercase hover:bg-white transition-all"
+              className="royal-button px-10 py-5"
             >
               Read Our Story <ChevronRight size={18} />
             </motion.a>
@@ -122,8 +122,8 @@ export default function OurHeritagePage() {
               <div className="text-[11px] tracking-[0.4em] uppercase text-gold mb-4">
                 Our Journey
               </div>
-              <h2 className="font-display text-4xl md:text-5xl uppercase mb-8">
-                Where It All <span className="text-gold">Started</span>
+              <h2 className="royal-title mb-8 text-5xl md:text-6xl">
+                Where it all <span className="text-gold">started.</span>
               </h2>
               <p className="text-white/70 text-lg leading-relaxed mb-6">
                 At Qureshi's Masala & Spices, every blend tells a story. Our journey began with a simple belief: authentic food deserves authentic spices.
@@ -145,8 +145,8 @@ export default function OurHeritagePage() {
               transition={{ duration: 0.6 }}
               className="order-2 md:order-1"
             >
-              <h2 className="font-display text-4xl md:text-5xl uppercase mb-8">
-                Our <span className="text-gold">Mission</span>
+              <h2 className="royal-title mb-8 text-5xl md:text-6xl">
+                Our <span className="text-gold">mission.</span>
               </h2>
               <p className="text-white/70 text-lg leading-relaxed mb-6">
                 We believe that great food is more than a meal—it's a memory, a celebration, and a connection between generations.
@@ -181,7 +181,7 @@ export default function OurHeritagePage() {
       </section>
 
       {/* TIMELINE */}
-      <section className="py-24 px-8 bg-gradient-to-b from-black to-dark">
+      <section className="border-y border-gold/10 bg-oxblood-deep/10 px-8 py-24">
         <div className="max-w-5xl mx-auto">
           <motion.div
             initial={{ opacity: 0, y: 30 }}
@@ -192,8 +192,8 @@ export default function OurHeritagePage() {
             <div className="text-[11px] tracking-[0.4em] uppercase text-gold mb-4">
               Our History
             </div>
-            <h2 className="font-display text-4xl md:text-6xl uppercase">
-              The <span className="text-gold">Timeline</span>
+            <h2 className="royal-title text-5xl md:text-7xl">
+              The <span className="text-gold">timeline.</span>
             </h2>
           </motion.div>
 
@@ -276,13 +276,15 @@ export default function OurHeritagePage() {
             <div className="text-[11px] tracking-[0.4em] uppercase text-gold mb-4">
               Our Values
             </div>
-            <h2 className="font-display text-4xl md:text-6xl uppercase">
-              What Makes Us <span className="text-gold">Different</span>
+            <h2 className="royal-title text-5xl md:text-7xl">
+              What makes us <span className="text-gold">different.</span>
             </h2>
           </motion.div>
 
           <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-8">
-            {VALUES.map((value, index) => (
+            {VALUES.map((value, index) => {
+              const ValueIcon = value.icon
+              return (
               <motion.div
                 key={index}
                 initial={{ opacity: 0, y: 30 }}
@@ -290,34 +292,35 @@ export default function OurHeritagePage() {
                 viewport={{ once: true }}
                 transition={{ duration: 0.5, delay: index * 0.1 }}
                 whileHover={{ y: -8, scale: 1.02 }}
-                className="bg-dark border border-white/10 rounded-2xl p-8 text-center hover:border-gold/30 transition-all"
+                className="royal-panel rounded-[3px] p-8 text-center transition-colors hover:border-gold/30"
               >
-                <div className="text-5xl mb-6">{value.icon}</div>
-                <h3 className="font-display text-xl uppercase mb-4">{value.title}</h3>
+                <ValueIcon aria-hidden="true" className="mx-auto mb-6 size-9 text-gold" strokeWidth={1.35} />
+                <h3 className="mb-4 font-display text-3xl text-cream">{value.title}</h3>
                 <p className="text-white/50 text-sm leading-relaxed">{value.description}</p>
               </motion.div>
-            ))}
+              )
+            })}
           </div>
         </div>
       </section>
 
       {/* CTA */}
-      <section className="py-24 px-8 bg-gold">
-        <div className="max-w-4xl mx-auto text-center text-black">
+      <section className="border-y border-gold/20 bg-[linear-gradient(125deg,#290a0b,#5b1718_52%,#24100f)] px-8 py-24">
+        <div className="mx-auto max-w-4xl text-center text-cream">
           <motion.div
             initial={{ opacity: 0, y: 30 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
           >
-            <h2 className="font-display text-4xl md:text-6xl uppercase mb-6">
-              Taste the Tradition
+            <h2 className="royal-title mb-6 text-5xl md:text-7xl">
+              Taste the tradition.
             </h2>
-            <p className="text-xl text-black/70 mb-10 max-w-2xl mx-auto">
+            <p className="mx-auto mb-10 max-w-2xl text-xl text-cream/65">
               Experience the authentic flavors of Qureshi's Masala & Spices in your kitchen today.
             </p>
             <a
               href="/shop"
-              className="inline-flex items-center gap-3 bg-black text-gold px-10 py-5 font-bold tracking-[0.2em] uppercase hover:bg-white hover:text-black transition-all"
+              className="royal-button px-10 py-5"
             >
               Shop Now <ArrowRight size={18} />
             </a>

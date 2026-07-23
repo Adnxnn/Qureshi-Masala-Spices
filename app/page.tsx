@@ -140,7 +140,7 @@ export default async function HomePage() {
       <HeroSection />
 
       {/* STATS BAR */}
-      <div className="bg-gold py-1 sm:py-2 mt-2 sm:mt-4 overflow-hidden">
+      <div className="overflow-hidden border-y border-gold-light/35 bg-gold py-2">
         <div className="flex whitespace-nowrap animate-marquee-reverse">
           {[...Array(2)].map((_, di) =>
             [
@@ -161,7 +161,7 @@ export default async function HomePage() {
       </div>
 
       {/* MARQUEE */}
-      <div className="bg-charcoal overflow-hidden py-2 sm:py-3 border-y border-gold/10">
+      <div className="overflow-hidden border-b border-gold/15 bg-charcoal py-2.5 sm:py-3">
         <div className="flex whitespace-nowrap animate-marquee">
           {[...Array(2)].map((_, di) =>
             ['Kebab Masala','Fish Fry Masala','Fish Curry Masala','Biryani Masala','Chicken Masala','Garam Masala'].map(item => (
@@ -174,11 +174,11 @@ export default async function HomePage() {
       </div>
 
       {/* PRODUCTS CAROUSEL SECTION */}
-      <section id="products" className="bg-black py-12 sm:py-24 px-4 sm:px-8 overflow-hidden">
+      <section id="products" className="royal-page overflow-hidden px-4 py-16 sm:px-8 sm:py-28">
         <div className="max-w-6xl mx-auto mb-8 sm:mb-14 text-center">
           <div className="text-[9px] sm:text-[11px] tracking-[0.35em] sm:tracking-[0.4em] uppercase text-gold mb-2 sm:mb-4">Our Masalas</div>
-          <h2 className="font-display text-2xl sm:text-4xl md:text-5xl lg:text-6xl uppercase leading-none mb-2 sm:mb-4">
-            Pure Flavour,<br /><span className="text-gradient-gold">Endless Taste</span>
+          <h2 className="royal-title text-4xl sm:text-6xl lg:text-7xl">
+            Pure flavour.<br /><span className="text-gradient-gold">Endless taste.</span>
           </h2>
           <div className="w-16 sm:w-24 h-0.5 sm:h-1 bg-gradient-to-r from-gold/0 via-gold to-gold/0 mx-auto mt-3 sm:mt-6"></div>
         </div>
@@ -190,10 +190,10 @@ export default async function HomePage() {
         <div className="text-center mt-12 sm:mt-24">
           <Link
             href="/shop"
-            className="inline-flex items-center gap-2 bg-gold text-black px-6 sm:px-8 py-2 sm:py-3 text-[10px] sm:text-xs font-bold tracking-[0.25em] sm:tracking-[0.3em] uppercase transition-all duration-300 hover:bg-white hover:shadow-[0_0_30px_rgba(245,197,24,0.4)]"
+            className="royal-button group"
           >
             Explore Our Collections
-            <svg className="w-2.5 h-2.5 sm:w-3 sm:h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <svg className="h-3 w-3 transition-transform duration-200 group-hover:translate-x-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M17 8l4 4m0 0l-4 4m4-4H3"/>
             </svg>
           </Link>
@@ -201,18 +201,15 @@ export default async function HomePage() {
       </section>
 
       {/* WHY QURESHI'S SECTION */}
-      <section className="bg-charcoal px-4 sm:px-8 py-12 sm:py-24 relative overflow-hidden">
-        {/* Decorative background elements */}
-        <div className="absolute top-0 left-0 w-full h-full pointer-events-none">
-          <div className="absolute top-10 sm:top-20 left-5 sm:left-10 w-32 sm:w-64 h-32 sm:h-64 bg-gold/5 rounded-full blur-3xl"></div>
-          <div className="absolute bottom-10 sm:bottom-20 right-5 sm:right-10 w-48 sm:w-96 h-48 sm:h-96 bg-gold/3 rounded-full blur-3xl"></div>
-        </div>
+      <section className="relative overflow-hidden border-y border-gold/15 bg-charcoal px-4 py-16 sm:px-8 sm:py-28">
+        <div className="pointer-events-none absolute inset-y-0 left-[7%] w-px bg-gradient-to-b from-transparent via-gold/10 to-transparent" aria-hidden="true" />
+        <div className="pointer-events-none absolute inset-y-0 right-[7%] w-px bg-gradient-to-b from-transparent via-gold/10 to-transparent" aria-hidden="true" />
         
         <div className="max-w-6xl mx-auto relative z-10">
           <div className="text-center mb-10 sm:mb-16 md:mb-20">
             <div className="text-[9px] sm:text-[11px] tracking-[0.35em] sm:tracking-[0.4em] uppercase text-gold mb-2 sm:mb-4">The Qureshi Difference</div>
-            <h2 className="font-display text-2xl sm:text-4xl md:text-5xl lg:text-6xl uppercase leading-tight mb-3 sm:mb-6 text-white">
-              Crafted<br /><span className="text-gradient-gold">Different</span>
+            <h2 className="royal-title text-4xl sm:text-6xl lg:text-7xl">
+              Crafted with<br /><span className="text-gradient-gold">a point of view.</span>
             </h2>
             <div className="w-16 sm:w-24 h-px bg-gradient-to-r from-transparent via-gold/30 to-transparent mx-auto mb-3 sm:mb-6"></div>
             <p className="text-white/60 max-w-2xl mx-auto text-sm sm:text-lg">
@@ -249,7 +246,7 @@ export default async function HomePage() {
               }
             ].map((item, index) => (
               <div key={index} className="group">
-                <div className="relative overflow-hidden rounded-2xl bg-gradient-to-br from-dark to-black border border-white/5 group-hover:border-gold/20 transition-all duration-500 h-full">
+                <div className="relative h-full overflow-hidden rounded-[3px] border border-gold/15 bg-gradient-to-b from-dark to-black transition-[border-color,transform] duration-300 group-hover:-translate-y-1 group-hover:border-gold/40">
                   {/* Image container */}
                   <div className="aspect-[4/5] relative overflow-hidden">
                     <Image
@@ -261,13 +258,13 @@ export default async function HomePage() {
                     <div className="absolute inset-0 bg-gradient-to-t from-black via-black/50 to-transparent"></div>
                     
                     {/* Gold accent line */}
-                    <div className="absolute bottom-0 left-1/2 -translate-x-1/2 w-16 h-1 bg-gradient-to-r from-transparent via-gold to-transparent"></div>
+                    <div className="absolute bottom-0 left-1/2 h-px w-16 -translate-x-1/2 bg-gradient-to-r from-transparent via-gold to-transparent"></div>
                   </div>
                   
                   {/* Content */}
                   <div className="p-6 sm:p-8">
                     <div className="text-gold text-2xl sm:text-3xl font-display font-bold mb-2">{item.stat}</div>
-                    <h3 className="font-display text-xl sm:text-2xl uppercase text-white mb-3">{item.title}</h3>
+                    <h3 className="font-display text-2xl font-semibold text-white sm:text-3xl">{item.title}</h3>
                     <p className="text-white/50 text-sm leading-relaxed">{item.description}</p>
                   </div>
                 </div>
@@ -306,7 +303,7 @@ export default async function HomePage() {
                   }
                 ].map((item, index) => (
                   <div key={`${loopIndex}-${index}`} className="w-[160px] group flex-shrink-0">
-                    <div className="relative overflow-hidden rounded-xl bg-gradient-to-br from-dark to-black border border-white/10 h-full">
+                    <div className="relative h-full overflow-hidden rounded-[3px] border border-gold/15 bg-gradient-to-b from-dark to-black">
                       {/* Image container */}
                       <div className="aspect-[3/4] relative overflow-hidden">
                         <Image
@@ -324,7 +321,7 @@ export default async function HomePage() {
                       {/* Content */}
                       <div className="p-3">
                         <div className="text-gold text-sm font-display font-bold mb-1">{item.stat}</div>
-                        <h3 className="font-display text-sm uppercase text-white mb-2">{item.title}</h3>
+                        <h3 className="mb-2 font-display text-lg font-semibold text-white">{item.title}</h3>
                         <p className="text-white/50 text-[10px] leading-relaxed">{item.description}</p>
                       </div>
                     </div>
@@ -337,17 +334,14 @@ export default async function HomePage() {
       </section>
 
       {/* OUR HERITAGE SECTION */}
-      <section id="heritage" className="bg-black px-4 sm:px-8 py-12 sm:py-24 relative overflow-hidden">
-        {/* Decorative background */}
-        <div className="absolute top-1/4 right-0 w-48 sm:w-96 h-48 sm:h-96 bg-gold/5 rounded-full blur-3xl"></div>
-        <div className="absolute bottom-1/4 left-0 w-48 sm:w-96 h-48 sm:h-96 bg-gold/5 rounded-full blur-3xl"></div>
+      <section id="heritage" className="royal-page relative overflow-hidden px-4 py-16 sm:px-8 sm:py-28">
 
         <div className="max-w-6xl mx-auto relative z-10">
           <div className="text-center mb-12 sm:mb-20">
             <div className="text-[9px] sm:text-[11px] tracking-[0.35em] sm:tracking-[0.4em] uppercase text-gold mb-2 sm:mb-4">Our Story</div>
-            <h2 className="font-display text-2xl sm:text-4xl md:text-5xl lg:text-6xl uppercase leading-tight text-white">
-              A Legacy of <span className="text-gradient-gold">Flavour</span>,<br />
-              Crafted with Passion
+            <h2 className="royal-title text-4xl sm:text-6xl lg:text-7xl">
+              A legacy of <span className="text-gradient-gold">flavour,</span><br />
+              held with care.
             </h2>
             <div className="w-16 sm:w-24 h-px bg-gradient-to-r from-transparent via-gold/30 to-transparent mx-auto mt-4 sm:mt-8"></div>
           </div>
@@ -358,8 +352,8 @@ export default async function HomePage() {
               <Slideshow />
             </div>
             <div className="order-2">
-              <div className="inline-block bg-gold/10 px-3 sm:px-4 py-1.5 sm:py-2 rounded-full mb-4 sm:mb-6">
-                <span className="text-gold text-xs sm:text-sm font-semibold tracking-wide">Our Roots</span>
+              <div className="mb-4 inline-block border-b border-gold/30 pb-2 sm:mb-6">
+                <span className="royal-eyebrow">Our Roots</span>
               </div>
               <p className="text-sm md:text-lg text-white/80 leading-relaxed mb-4 sm:mb-6 font-serif">
                 At Qureshi's Masala & Spices, every blend tells a story.
@@ -376,8 +370,8 @@ export default async function HomePage() {
           {/* Second carousel and paragraph */}
           <div className="grid md:grid-cols-2 gap-6 md:gap-10 lg:gap-16 items-center mb-12 sm:mb-24">
             <div className="order-2 md:order-1">
-              <div className="inline-block bg-gold/10 px-3 sm:px-4 py-1.5 sm:py-2 rounded-full mb-4 sm:mb-6">
-                <span className="text-gold text-xs sm:text-sm font-semibold tracking-wide">Our Journey</span>
+              <div className="mb-4 inline-block border-b border-gold/30 pb-2 sm:mb-6">
+                <span className="royal-eyebrow">Our Journey</span>
               </div>
               <p className="text-sm md:text-lg text-white/80 leading-relaxed mb-4 sm:mb-6 font-serif">
                 From Humble Beginnings to Trusted Brand.
@@ -402,9 +396,9 @@ export default async function HomePage() {
 
           <div className="text-center max-w-3xl mx-auto">
             <div className="relative py-6 sm:py-12">
-              <div className="absolute inset-0 bg-gold/5 rounded-2xl"></div>
+              <div className="absolute inset-0 border-y border-gold/20 bg-gold/[0.035]"></div>
               <div className="relative z-10 px-4 sm:px-8">
-                <p className="text-base md:text-xl md:text-2xl text-gold/90 font-serif italic">
+                <p className="text-base font-serif italic text-gold/90 md:text-2xl">
                   "Because every great dish starts with the perfect blend."
                 </p>
               </div>
@@ -417,21 +411,18 @@ export default async function HomePage() {
       </section>
 
       {/* BEHIND THE SCENES */}
-      <section className="bg-black py-12 sm:py-24 px-4 sm:px-8 overflow-hidden relative">
-        {/* Decorative background */}
-        <div className="absolute top-1/3 left-0 w-48 sm:w-96 h-48 sm:h-96 bg-gold/5 rounded-full blur-3xl"></div>
-        <div className="absolute bottom-1/3 right-0 w-48 sm:w-96 h-48 sm:h-96 bg-gold/5 rounded-full blur-3xl"></div>
+      <section className="relative overflow-hidden border-y border-gold/15 bg-[#0b0806] px-4 py-16 sm:px-8 sm:py-28">
 
         <div className="max-w-6xl mx-auto relative z-10">
           <div className="text-center mb-10 sm:mb-16">
             <div className="text-[9px] sm:text-[11px] tracking-[0.35em] sm:tracking-[0.4em] uppercase text-gold mb-2 sm:mb-4">Our Factory</div>
-            <h2 className="font-display text-2xl sm:text-4xl md:text-5xl lg:text-6xl uppercase leading-tight text-white">
-              Behind the Scenes<br /><span className="text-gradient-gold">at Qureshi's</span>
+            <h2 className="royal-title text-4xl sm:text-6xl lg:text-7xl">
+              Behind the scenes<br /><span className="text-gradient-gold">at Qureshi&apos;s.</span>
             </h2>
             <div className="w-16 sm:w-24 h-px bg-gradient-to-r from-transparent via-gold/30 to-transparent mx-auto mt-4 sm:mt-8"></div>
           </div>
 
-          <div className="grid lg:grid-cols-2 gap-6 md:gap-10 md:gap-12 items-center">
+          <div className="grid items-center gap-6 md:gap-12 lg:grid-cols-2">
             <Slideshow 
               slides={[
                 '/images/Stock2.MP4',
@@ -453,7 +444,7 @@ export default async function HomePage() {
               </p>
               <Link
                 href="/stock-our-products"
-                className="inline-flex items-center gap-2 sm:gap-3 bg-gold text-black px-6 sm:px-8 py-2 sm:py-3 text-[10px] sm:text-xs font-bold tracking-[0.25em] sm:tracking-[0.3em] uppercase transition-all duration-300 hover:bg-white hover:shadow-[0_0_30px_rgba(245,197,24,0.4)]"
+                className="royal-button group"
               >
                 Stock Our Products
                 <svg className="w-2.5 h-2.5 sm:w-3 sm:h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -466,42 +457,39 @@ export default async function HomePage() {
       </section>
 
       {/* CUSTOMER REVIEWS */}
-      <section className="bg-charcoal py-12 sm:py-24 overflow-hidden relative">
-        {/* Decorative elements */}
-        <div className="absolute top-5 sm:top-10 left-5 sm:left-10 w-32 sm:w-64 h-32 sm:h-64 bg-gold/5 rounded-full blur-3xl"></div>
-        <div className="absolute bottom-5 sm:bottom-10 right-5 sm:right-10 w-40 sm:w-80 h-40 sm:h-80 bg-gold/5 rounded-full blur-3xl"></div>
+      <section className="relative overflow-hidden bg-charcoal py-16 sm:py-28">
 
         <div className="max-w-6xl mx-auto px-4 sm:px-8 mb-10 sm:mb-16 relative z-10">
           <div className="text-center">
             <div className="text-[9px] sm:text-[11px] tracking-[0.35em] sm:tracking-[0.4em] uppercase text-gold mb-2 sm:mb-4">Reviews</div>
-            <h2 className="font-display text-2xl sm:text-4xl md:text-5xl lg:text-6xl uppercase leading-none mb-2 sm:mb-4 text-white">
-              What Our Customers<br /><span className="text-gradient-gold">Are Saying</span>
+            <h2 className="royal-title text-4xl sm:text-6xl lg:text-7xl">
+              What our customers<br /><span className="text-gradient-gold">are saying.</span>
             </h2>
             <div className="w-16 sm:w-24 h-px bg-gradient-to-r from-transparent via-gold/30 to-transparent mx-auto mt-4 sm:mt-8"></div>
           </div>
         </div>
         
         <div className="overflow-hidden relative z-10">
-          <div className="flex gap-3 md:gap-5 md:gap-6 animate-scroll">
+          <div className="flex animate-scroll gap-3 md:gap-6">
             {/* Two copies for perfect seamless infinite loop with translateX(-50%) */}
             {[...reviews, ...reviews].map((review, idx) => (
-              <div key={`review-${idx}`} className="w-[200px] sm:w-[260px] sm:w-[300px] md:w-[340px] lg:w-[370px] bg-gradient-to-br from-black to-dark border border-white/5 p-3 sm:p-5 sm:p-6 md:p-7 rounded-2xl flex-shrink-0 flex flex-col justify-between hover:border-gold/20 transition-all duration-500 hover:shadow-[0_0_50px_rgba(245,197,24,0.1)]">
+              <div key={`review-${idx}`} className="flex w-[220px] flex-shrink-0 flex-col justify-between rounded-[3px] border border-gold/15 bg-gradient-to-b from-dark to-black p-4 transition-[border-color,transform] duration-300 hover:-translate-y-1 hover:border-gold/35 sm:w-[300px] sm:p-6 md:w-[340px] md:p-7 lg:w-[370px]">
                 <div>
                   <div className="flex items-center gap-0.5 mb-3 sm:mb-5">
                     {[...Array(review.rating)].map((_, i) => (
                       <span key={i} className="text-gold text-sm sm:text-lg">★</span>
                     ))}
                   </div>
-                  <p className="text-white/80 text-xs sm:text-sm sm:text-base leading-relaxed mb-4 sm:mb-6 italic">
+                  <p className="mb-4 text-xs italic leading-relaxed text-white/80 sm:mb-6 sm:text-base">
                     "{review.comment}"
                   </p>
                 </div>
                 <div className="flex items-center gap-2 sm:gap-4">
-                  <div className="w-7 h-7 md:w-10 md:h-10 md:w-12 md:h-12 bg-gradient-to-br from-gold/30 to-gold/10 rounded-full flex items-center justify-center font-display text-gold text-sm sm:text-lg border border-gold/20">
+                  <div className="flex h-7 w-7 items-center justify-center rounded-full border border-gold/20 bg-gradient-to-br from-gold/30 to-gold/10 font-display text-sm text-gold sm:text-lg md:h-12 md:w-12">
                     {review.name.charAt(0)}
                   </div>
                   <div>
-                    <div className="text-white font-semibold text-xs sm:text-sm sm:text-base">{review.name}</div>
+                    <div className="text-xs font-semibold text-white sm:text-base">{review.name}</div>
                     <div className="text-white/50 text-[10px] sm:text-xs">{review.location}</div>
                   </div>
                 </div>
@@ -512,19 +500,19 @@ export default async function HomePage() {
       </section>
 
       {/* CTA */}
-      <section className="bg-gold py-16 sm:py-32 px-4 sm:px-8 text-center relative overflow-hidden">
+      <section className="relative overflow-hidden border-y border-gold/25 bg-[#5b1718] px-4 py-20 text-center sm:px-8 sm:py-32">
         {/* Faded background text */}
         <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
-          <span className="font-display text-[80px] sm:text-[150px] sm:text-[200px] md:text-[300px] text-black/5 uppercase tracking-[0.15em] sm:tracking-[0.2em] select-none">
+          <span className="select-none font-display text-[80px] uppercase tracking-[0.15em] text-black/15 sm:text-[200px] md:text-[300px]">
             SPICE
           </span>
         </div>
         
         <div className="relative z-10 max-w-3xl mx-auto">
-          <h2 className="font-display text-2xl sm:text-4xl md:text-6xl lg:text-8xl text-black uppercase leading-tight mb-6 sm:mb-10">
-            Bring the flavour<br />home today
+          <h2 className="royal-title mb-8 text-5xl sm:text-7xl lg:text-8xl">
+            Bring the flavour<br />home today.
           </h2>
-          <Link href="/shop" className="inline-flex items-center gap-2 sm:gap-3 bg-black text-gold px-6 sm:px-10 py-2.5 sm:py-4 text-[10px] sm:text-xs font-bold tracking-[0.25em] sm:tracking-[0.3em] uppercase transition-all duration-500 hover:bg-charcoal hover:shadow-[0_0_50px_rgba(0,0,0,0.4)]">
+          <Link href="/shop" className="royal-button group">
             Shop the Full Range
             <svg className="w-2.5 h-2.5 sm:w-3 sm:h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M17 8l4 4m0 0l-4 4m4-4H3"/>

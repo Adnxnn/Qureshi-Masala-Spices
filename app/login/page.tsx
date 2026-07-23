@@ -6,6 +6,7 @@ import { useRouter } from 'next/navigation'
 import { useForm } from 'react-hook-form'
 import { Eye, EyeOff, LogIn } from 'lucide-react'
 import { loginUser } from '@/lib/actions'
+import AuthBackdrop from '@/components/site/AuthBackdrop'
 
 type LoginFormValues = {
   email: string
@@ -43,26 +44,27 @@ export default function LoginPage() {
   }
 
   return (
-    <div className="min-h-screen bg-dark px-4 pb-16 pt-14 sm:px-6 sm:pb-20 sm:pt-24">
-      <div className="mx-auto w-full max-w-md">
+    <div className="royal-auth-stage royal-grain px-4 pb-16 pt-14 sm:px-6 sm:pb-20 sm:pt-24">
+      <AuthBackdrop />
+      <div className="relative z-10 mx-auto w-full max-w-md">
         <div className="mb-7 text-center sm:mb-9">
-          <p className="mb-3 text-[11px] font-bold uppercase tracking-[0.28em] text-gold">
+          <p className="royal-eyebrow mb-3">
             Your Qureshi&apos;s account
           </p>
-          <h1 className="font-display text-4xl tracking-wide text-white sm:text-5xl">
-            Welcome Back
+          <h1 className="royal-title text-5xl sm:text-6xl">
+            Welcome back.
           </h1>
           <p className="mt-2 text-sm text-white/55 sm:text-base">
             Sign in to view your profile, saved address and orders.
           </p>
         </div>
 
-        <div className="rounded-2xl border border-white/10 bg-white/[0.04] p-5 sm:p-8">
+        <div className="royal-auth-card p-5 sm:p-8">
           <form onSubmit={handleSubmit(onSubmit)} className="space-y-5" noValidate>
             {formError ? (
               <div
                 role="alert"
-                className="rounded-xl border border-red-400/25 bg-red-500/10 px-4 py-3 text-sm leading-6 text-red-300"
+                className="rounded-[2px] border border-red-400/25 bg-red-500/10 px-4 py-3 text-sm leading-6 text-red-300"
               >
                 {formError}
               </div>
@@ -88,7 +90,7 @@ export default function LoginPage() {
                     message: 'Enter a valid email address.',
                   },
                 })}
-                className="min-h-12 w-full rounded-xl border border-white/10 bg-black/25 px-4 text-base text-white outline-none transition placeholder:text-white/30 focus-visible:border-gold focus-visible:ring-2 focus-visible:ring-gold/20"
+                className="royal-field px-4 text-base placeholder:text-white/30"
                 placeholder="name@example.com"
               />
               {errors.email ? (
@@ -110,7 +112,7 @@ export default function LoginPage() {
                   aria-invalid={errors.password ? 'true' : 'false'}
                   aria-describedby={errors.password ? 'password-error' : undefined}
                   {...register('password', { required: 'Password is required.' })}
-                  className="min-h-12 w-full rounded-xl border border-white/10 bg-black/25 px-4 pr-12 text-base text-white outline-none transition placeholder:text-white/30 focus-visible:border-gold focus-visible:ring-2 focus-visible:ring-gold/20"
+                  className="royal-field px-4 pr-12 text-base placeholder:text-white/30"
                   placeholder="Enter your password"
                 />
                 <button
@@ -132,7 +134,7 @@ export default function LoginPage() {
             <button
               type="submit"
               disabled={isSubmitting}
-              className="flex min-h-12 w-full items-center justify-center gap-2 rounded-xl bg-gold px-5 font-bold text-black transition hover:bg-gold-light focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-gold focus-visible:ring-offset-2 focus-visible:ring-offset-dark disabled:cursor-wait disabled:opacity-60"
+              className="royal-button w-full disabled:cursor-wait disabled:opacity-60"
             >
               <LogIn size={18} />
               {isSubmitting ? 'Signing in…' : 'Sign In'}

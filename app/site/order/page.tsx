@@ -58,7 +58,7 @@ const InputField = ({
       type={type}
       placeholder={placeholder}
       {...register(id)}
-      className="w-full bg-zinc-900 border border-zinc-800 text-white px-4 py-3 rounded-lg text-sm focus:outline-none focus:border-zinc-600 transition-colors placeholder:text-zinc-600"
+      className="royal-field px-4 py-3 text-sm placeholder:text-zinc-600"
     />
     {errors[id] && <p className="text-red-400 text-xs">{errors[id]?.message}</p>}
   </div>
@@ -102,18 +102,18 @@ export default function OrderPage() {
 
   if (submitted) {
     return (
-      <div className="min-h-screen flex items-center justify-center px-4 pt-20 bg-zinc-950">
+      <div className="royal-page royal-grain flex min-h-screen items-center justify-center px-4 pt-20">
         <div className="text-center max-w-md w-full">
           <div className="w-20 h-20 bg-zinc-900 rounded-full flex items-center justify-center mx-auto mb-6">
             <CheckCircle size={48} className="text-gold" />
           </div>
           
-          <h1 className="font-display text-3xl md:text-4xl uppercase text-white mb-3">Order Placed!</h1>
+          <h1 className="royal-title mb-3 text-5xl md:text-6xl">Order placed.</h1>
           <p className="text-zinc-500 text-lg mb-10">Your order <span className="text-gold font-mono">#{orderId}</span> has been received.</p>
           
           <a
             href="/"
-            className="inline-block w-full bg-gold text-black px-6 py-3.5 text-sm font-bold tracking-wide uppercase hover:bg-white transition-colors rounded-lg"
+            className="royal-button w-full px-6 py-3.5"
           >
             Back to Home
           </a>
@@ -123,17 +123,17 @@ export default function OrderPage() {
   }
 
   return (
-    <div className="min-h-screen pt-24 pb-16 bg-zinc-950">
+    <div className="royal-page royal-grain min-h-screen pb-16 pt-24">
       <div className="max-w-6xl mx-auto px-4">
         <div className="mb-10">
-          <h1 className="font-display text-3xl md:text-4xl uppercase text-white mb-2">Checkout</h1>
+          <h1 className="royal-title mb-2 text-5xl md:text-6xl">Checkout.</h1>
           <p className="text-zinc-500">Complete your order</p>
         </div>
 
         <div className="grid lg:grid-cols-3 gap-8">
           <div className="lg:col-span-1">
             <div className="sticky top-24">
-              <div className="bg-zinc-900 border border-zinc-800 rounded-xl overflow-hidden">
+              <div className="royal-panel overflow-hidden">
                 <div className="p-5 border-b border-zinc-800">
                   <h2 className="text-xs font-bold tracking-widest uppercase text-zinc-500">Your Cart</h2>
                 </div>
@@ -218,7 +218,7 @@ export default function OrderPage() {
             onSubmit={handleSubmit(onSubmit)} 
             className="lg:col-span-2 space-y-6"
           >
-            <div className="bg-zinc-900 border border-zinc-800 rounded-xl overflow-hidden">
+            <div className="royal-panel overflow-hidden">
               <div className="p-5 border-b border-zinc-800">
                 <h2 className="text-xs font-bold tracking-widest uppercase text-zinc-500">Delivery Details</h2>
               </div>
@@ -237,7 +237,7 @@ export default function OrderPage() {
                     {...register('customer_address')}
                     rows={3}
                     placeholder="House number, street, landmark..."
-                    className="w-full bg-zinc-900 border border-zinc-800 text-white px-4 py-3 rounded-lg text-sm focus:outline-none focus:border-zinc-600 transition-colors placeholder:text-zinc-600 resize-none"
+                    className="royal-field resize-none px-4 py-3 text-sm placeholder:text-zinc-600"
                   />
                   {errors.customer_address && <p className="text-red-400 text-xs">{errors.customer_address?.message}</p>}
                 </div>
@@ -253,7 +253,7 @@ export default function OrderPage() {
                     {...register('notes')}
                     rows={2}
                     placeholder="Any delivery instructions..."
-                    className="w-full bg-zinc-900 border border-zinc-800 text-white px-4 py-3 rounded-lg text-sm focus:outline-none focus:border-zinc-600 transition-colors placeholder:text-zinc-600 resize-none"
+                    className="royal-field resize-none px-4 py-3 text-sm placeholder:text-zinc-600"
                   />
                 </div>
               </div>
@@ -262,7 +262,7 @@ export default function OrderPage() {
             <button
               type="submit"
               disabled={isSubmitting || items.length === 0}
-              className="w-full bg-gold text-black py-4 font-bold text-sm tracking-wide uppercase hover:bg-white transition-all disabled:opacity-40 disabled:cursor-not-allowed flex items-center justify-center gap-2 rounded-lg"
+              className="royal-button w-full py-4 disabled:cursor-not-allowed disabled:opacity-40"
             >
               {isSubmitting ? (
                 <span className="flex items-center gap-2">
