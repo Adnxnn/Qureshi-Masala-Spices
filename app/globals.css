@@ -6,18 +6,33 @@
 
 :root {
   color-scheme: dark;
-  --black: #080705;
-  --charcoal: #100d0a;
-  --dark: #17110e;
-  --surface: #1d1511;
-  --surface-elevated: #241916;
-  --oxblood: #5b1718;
-  --oxblood-deep: #290a0b;
-  --gold: #c7a15a;
-  --gold-light: #e0c889;
-  --gold-dark: #8b6730;
-  --cream: #f4ede0;
-  --muted: #b9ad9b;
+  --black-rgb: 7 7 11;
+  --charcoal-rgb: 15 13 22;
+  --dark-rgb: 24 18 29;
+  --surface-rgb: 30 23 34;
+  --gold-rgb: 248 191 55;
+  --gold-light-rgb: 255 221 120;
+  --gold-dark-rgb: 174 102 17;
+  --cream-rgb: 250 244 232;
+  --muted-rgb: 193 181 164;
+  --black: rgb(var(--black-rgb));
+  --charcoal: rgb(var(--charcoal-rgb));
+  --dark: rgb(var(--dark-rgb));
+  --surface: rgb(var(--surface-rgb));
+  --surface-elevated: #291e30;
+  --oxblood: #8d202c;
+  --oxblood-deep: #310912;
+  --gold: rgb(var(--gold-rgb));
+  --gold-light: rgb(var(--gold-light-rgb));
+  --gold-dark: rgb(var(--gold-dark-rgb));
+  --cream: rgb(var(--cream-rgb));
+  --muted: rgb(var(--muted-rgb));
+  --accent-chilli: #ff4b45;
+  --accent-turmeric: #f8bf37;
+  --accent-coriander: #62d990;
+  --accent-cobalt: #6f8cff;
+  --accent-strong: #ffcf5a;
+  --button-ink: #171009;
   --border: rgba(224, 200, 137, 0.17);
   --border-strong: rgba(224, 200, 137, 0.32);
   --font-display: 'Cormorant Garamond', Georgia, serif;
@@ -31,12 +46,12 @@
 
 html { 
   scroll-behavior: smooth;
-  background: var(--black);
+  background: #07070b;
 }
 
 body {
-  background: var(--black);
-  color: var(--cream);
+  background: #07070b;
+  color: #faf4e8;
   font-family: var(--font-body);
   overflow-x: hidden;
   text-rendering: optimizeLegibility;
@@ -450,6 +465,714 @@ a {
   -webkit-mask-image: radial-gradient(circle at 74% 48%, black 0%, transparent 62%);
 }
 
+/* Dual-theme cinematic public experience */
+.qms-public-shell {
+  position: relative;
+  isolation: isolate;
+  min-height: 100svh;
+  overflow: clip;
+  color-scheme: dark;
+  background: var(--black);
+  color: var(--cream);
+}
+
+html[data-theme='light'] .qms-public-shell {
+  color-scheme: light;
+  --black-rgb: 255 247 228;
+  --charcoal-rgb: 244 232 201;
+  --dark-rgb: 235 220 186;
+  --surface-rgb: 255 252 242;
+  --gold-rgb: 239 164 26;
+  --gold-light-rgb: 255 194 59;
+  --gold-dark-rgb: 133 59 18;
+  --cream-rgb: 34 23 17;
+  --muted-rgb: 103 82 68;
+  --black: rgb(var(--black-rgb));
+  --charcoal: rgb(var(--charcoal-rgb));
+  --dark: rgb(var(--dark-rgb));
+  --surface: rgb(var(--surface-rgb));
+  --surface-elevated: #fffef9;
+  --oxblood: #c93632;
+  --oxblood-deep: #741e20;
+  --gold: rgb(var(--gold-rgb));
+  --gold-light: rgb(var(--gold-light-rgb));
+  --gold-dark: rgb(var(--gold-dark-rgb));
+  --cream: rgb(var(--cream-rgb));
+  --muted: rgb(var(--muted-rgb));
+  --accent-chilli: #ca372f;
+  --accent-turmeric: #eba318;
+  --accent-coriander: #167b51;
+  --accent-cobalt: #2356c8;
+  --accent-strong: #9f321d;
+  --button-ink: #1f1309;
+  --border: rgba(69, 45, 28, 0.16);
+  --border-strong: rgba(69, 45, 28, 0.28);
+  background: var(--black);
+  color: var(--cream);
+}
+
+.qms-public-shell::before {
+  content: '';
+  position: fixed;
+  inset: 0;
+  z-index: 0;
+  pointer-events: none;
+  background:
+    radial-gradient(circle at 9% 24%, color-mix(in srgb, var(--accent-chilli) 17%, transparent), transparent 23rem),
+    radial-gradient(circle at 88% 18%, color-mix(in srgb, var(--accent-cobalt) 16%, transparent), transparent 25rem),
+    radial-gradient(circle at 72% 78%, color-mix(in srgb, var(--accent-coriander) 11%, transparent), transparent 24rem);
+  opacity: 0.55;
+}
+
+.qms-public-shell > * {
+  position: relative;
+  z-index: 1;
+}
+
+.qms-scroll-meter {
+  position: fixed;
+  inset: 0 0 auto;
+  z-index: 100;
+  height: 3px;
+  pointer-events: none;
+  background: linear-gradient(
+    90deg,
+    var(--accent-chilli),
+    var(--accent-turmeric) 34%,
+    var(--accent-coriander) 67%,
+    var(--accent-cobalt)
+  );
+  box-shadow: 0 1px 14px color-mix(in srgb, var(--accent-turmeric) 42%, transparent);
+  will-change: transform;
+}
+
+.qms-theme-toggle {
+  position: relative;
+  display: inline-flex;
+  width: 2.65rem;
+  height: 2.65rem;
+  flex: 0 0 auto;
+  align-items: center;
+  justify-content: center;
+  border: 1px solid rgb(var(--cream-rgb) / 0.12);
+  border-radius: 999px;
+  background:
+    linear-gradient(145deg, rgb(var(--cream-rgb) / 0.09), transparent),
+    rgb(var(--surface-rgb) / 0.76);
+  color: var(--gold-light);
+  box-shadow: 0 10px 30px rgb(0 0 0 / 0.2);
+  transition:
+    transform 120ms var(--ease-out),
+    border-color 160ms var(--ease-out),
+    background-color 160ms var(--ease-out),
+    color 160ms var(--ease-out);
+}
+
+.qms-theme-toggle:hover {
+  border-color: rgb(var(--gold-rgb) / 0.55);
+  color: var(--gold);
+  transform: rotate(-8deg);
+}
+
+.qms-theme-toggle:active {
+  transform: scale(0.96);
+}
+
+.qms-theme-toggle:focus-visible {
+  outline: 2px solid var(--gold);
+  outline-offset: 3px;
+}
+
+.qms-theme-icon {
+  position: absolute;
+}
+
+.qms-theme-icon-moon {
+  display: none;
+}
+
+html[data-theme='light'] .qms-theme-icon-sun {
+  display: none;
+}
+
+html[data-theme='light'] .qms-theme-icon-moon {
+  display: block;
+}
+
+.qms-header {
+  border-color: rgb(var(--gold-rgb) / 0.16) !important;
+  background: linear-gradient(180deg, rgb(var(--black-rgb) / 0.94), rgb(var(--black-rgb) / 0.6), transparent) !important;
+}
+
+.qms-header[data-scrolled='true'] {
+  border-color: rgb(var(--gold-rgb) / 0.26) !important;
+  background: rgb(var(--black-rgb) / 0.88) !important;
+  box-shadow: 0 14px 50px rgb(0 0 0 / 0.18);
+}
+
+html[data-theme='light'] .qms-header {
+  background:
+    linear-gradient(100deg, rgb(255 247 228 / 0.96), rgb(255 252 242 / 0.9) 62%, rgb(232 242 255 / 0.88)) !important;
+}
+
+html[data-theme='light'] .qms-header[data-scrolled='true'] {
+  background: rgb(255 252 242 / 0.92) !important;
+  box-shadow: 0 16px 50px rgb(92 57 24 / 0.13);
+}
+
+.qms-logo-plate {
+  transition:
+    background-color 180ms var(--ease-out),
+    box-shadow 180ms var(--ease-out),
+    transform 120ms var(--ease-out);
+}
+
+html[data-theme='light'] .qms-logo-plate {
+  border: 1px solid rgb(255 255 255 / 0.08);
+  border-radius: 999px;
+  background: #100d13;
+  box-shadow:
+    0 8px 24px rgb(50 28 14 / 0.16),
+    inset 0 0 0 1px rgb(248 191 55 / 0.08);
+  padding: 0.25rem 0.55rem;
+}
+
+.qms-nav-link {
+  color: rgb(var(--cream-rgb) / 0.7) !important;
+}
+
+.qms-nav-link:hover,
+.qms-nav-link[data-active='true'] {
+  color: var(--accent-strong) !important;
+}
+
+.qms-mega-menu,
+.qms-mobile-menu {
+  border-color: var(--border-strong) !important;
+  background:
+    linear-gradient(145deg, rgb(var(--cream-rgb) / 0.035), transparent 34%),
+    rgb(var(--surface-rgb) / 0.97) !important;
+  color: var(--cream);
+}
+
+.qms-mobile-menu-dock {
+  background: rgb(var(--charcoal-rgb) / 0.96) !important;
+}
+
+.qms-mobile-backdrop {
+  background: rgb(5 5 10 / 0.8) !important;
+  backdrop-filter: blur(5px);
+}
+
+.qms-icon-button,
+.qms-menu-button {
+  color: rgb(var(--cream-rgb) / 0.72) !important;
+}
+
+.qms-icon-button:hover,
+.qms-menu-button:hover {
+  color: var(--accent-strong) !important;
+}
+
+html[data-theme='light'] .qms-menu-button {
+  border-color: rgb(var(--cream-rgb) / 0.14) !important;
+  background: rgb(var(--surface-rgb) / 0.84) !important;
+  box-shadow: 0 10px 25px rgb(67 42 22 / 0.12);
+}
+
+.qms-footer {
+  border-color: rgb(var(--gold-rgb) / 0.25) !important;
+  background:
+    radial-gradient(circle at 10% 10%, color-mix(in srgb, var(--accent-chilli) 14%, transparent), transparent 24rem),
+    radial-gradient(circle at 90% 92%, color-mix(in srgb, var(--accent-cobalt) 12%, transparent), transparent 23rem),
+    var(--black) !important;
+}
+
+.qms-hero {
+  background: var(--black) !important;
+}
+
+.qms-hero-overlay {
+  background:
+    radial-gradient(circle at 74% 32%, color-mix(in srgb, var(--accent-chilli) 37%, transparent), transparent 29rem),
+    radial-gradient(circle at 88% 76%, color-mix(in srgb, var(--accent-cobalt) 18%, transparent), transparent 24rem),
+    linear-gradient(90deg, rgb(var(--black-rgb) / 0.98) 0%, rgb(var(--black-rgb) / 0.82) 42%, rgb(var(--black-rgb) / 0.38) 72%, rgb(var(--black-rgb) / 0.88) 100%) !important;
+}
+
+.qms-hero-fade {
+  background: linear-gradient(to top, var(--black), transparent) !important;
+}
+
+html[data-theme='light'] .qms-hero-video {
+  opacity: 0.12 !important;
+  filter: saturate(0.9) contrast(0.92);
+  mix-blend-mode: multiply;
+}
+
+html[data-theme='light'] .qms-hero-overlay {
+  background:
+    radial-gradient(circle at 73% 34%, rgb(202 55 47 / 0.2), transparent 27rem),
+    radial-gradient(circle at 92% 72%, rgb(35 86 200 / 0.17), transparent 25rem),
+    radial-gradient(circle at 40% 95%, rgb(22 123 81 / 0.11), transparent 22rem),
+    linear-gradient(90deg, rgb(255 247 228 / 0.99) 0%, rgb(255 247 228 / 0.9) 45%, rgb(255 247 228 / 0.44) 75%, rgb(255 247 228 / 0.88) 100%) !important;
+}
+
+.qms-display-spectrum,
+.text-gradient-gold {
+  background: linear-gradient(
+    105deg,
+    var(--accent-chilli) 4%,
+    var(--accent-turmeric) 38%,
+    var(--accent-coriander) 68%,
+    var(--accent-cobalt) 96%
+  );
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent !important;
+  -webkit-text-fill-color: transparent;
+}
+
+.qms-hero-stats {
+  border-color: rgb(var(--gold-rgb) / 0.22) !important;
+  background: linear-gradient(90deg, rgb(var(--surface-rgb) / 0.05), rgb(var(--surface-rgb) / 0.18), transparent);
+}
+
+.qms-spice-orbits {
+  position: absolute;
+  inset: 5% 0 3%;
+  transform-origin: 50% 55%;
+  animation: qms-orbit 26s linear infinite;
+  pointer-events: none;
+  will-change: transform;
+}
+
+.qms-spice-orbit {
+  position: absolute;
+  display: block;
+  border-radius: 999px;
+  filter: blur(0.2px);
+}
+
+.qms-spice-orbit-chilli {
+  top: 7%;
+  right: 10%;
+  width: 42%;
+  aspect-ratio: 1;
+  border: 1px solid color-mix(in srgb, var(--accent-chilli) 62%, transparent);
+  box-shadow: 0 0 80px color-mix(in srgb, var(--accent-chilli) 18%, transparent);
+}
+
+.qms-spice-orbit-turmeric {
+  right: 1%;
+  bottom: 12%;
+  width: 23%;
+  aspect-ratio: 1;
+  background: color-mix(in srgb, var(--accent-turmeric) 12%, transparent);
+  border: 1px solid color-mix(in srgb, var(--accent-turmeric) 45%, transparent);
+}
+
+.qms-spice-orbit-coriander {
+  bottom: 4%;
+  left: 11%;
+  width: 17%;
+  aspect-ratio: 1;
+  background: color-mix(in srgb, var(--accent-coriander) 10%, transparent);
+  border: 1px solid color-mix(in srgb, var(--accent-coriander) 38%, transparent);
+}
+
+.qms-spice-orbit-cobalt {
+  top: 26%;
+  left: 4%;
+  width: 31%;
+  aspect-ratio: 1;
+  border: 1px dashed color-mix(in srgb, var(--accent-cobalt) 42%, transparent);
+}
+
+@keyframes qms-orbit {
+  to { transform: rotate(360deg); }
+}
+
+.qms-product-plinth {
+  border-color: rgb(var(--gold-rgb) / 0.28) !important;
+  background:
+    radial-gradient(ellipse at center, rgb(var(--gold-rgb) / 0.24), color-mix(in srgb, var(--accent-chilli) 14%, transparent) 40%, transparent 72%) !important;
+}
+
+.qms-spectrum-band {
+  border-color: rgb(var(--cream-rgb) / 0.12) !important;
+  background: linear-gradient(
+    90deg,
+    var(--accent-chilli),
+    var(--accent-turmeric) 32%,
+    var(--accent-coriander) 66%,
+    var(--accent-cobalt)
+  ) !important;
+}
+
+.qms-product-marquee {
+  border-color: rgb(var(--gold-rgb) / 0.18) !important;
+  background:
+    linear-gradient(90deg, color-mix(in srgb, var(--accent-cobalt) 8%, transparent), transparent 24%, transparent 76%, color-mix(in srgb, var(--accent-chilli) 8%, transparent)),
+    var(--charcoal) !important;
+}
+
+.qms-section-difference,
+.qms-section-reviews {
+  background:
+    radial-gradient(circle at 12% 18%, color-mix(in srgb, var(--accent-coriander) 9%, transparent), transparent 20rem),
+    radial-gradient(circle at 88% 82%, color-mix(in srgb, var(--accent-cobalt) 10%, transparent), transparent 23rem),
+    var(--charcoal) !important;
+}
+
+.qms-section-factory {
+  background:
+    radial-gradient(circle at 12% 82%, color-mix(in srgb, var(--accent-chilli) 15%, transparent), transparent 23rem),
+    radial-gradient(circle at 84% 14%, color-mix(in srgb, var(--accent-turmeric) 8%, transparent), transparent 22rem),
+    var(--black) !important;
+}
+
+html[data-theme='light'] .qms-section-factory {
+  background:
+    radial-gradient(circle at 12% 82%, rgb(202 55 47 / 0.1), transparent 23rem),
+    radial-gradient(circle at 84% 14%, rgb(235 163 24 / 0.13), transparent 22rem),
+    #fffaf0 !important;
+}
+
+.qms-feature-card,
+.qms-review-card,
+.qms-product-card {
+  border-color: var(--border) !important;
+  background:
+    linear-gradient(145deg, rgb(var(--cream-rgb) / 0.035), transparent 36%),
+    rgb(var(--surface-rgb) / 0.62) !important;
+  box-shadow: 0 22px 68px rgb(0 0 0 / 0.16);
+}
+
+.qms-feature-card:hover,
+.qms-review-card:hover,
+.qms-product-card:hover {
+  border-color: rgb(var(--gold-rgb) / 0.46) !important;
+  box-shadow:
+    0 30px 90px rgb(0 0 0 / 0.24),
+    0 0 0 1px color-mix(in srgb, var(--accent-chilli) 10%, transparent);
+}
+
+.qms-product-stage {
+  border: 1px solid rgb(var(--gold-rgb) / 0.13);
+  background:
+    radial-gradient(circle at 46% 34%, rgb(var(--gold-rgb) / 0.13), transparent 27%),
+    radial-gradient(circle at 72% 68%, color-mix(in srgb, var(--accent-chilli) 17%, transparent), transparent 48%),
+    linear-gradient(145deg, rgb(var(--charcoal-rgb)), rgb(var(--black-rgb))) !important;
+}
+
+html[data-theme='light'] .qms-product-stage {
+  background:
+    radial-gradient(circle at 42% 32%, rgb(255 203 83 / 0.36), transparent 27%),
+    radial-gradient(circle at 76% 68%, rgb(35 86 200 / 0.12), transparent 45%),
+    linear-gradient(145deg, #fffdf7, #f1dfb7) !important;
+  box-shadow: 0 24px 65px rgb(101 62 25 / 0.13);
+}
+
+.qms-modal {
+  border-color: var(--border-strong) !important;
+  background:
+    radial-gradient(circle at 12% 15%, color-mix(in srgb, var(--accent-chilli) 10%, transparent), transparent 22rem),
+    linear-gradient(180deg, var(--surface), var(--black)) !important;
+}
+
+html[data-theme='light'] .qms-modal {
+  background:
+    radial-gradient(circle at 12% 15%, rgb(202 55 47 / 0.08), transparent 22rem),
+    linear-gradient(180deg, #fffdf8, #f5e8cc) !important;
+  box-shadow: 0 35px 100px rgb(70 39 15 / 0.25) !important;
+}
+
+.qms-filter-pill {
+  box-shadow: inset 0 1px 0 rgb(var(--cream-rgb) / 0.035);
+}
+
+html[data-theme='light'] .qms-filter-pill {
+  background: rgb(255 255 255 / 0.52) !important;
+  color: rgb(var(--cream-rgb) / 0.66) !important;
+}
+
+html[data-theme='light'] .qms-filter-pill[class*='bg-gold/10'] {
+  border-color: var(--accent-chilli) !important;
+  background: rgb(202 55 47 / 0.09) !important;
+  color: var(--accent-strong) !important;
+}
+
+.qms-field {
+  caret-color: var(--gold);
+}
+
+.qms-field::placeholder {
+  color: rgb(var(--cream-rgb) / 0.28) !important;
+}
+
+html[data-theme='light'] .qms-field {
+  border-color: rgb(var(--cream-rgb) / 0.15) !important;
+  background: rgb(var(--surface-rgb) / 0.9) !important;
+  color: var(--cream) !important;
+  box-shadow: inset 0 1px 0 rgb(255 255 255 / 0.9);
+}
+
+html[data-theme='light'] .qms-field:focus {
+  border-color: var(--accent-cobalt) !important;
+  box-shadow: 0 0 0 3px rgb(35 86 200 / 0.1);
+}
+
+.qms-checkout-progress,
+.qms-trust-strip {
+  border-color: var(--border) !important;
+  background: rgb(var(--surface-rgb) / 0.44) !important;
+}
+
+html[data-theme='light'] .qms-checkout-progress,
+html[data-theme='light'] .qms-trust-strip {
+  background: rgb(255 255 255 / 0.58) !important;
+  box-shadow: 0 14px 38px rgb(75 42 17 / 0.08);
+}
+
+.qms-cart-row {
+  border-color: var(--border) !important;
+}
+
+.qms-order-page .royal-panel {
+  overflow: hidden;
+}
+
+.qms-mobile-dock {
+  border-color: var(--border-strong) !important;
+  background: rgb(var(--surface-rgb) / 0.94) !important;
+  box-shadow: 0 -16px 48px rgb(0 0 0 / 0.25) !important;
+}
+
+html[data-theme='light'] .royal-page {
+  background:
+    radial-gradient(circle at 88% 7%, rgb(35 86 200 / 0.1), transparent 29rem),
+    radial-gradient(circle at 9% 48%, rgb(202 55 47 / 0.08), transparent 24rem),
+    linear-gradient(180deg, #fff7e4 0%, #fffdf5 46%, #f6ecd4 100%);
+}
+
+html[data-theme='light'] .royal-page::before,
+html[data-theme='light'] .royal-grain::before {
+  opacity: 0.16;
+  mix-blend-mode: multiply;
+}
+
+html[data-theme='light'] .royal-panel {
+  border-color: var(--border);
+  background:
+    linear-gradient(145deg, rgb(255 255 255 / 0.8), transparent 36%),
+    linear-gradient(180deg, #fffdf7, #f2e5c8);
+  box-shadow:
+    0 28px 75px rgb(91 53 21 / 0.13),
+    6px 6px 0 rgb(35 86 200 / 0.055);
+}
+
+html[data-theme='light'] .royal-eyebrow {
+  color: var(--accent-strong);
+}
+
+html[data-theme='light'] .royal-field {
+  border-color: rgb(var(--cream-rgb) / 0.16);
+  background: rgb(var(--surface-rgb) / 0.9);
+  color: var(--cream);
+  box-shadow: inset 0 1px 0 rgb(255 255 255 / 0.9);
+}
+
+html[data-theme='light'] .royal-button {
+  border-color: #d98312;
+  background: linear-gradient(105deg, #f6a915, #ffca49);
+  color: var(--button-ink);
+  box-shadow: 5px 5px 0 rgb(202 55 47 / 0.16);
+}
+
+html[data-theme='light'] .royal-button-secondary {
+  border-color: rgb(var(--cream-rgb) / 0.24);
+  background: rgb(255 255 255 / 0.62);
+  color: var(--cream);
+}
+
+html[data-theme='light'] .royal-button-secondary:hover {
+  border-color: var(--accent-cobalt);
+  color: var(--accent-cobalt);
+}
+
+html[data-theme='light'] .royal-auth-stage {
+  background:
+    radial-gradient(circle at 80% 0%, rgb(35 86 200 / 0.13), transparent 28rem),
+    radial-gradient(circle at 10% 84%, rgb(202 55 47 / 0.13), transparent 28rem),
+    var(--black);
+}
+
+html[data-theme='light'] .royal-auth-card {
+  border-color: var(--border);
+  background: rgb(var(--surface-rgb) / 0.92);
+  box-shadow: 0 34px 95px rgb(85 48 18 / 0.15);
+}
+
+html[data-theme='light'] .royal-prose {
+  color: rgb(var(--cream-rgb) / 0.72);
+}
+
+html[data-theme='light'] .qms-public-shell .text-gold,
+html[data-theme='light'] .qms-public-shell .text-gold-light {
+  color: var(--accent-strong) !important;
+}
+
+html[data-theme='light'] .qms-public-shell [class~='text-white'],
+html[data-theme='light'] .qms-public-shell [class~='text-[#f5efe6]'] {
+  color: rgb(var(--cream-rgb)) !important;
+}
+
+html[data-theme='light'] .qms-public-shell [class~='text-white/80'],
+html[data-theme='light'] .qms-public-shell [class~='text-[#f5efe6]/80'] {
+  color: rgb(var(--cream-rgb) / 0.8) !important;
+}
+
+html[data-theme='light'] .qms-public-shell [class~='text-white/70'],
+html[data-theme='light'] .qms-public-shell [class~='text-[#f5efe6]/75'],
+html[data-theme='light'] .qms-public-shell [class~='text-[#f5efe6]/70'] {
+  color: rgb(var(--cream-rgb) / 0.72) !important;
+}
+
+html[data-theme='light'] .qms-public-shell [class~='text-white/60'],
+html[data-theme='light'] .qms-public-shell [class~='text-white/55'],
+html[data-theme='light'] .qms-public-shell [class~='text-[#f5efe6]/65'],
+html[data-theme='light'] .qms-public-shell [class~='text-[#f5efe6]/60'] {
+  color: rgb(var(--cream-rgb) / 0.64) !important;
+}
+
+html[data-theme='light'] .qms-public-shell [class~='text-white/50'],
+html[data-theme='light'] .qms-public-shell [class~='text-white/45'],
+html[data-theme='light'] .qms-public-shell [class~='text-[#f5efe6]/55'],
+html[data-theme='light'] .qms-public-shell [class~='text-[#f5efe6]/50'],
+html[data-theme='light'] .qms-public-shell [class~='text-[#d7c8b3]/55'] {
+  color: rgb(var(--cream-rgb) / 0.56) !important;
+}
+
+html[data-theme='light'] .qms-public-shell [class~='text-white/40'],
+html[data-theme='light'] .qms-public-shell [class~='text-white/35'],
+html[data-theme='light'] .qms-public-shell [class~='text-[#f5efe6]/45'],
+html[data-theme='light'] .qms-public-shell [class~='text-[#f5efe6]/40'],
+html[data-theme='light'] .qms-public-shell [class~='text-[#f5efe6]/35'] {
+  color: rgb(var(--cream-rgb) / 0.48) !important;
+}
+
+html[data-theme='light'] .qms-public-shell [class~='text-white/30'],
+html[data-theme='light'] .qms-public-shell [class~='text-white/20'],
+html[data-theme='light'] .qms-public-shell [class~='text-[#f5efe6]/30'],
+html[data-theme='light'] .qms-public-shell [class~='text-[#f5efe6]/20'] {
+  color: rgb(var(--cream-rgb) / 0.38) !important;
+}
+
+html[data-theme='light'] .qms-public-shell [class~='border-white/5'],
+html[data-theme='light'] .qms-public-shell [class~='border-white/[0.07]'],
+html[data-theme='light'] .qms-public-shell [class~='border-white/[0.08]'],
+html[data-theme='light'] .qms-public-shell [class~='border-white/[0.09]'],
+html[data-theme='light'] .qms-public-shell [class~='border-white/10'] {
+  border-color: rgb(var(--cream-rgb) / 0.12) !important;
+}
+
+html[data-theme='light'] .qms-public-shell [class~='border-white/20'] {
+  border-color: rgb(var(--cream-rgb) / 0.2) !important;
+}
+
+html[data-theme='light'] .qms-public-shell [class~='bg-white/[0.018]'],
+html[data-theme='light'] .qms-public-shell [class~='bg-white/[0.025]'],
+html[data-theme='light'] .qms-public-shell [class~='bg-white/5'] {
+  background-color: rgb(var(--cream-rgb) / 0.045) !important;
+}
+
+html[data-theme='light'] .qms-public-shell [class~='bg-white/10'] {
+  background-color: rgb(var(--cream-rgb) / 0.08) !important;
+}
+
+html[data-theme='light'] .qms-public-shell [class~='bg-black/15'],
+html[data-theme='light'] .qms-public-shell [class~='bg-black/25'],
+html[data-theme='light'] .qms-public-shell [class~='bg-black/30'],
+html[data-theme='light'] .qms-public-shell [class~='bg-black/35'],
+html[data-theme='light'] .qms-public-shell [class~='bg-black/40'] {
+  background-color: rgb(var(--cream-rgb) / 0.045) !important;
+}
+
+html[data-theme='light'] .qms-public-shell [class~='bg-[#11100f]'] {
+  background-color: rgb(var(--surface-rgb)) !important;
+}
+
+html[data-theme='light'] .qms-public-shell [class~='text-[#c9a45f]'],
+html[data-theme='light'] .qms-public-shell [class~='text-[#d9b56f]'],
+html[data-theme='light'] .qms-public-shell [class~='text-[#e0bd77]'] {
+  color: var(--accent-strong) !important;
+}
+
+html[data-theme='light'] ::-webkit-scrollbar-track {
+  background: #fff7e4;
+}
+
+html[data-theme='light'] ::-webkit-scrollbar-thumb {
+  background: #bc7c34;
+  border-color: #fff7e4;
+}
+
+@media (max-width: 639px) {
+  .qms-public-shell {
+    overflow: clip;
+  }
+
+  .qms-theme-toggle {
+    width: 2.5rem;
+    height: 2.5rem;
+  }
+
+  .qms-logo-plate {
+    transform: scale(0.96);
+    transform-origin: left center;
+  }
+
+  .qms-hero {
+    min-height: auto;
+  }
+
+  .qms-hero-stage {
+    transform: scale(1.04);
+    transform-origin: center bottom;
+  }
+
+  .qms-spice-orbits {
+    inset: 4% -7% 1%;
+  }
+
+  .qms-product-card {
+    contain: layout paint;
+  }
+
+  .qms-shop-page {
+    padding-top: 5.5rem;
+  }
+
+  .qms-shop-page .royal-title {
+    font-size: clamp(3.2rem, 16vw, 4.8rem);
+    line-height: 0.88;
+  }
+
+  .qms-product-page .royal-title,
+  .qms-order-page .royal-title {
+    overflow-wrap: anywhere;
+  }
+
+  .qms-mobile-menu {
+    padding-bottom: env(safe-area-inset-bottom);
+  }
+
+  .qms-mobile-dock {
+    padding-left: max(1rem, env(safe-area-inset-left));
+    padding-right: max(1rem, env(safe-area-inset-right));
+  }
+}
+
 @media (prefers-reduced-motion: reduce) {
   html { scroll-behavior: auto; }
 
@@ -460,5 +1183,9 @@ a {
     animation-iteration-count: 1 !important;
     scroll-behavior: auto !important;
     transition-duration: 0.01ms !important;
+  }
+
+  .qms-spice-orbits {
+    animation: none !important;
   }
 }

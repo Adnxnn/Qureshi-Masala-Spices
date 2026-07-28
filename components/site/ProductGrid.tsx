@@ -82,7 +82,7 @@ function QuickViewModal({ product, onClose }: { product: Product; onClose: () =>
           animate={{ opacity: 1, scale: 1, y: 0 }}
           exit={{ opacity: 0, scale: 0.95, y: 40 }}
           transition={{ duration: 0.4, ease: [0.22, 1, 0.36, 1] }}
-          className="max-h-[90vh] w-full overflow-y-auto rounded-t-[3px] border border-gold/20 bg-gradient-to-b from-dark to-black shadow-[0_35px_100px_rgba(0,0,0,0.62)] sm:max-w-4xl sm:rounded-[3px]"
+          className="qms-modal max-h-[90vh] w-full overflow-y-auto rounded-t-[3px] border border-gold/20 bg-gradient-to-b from-dark to-black shadow-[0_35px_100px_rgba(0,0,0,0.62)] sm:max-w-4xl sm:rounded-[3px]"
           onClick={(e) => e.stopPropagation()}
         >
           <div className="flex justify-between items-center p-4 sm:p-6 border-b border-white/10">
@@ -96,7 +96,7 @@ function QuickViewModal({ product, onClose }: { product: Product; onClose: () =>
           </div>
 
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6 sm:gap-8 p-4 sm:p-6">
-            <div className="flex items-center justify-center rounded-[3px] border border-gold/10 bg-[radial-gradient(circle_at_50%_42%,rgba(91,23,24,0.2),transparent_52%),#0c0907] p-6 sm:p-8">
+            <div className="qms-product-stage flex items-center justify-center rounded-[3px] border border-gold/10 bg-[radial-gradient(circle_at_50%_42%,rgba(91,23,24,0.2),transparent_52%),#0c0907] p-6 sm:p-8">
               <Image
                 src={product.image_url}
                 alt={product.name}
@@ -258,14 +258,14 @@ export default function ProductGrid({ products, loading = false }: { products: P
               className="h-full cursor-pointer rounded-[3px] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-gold focus-visible:ring-offset-4 focus-visible:ring-offset-black"
             >
               <motion.div
-                className={`group relative flex h-full flex-col overflow-hidden rounded-[3px] bg-white/[0.018] transition-[background-color,transform,box-shadow] duration-300 hover:-translate-y-1 hover:bg-white/[0.032] hover:shadow-[0_28px_80px_rgba(0,0,0,0.34)] ${isOutOfStock ? 'opacity-70' : ''}`}
+                className={`qms-product-card group relative flex h-full flex-col overflow-hidden rounded-[3px] bg-white/[0.018] transition-[background-color,transform,box-shadow] duration-300 hover:-translate-y-1 hover:bg-white/[0.032] hover:shadow-[0_28px_80px_rgba(0,0,0,0.34)] ${isOutOfStock ? 'opacity-70' : ''}`}
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.5, delay: i * 0.05 }}
               >
                 {/* Product Image */}
                 <div className="p-4 sm:p-6 flex justify-center">
-                  <div className="relative flex aspect-square w-full items-center justify-center overflow-hidden rounded-[3px] bg-[radial-gradient(circle_at_50%_38%,rgba(199,161,90,0.08),transparent_25%),radial-gradient(circle_at_50%_55%,rgba(91,23,24,0.16),transparent_54%),#0c0a08] shadow-[0_22px_55px_rgba(0,0,0,0.22)]">
+                  <div className="qms-product-stage relative flex aspect-square w-full items-center justify-center overflow-hidden rounded-[3px] bg-[radial-gradient(circle_at_50%_38%,rgba(199,161,90,0.08),transparent_25%),radial-gradient(circle_at_50%_55%,rgba(91,23,24,0.16),transparent_54%),#0c0a08] shadow-[0_22px_55px_rgba(0,0,0,0.22)]">
                     {p.image_url ? (
                       <Image
                         src={p.image_url}

@@ -6,12 +6,12 @@ export default function Footer() {
   const currentYear = new Date().getFullYear()
 
   return (
-    <footer className="royal-grain relative overflow-hidden border-t border-gold/20 bg-[#080705]">
+    <footer className="qms-footer royal-grain relative overflow-hidden border-t border-gold/20 bg-[#080705]">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12 sm:py-16">
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-8 lg:gap-12">
           {/* Brand Info */}
           <div className="lg:col-span-2">
-            <Link href="/" className="inline-block mb-4">
+            <Link href="/" className="qms-logo-plate mb-4 inline-block">
               <Image
                 src="/images/qureshis-navbar-logo.png"
                 alt="Qureshi's Masala & Spices"

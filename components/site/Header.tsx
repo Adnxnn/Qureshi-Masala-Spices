@@ -14,6 +14,7 @@ import {
 } from 'lucide-react'
 import { useCart } from '@/lib/cart'
 import type { User as UserType } from '@/types'
+import ThemeToggle from './ThemeToggle'
 
 const navLinks = [
   { href: '/shop', label: 'Shop', hasMega: true },
@@ -97,7 +98,8 @@ export default function Header({ user }: { user: UserType | null }) {
       <motion.header
         initial={{ y: -100 }}
         animate={{ y: 0 }}
-        className={`fixed left-0 right-0 top-0 z-40 border-b transition-[background-color,border-color,padding] duration-300 ${
+        data-scrolled={isScrolled}
+        className={`qms-header fixed left-0 right-0 top-0 z-40 border-b transition-[background-color,border-color,padding] duration-300 ${
           isScrolled 
             ? 'border-gold/20 bg-[#080705]/94 py-2.5 backdrop-blur-xl'
             : 'border-gold/10 bg-gradient-to-b from-black/80 to-transparent py-4'
@@ -106,7 +108,7 @@ export default function Header({ user }: { user: UserType | null }) {
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex items-center justify-between">
             {/* Logo */}
-            <Link href="/" className="z-50 flex items-center" aria-label="Qureshi's home">
+            <Link href="/" className="qms-logo-plate z-50 flex items-center" aria-label="Qureshi's home">
               <Image
                 src="/images/qureshis-navbar-logo.png"
                 alt="Qureshi's Masala & Spices"
@@ -128,7 +130,8 @@ export default function Header({ user }: { user: UserType | null }) {
                 >
                   <Link
                     href={link.href}
-                    className={`flex items-center gap-1 text-[11px] font-semibold tracking-[0.14em] uppercase transition-colors ${
+                    data-active={pathname.startsWith(link.href)}
+                    className={`qms-nav-link flex items-center gap-1 text-[11px] font-semibold tracking-[0.14em] uppercase transition-colors ${
                       pathname.startsWith(link.href) 
                         ? 'text-gold'
                         : 'text-white/70 hover:text-gold'
@@ -154,7 +157,7 @@ export default function Header({ user }: { user: UserType | null }) {
                           animate={{ opacity: 1, y: 0 }}
                           exit={{ opacity: 0, y: 10 }}
                           transition={{ duration: 0.2 }}
-                          className="absolute left-1/2 top-full mt-4 w-[900px] -translate-x-1/2 overflow-hidden rounded-[3px] border border-gold/20 bg-[#100d0a]/98 shadow-[0_30px_90px_rgba(0,0,0,0.6)] backdrop-blur-xl"
+                          className="qms-mega-menu absolute left-1/2 top-full mt-4 w-[900px] -translate-x-1/2 overflow-hidden rounded-[3px] border border-gold/20 bg-[#100d0a]/98 shadow-[0_30px_90px_rgba(0,0,0,0.6)] backdrop-blur-xl"
                         >
                           <div className="grid grid-cols-12 gap-6 p-8">
                             {/* Shop by Product */}
@@ -232,23 +235,24 @@ export default function Header({ user }: { user: UserType | null }) {
 
             {/* Right Icons */}
             <div className="flex items-center gap-1 sm:gap-3 lg:gap-5">
+              <ThemeToggle />
               <button
                 aria-label="Search"
-                className="hidden size-10 items-center justify-center text-white/70 transition-colors hover:text-gold focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-gold sm:flex"
+                className="qms-icon-button hidden size-10 items-center justify-center text-white/70 transition-colors hover:text-gold focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-gold sm:flex"
               >
                 <Search size={18} />
               </button>
               <Link
                 href={user ? '/account' : '/login?next=/account'}
                 aria-label={user ? 'Open my account' : 'Sign in'}
-                className="flex size-10 items-center justify-center text-white/70 transition-colors hover:text-gold focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-gold"
+                className="qms-icon-button flex size-10 items-center justify-center text-white/70 transition-colors hover:text-gold focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-gold"
               >
                 <User size={20} />
               </Link>
               <Link
                 href="/order"
                 aria-label={`View cart with ${count} item${count === 1 ? '' : 's'}`}
-                className="group relative flex min-h-10 min-w-10 items-center justify-center gap-2 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-gold sm:px-1"
+                className="qms-icon-button group relative flex min-h-10 min-w-10 items-center justify-center gap-2 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-gold sm:px-1"
               >
                 <ShoppingBag size={18} className="text-white/70 group-hover:text-gold transition-colors" />
                 {count > 0 && (
@@ -269,7 +273,7 @@ export default function Header({ user }: { user: UserType | null }) {
               {/* Mobile Menu Toggle */}
               <button
                 onClick={() => setIsMobileMenuOpen(true)}
-                className="flex size-11 items-center justify-center rounded-[3px] border border-white/[0.09] bg-[#14110e] text-white shadow-[0_10px_30px_rgba(0,0,0,0.28)] transition-[background-color,border-color,color,transform] duration-200 hover:border-gold/35 hover:bg-[#1b1612] hover:text-gold active:scale-[0.97] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-gold lg:hidden"
+                className="qms-menu-button flex size-11 items-center justify-center rounded-[3px] border border-white/[0.09] bg-[#14110e] text-white shadow-[0_10px_30px_rgba(0,0,0,0.28)] transition-[background-color,border-color,color,transform] duration-200 hover:border-gold/35 hover:bg-[#1b1612] hover:text-gold active:scale-[0.97] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-gold lg:hidden"
                 aria-label="Open menu"
                 aria-expanded={isMobileMenuOpen}
                 aria-controls="mobile-site-menu"
@@ -293,7 +297,7 @@ export default function Header({ user }: { user: UserType | null }) {
           >
             <button
               type="button"
-              className="absolute inset-0 cursor-default bg-black/[0.82]"
+              className="qms-mobile-backdrop absolute inset-0 cursor-default bg-black/[0.82]"
               onClick={() => setIsMobileMenuOpen(false)}
               aria-label="Close menu"
               tabIndex={-1}
@@ -308,10 +312,10 @@ export default function Header({ user }: { user: UserType | null }) {
               aria-modal="true"
               aria-label="Site navigation"
               id="mobile-site-menu"
-              className="absolute inset-y-0 right-0 flex w-[min(92vw,26rem)] flex-col overflow-hidden border-l border-white/[0.08] bg-[#0b0908] shadow-[-32px_0_90px_rgba(0,0,0,0.64)]"
+              className="qms-mobile-menu absolute inset-y-0 right-0 flex w-[min(94vw,27rem)] flex-col overflow-hidden border-l border-white/[0.08] bg-[#0b0908] shadow-[-32px_0_90px_rgba(0,0,0,0.64)]"
             >
               <div className="flex items-center justify-between border-b border-gold/20 px-6 py-5">
-                <Link href="/" onClick={() => setIsMobileMenuOpen(false)}>
+                <Link href="/" className="qms-logo-plate" onClick={() => setIsMobileMenuOpen(false)}>
                   <Image
                     src="/images/qureshis-navbar-logo.png"
                     alt="Qureshi's Masala & Spices"
@@ -411,7 +415,7 @@ export default function Header({ user }: { user: UserType | null }) {
                 </div>
               </div>
 
-              <div className="border-t border-white/[0.08] bg-[#0d0b09] p-6">
+              <div className="qms-mobile-menu-dock border-t border-white/[0.08] bg-[#0d0b09] p-6">
                 <Link
                   href="/order"
                   onClick={() => setIsMobileMenuOpen(false)}
