@@ -2,8 +2,10 @@
 
 import { useEffect, useState } from 'react'
 import { usePathname } from 'next/navigation'
+import { Toaster } from 'react-hot-toast'
 import { CartNotificationsProvider } from '@/lib/cart-notifications'
 import PremiumCartNotification from '@/components/site/PremiumCartNotification'
+import CinematicMotion from '@/components/site/CinematicMotion'
 import { getCurrentUser } from '@/lib/actions'
 import type { User as UserType } from '@/types'
 import Header from '@/components/site/Header'
@@ -31,19 +33,45 @@ export default function ClientLayout({
   }
 
   if (isAdmin) {
-    return <>{children}</>
+    return (
+      <>
+        {children}
+        <Toaster position="top-center" />
+      </>
+    )
   }
 
   return (
     <CartNotificationsProvider>
-      <Header user={user} />
+      <div className="qms-public-shell">
+        <CinematicMotion />
+        <Header user={user} />
 
-      <main className="min-h-screen w-full overflow-x-hidden">
-        {children}
-      </main>
+        <main className="min-h-screen w-full overflow-x-hidden">
+          {children}
+        </main>
 
-      <PremiumCartNotification />
-      <Footer />
+        <PremiumCartNotification />
+        <Footer />
+        <Toaster
+          position="top-center"
+          toastOptions={{
+            className: 'qms-toast',
+            style: {
+              background: 'rgb(var(--surface-rgb) / 0.96)',
+              color: 'rgb(var(--cream-rgb))',
+              border: '1px solid rgb(var(--gold-rgb) / 0.28)',
+              borderRadius: '4px',
+            },
+            success: {
+              iconTheme: {
+                primary: 'rgb(var(--gold-rgb))',
+                secondary: 'rgb(var(--black-rgb))',
+              },
+            },
+          }}
+        />
+      </div>
     </CartNotificationsProvider>
   )
 }

@@ -115,7 +115,7 @@ export default function HeroSection() {
   return (
     <section
       ref={rootRef}
-      className="royal-grain relative isolate min-h-[calc(100svh-72px)] overflow-hidden border-b border-gold/15 bg-black sm:min-h-[calc(100svh-88px)]"
+      className="qms-hero royal-grain relative isolate min-h-[calc(100svh-72px)] overflow-hidden border-b border-gold/15 bg-black sm:min-h-[calc(100svh-88px)]"
     >
       <video
         autoPlay
@@ -123,18 +123,18 @@ export default function HeroSection() {
         loop
         playsInline
         preload="metadata"
-        className="absolute inset-0 -z-30 h-full w-full object-cover opacity-[0.18] saturate-[0.72]"
+        className="qms-hero-video absolute inset-0 -z-30 h-full w-full object-cover opacity-[0.18] saturate-[0.72]"
         aria-hidden="true"
       >
         <source src="/images/Background01.MP4" type="video/mp4" />
       </video>
 
       <div
-        className="absolute inset-0 -z-20 bg-[radial-gradient(circle_at_70%_42%,rgba(91,23,24,0.42),transparent_31rem),linear-gradient(90deg,rgba(8,7,5,0.98)_0%,rgba(8,7,5,0.80)_43%,rgba(8,7,5,0.38)_72%,rgba(8,7,5,0.88)_100%)]"
+        className="qms-hero-overlay absolute inset-0 -z-20 bg-[radial-gradient(circle_at_70%_42%,rgba(91,23,24,0.42),transparent_31rem),linear-gradient(90deg,rgba(8,7,5,0.98)_0%,rgba(8,7,5,0.80)_43%,rgba(8,7,5,0.38)_72%,rgba(8,7,5,0.88)_100%)]"
         aria-hidden="true"
       />
       <div
-        className="absolute inset-x-0 bottom-0 -z-10 h-48 bg-gradient-to-t from-black to-transparent"
+        className="qms-hero-fade absolute inset-x-0 bottom-0 -z-10 h-48 bg-gradient-to-t from-black to-transparent"
         aria-hidden="true"
       />
 
@@ -158,7 +158,7 @@ export default function HeroSection() {
             className="royal-title mx-auto max-w-[11ch] text-[clamp(3.35rem,8.5vw,7.2rem)] lg:mx-0"
           >
             A legacy,
-            <span className="block text-gold-light">sealed in spice.</span>
+            <span className="qms-display-spectrum block text-gold-light">sealed in spice.</span>
           </h1>
 
           <p
@@ -193,7 +193,7 @@ export default function HeroSection() {
 
           <dl
             data-hero-copy
-            className="mx-auto mt-9 grid max-w-lg grid-cols-3 border-y border-gold/15 py-4 text-left lg:mx-0"
+            className="qms-hero-stats mx-auto mt-9 grid max-w-lg grid-cols-3 border-y border-gold/15 py-4 text-left lg:mx-0"
           >
             {[
               ['100%', 'Natural'],
@@ -223,10 +223,17 @@ export default function HeroSection() {
 
           <div
             ref={stageRef}
-            className="absolute inset-0 [perspective:1300px] [transform-style:preserve-3d] will-change-transform"
+            className="qms-hero-stage absolute inset-0 [perspective:1300px] [transform-style:preserve-3d] will-change-transform"
           >
+            <div className="qms-spice-orbits" data-spice-orbit aria-hidden="true">
+              <span className="qms-spice-orbit qms-spice-orbit-chilli" />
+              <span className="qms-spice-orbit qms-spice-orbit-turmeric" />
+              <span className="qms-spice-orbit qms-spice-orbit-coriander" />
+              <span className="qms-spice-orbit qms-spice-orbit-cobalt" />
+            </div>
+
             <div
-              className="absolute bottom-[8%] left-1/2 h-[21%] w-[78%] -translate-x-1/2 rounded-[50%] border border-gold/15 bg-[radial-gradient(ellipse_at_center,rgba(199,161,90,0.22),rgba(91,23,24,0.14)_38%,transparent_72%)] blur-[0.2px]"
+              className="qms-product-plinth absolute bottom-[8%] left-1/2 h-[21%] w-[78%] -translate-x-1/2 rounded-[50%] border border-gold/15 bg-[radial-gradient(ellipse_at_center,rgba(199,161,90,0.22),rgba(91,23,24,0.14)_38%,transparent_72%)] blur-[0.2px]"
               aria-hidden="true"
             />
             <div

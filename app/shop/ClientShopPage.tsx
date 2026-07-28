@@ -60,7 +60,7 @@ export default function ClientShopPage({ initialProducts }: { initialProducts: P
   }, [initialProducts, selectedCategory, searchQuery, sortBy])
 
   return (
-    <div className="royal-page royal-grain px-4 pb-20 pt-24 sm:px-6 sm:pb-28 sm:pt-32 lg:px-8">
+    <div className="qms-cinematic-page qms-shop-page royal-page royal-grain px-4 pb-20 pt-24 sm:px-6 sm:pb-28 sm:pt-32 lg:px-8">
       <div className="max-w-7xl mx-auto relative">
         {/* Decorative background logo */}
         <div className="pointer-events-none absolute left-1/2 top-6 z-0 w-[250px] -translate-x-1/2 select-none opacity-[0.035] sm:top-10 sm:w-[600px] lg:w-[900px]">
@@ -76,7 +76,9 @@ export default function ClientShopPage({ initialProducts }: { initialProducts: P
         {/* Header */}
         <div className="mb-8 sm:mb-12 relative z-10">
           <p className="royal-eyebrow mb-3">The Qureshi&apos;s collection</p>
-          <h1 className="royal-title mb-3 text-5xl sm:mb-4 sm:text-6xl md:text-7xl lg:text-8xl">A spice for every story.</h1>
+          <h1 className="royal-title mb-3 max-w-[13ch] text-5xl sm:mb-4 sm:text-6xl md:text-7xl lg:text-8xl">
+            A spice for <span className="qms-display-spectrum">every story.</span>
+          </h1>
           <p className="max-w-2xl text-sm leading-relaxed text-muted sm:text-base md:text-lg">Explore our collection of authentic, handcrafted spice blends made with traditional recipes.</p>
         </div>
 
@@ -91,7 +93,7 @@ export default function ClientShopPage({ initialProducts }: { initialProducts: P
                 placeholder="Search products..."
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
-                className="royal-field py-3.5 pl-11 pr-4 text-sm placeholder:text-white/20 sm:py-4 sm:pr-5 sm:text-base"
+                className="qms-field royal-field py-3.5 pl-11 pr-4 text-sm placeholder:text-white/20 sm:py-4 sm:pr-5 sm:text-base"
               />
             </div>
 
@@ -101,7 +103,7 @@ export default function ClientShopPage({ initialProducts }: { initialProducts: P
                 <button
                   key={cat.value}
                   onClick={() => setSelectedCategory(cat.value)}
-                  className={`min-h-11 flex-shrink-0 rounded-[2px] border px-4 py-2.5 text-[9px] font-bold uppercase tracking-[0.24em] transition-colors sm:px-5 sm:py-3 sm:text-[10px] ${
+                  className={`qms-filter-pill min-h-11 flex-shrink-0 rounded-[2px] border px-4 py-2.5 text-[9px] font-bold uppercase tracking-[0.24em] transition-colors sm:px-5 sm:py-3 sm:text-[10px] ${
                     selectedCategory === cat.value
                       ? 'border-gold/65 bg-gold/10 text-gold-light'
                       : 'border-white/10 bg-black/30 text-muted hover:border-gold/30 hover:text-cream'
@@ -119,7 +121,7 @@ export default function ClientShopPage({ initialProducts }: { initialProducts: P
                 <select
                   value={sortBy}
                   onChange={(e) => setSortBy(e.target.value)}
-                  className="royal-field cursor-pointer appearance-none px-4 py-3.5 text-sm sm:px-5 sm:py-4 sm:text-base"
+                  className="qms-field royal-field cursor-pointer appearance-none px-4 py-3.5 text-sm sm:px-5 sm:py-4 sm:text-base"
                 >
                   <option value="featured">Featured</option>
                   <option value="price-low">Price: Low → High</option>
