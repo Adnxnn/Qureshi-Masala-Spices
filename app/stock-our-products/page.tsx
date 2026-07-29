@@ -4,6 +4,7 @@ import { useState } from 'react';
 import Slideshow from '@/components/site/Slideshow';
 import { motion } from 'framer-motion';
 import { MessageCircle } from 'lucide-react';
+import KodaguPageHero from '@/components/site/KodaguPageHero';
 
 export default function DealershipPage() {
   const [name, setName] = useState('');
@@ -20,24 +21,20 @@ export default function DealershipPage() {
   };
 
   return (
-    <div className="royal-page royal-grain min-h-screen pb-20 pt-28">
-      <div className="container mx-auto px-4 sm:px-6 lg:px-8">
-        {/* Hero Section */}
-        <motion.div
-          initial={{ opacity: 0, y: -20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.5 }}
-          className="text-center mb-16"
-        >
-          <p className="royal-eyebrow mb-4">Retail partnerships</p>
-          <h1 className="royal-title mb-6 text-5xl sm:text-6xl md:text-7xl">
-            Stock <span className="text-gradient-gold">our products.</span>
-          </h1>
-          <p className="text-white/60 text-base sm:text-lg max-w-3xl mx-auto leading-relaxed">
-            Are you interested in stocking Qureshi's Masala products in your shop, market, or supermarket? 
-            We'd love to hear from you!
-          </p>
-        </motion.div>
+    <div className="qms-editorial-page qms-stock-page">
+      <KodaguPageHero
+        eyebrow="Retail partnerships"
+        index="07"
+        title={<>Put Qureshi&apos;s <strong>on your shelf.</strong></>}
+        description="For shops, supermarkets and independent retailers who want a distinctive, small-batch masala range backed by direct WhatsApp support."
+        meta={['Retail ready', 'Direct enquiry', 'Full product range']}
+        image="/images/Stock1.PNG"
+        imageAlt="Qureshi's Masala and Spices surrounded by an explosion of whole and ground spices"
+        imageLabel="Retail Partners / Kodagu"
+      />
+
+      <section className="qms-stock-section">
+        <div className="qms-page-body">
 
         {/* Main Content */}
         <div className="grid lg:grid-cols-12 gap-8 lg:gap-12 max-w-7xl mx-auto">
@@ -85,8 +82,9 @@ export default function DealershipPage() {
                     type="text"
                     id="name"
                     name="name"
+                    autoComplete="name"
                     className="royal-field px-4 py-3.5 text-sm placeholder-white/30"
-                    placeholder="Your Full Name"
+                    placeholder="Your full name…"
                     value={name}
                     onChange={(e) => setName(e.target.value)}
                   />
@@ -101,8 +99,10 @@ export default function DealershipPage() {
                     type="tel"
                     id="phone"
                     name="phone"
+                    inputMode="tel"
+                    autoComplete="tel"
                     className="royal-field px-4 py-3.5 text-sm placeholder-white/30"
-                    placeholder="+91 98765 43210"
+                    placeholder="+91 98765 43210…"
                     value={phone}
                     onChange={(e) => setPhone(e.target.value)}
                   />
@@ -117,8 +117,11 @@ export default function DealershipPage() {
                     type="email"
                     id="email"
                     name="email"
+                    inputMode="email"
+                    autoComplete="email"
+                    spellCheck={false}
                     className="royal-field px-4 py-3.5 text-sm placeholder-white/30"
-                    placeholder="your@email.com"
+                    placeholder="name@example.com…"
                     value={email}
                     onChange={(e) => setEmail(e.target.value)}
                   />
@@ -163,7 +166,7 @@ export default function DealershipPage() {
                         name="shopAddress"
                         rows={3}
                         className="royal-field resize-none px-4 py-3.5 text-sm placeholder-white/30"
-                        placeholder="Enter your shop address"
+                        placeholder="Enter your shop address…"
                         value={shopAddress}
                         onChange={(e) => setShopAddress(e.target.value)}
                       />
@@ -179,7 +182,7 @@ export default function DealershipPage() {
                         name="shopDetails"
                         rows={3}
                         className="royal-field resize-none px-4 py-3.5 text-sm placeholder-white/30"
-                        placeholder="Tell us more about your business"
+                        placeholder="Tell us more about your business…"
                         value={shopDetails}
                         onChange={(e) => setShopDetails(e.target.value)}
                       />
@@ -200,7 +203,8 @@ export default function DealershipPage() {
             </div>
           </motion.div>
         </div>
+        </div>
+      </section>
       </div>
-    </div>
   );
 }

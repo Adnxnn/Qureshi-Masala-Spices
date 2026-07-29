@@ -1,15 +1,14 @@
 'use client'
-import { useState, useEffect } from 'react'
 import { motion } from 'framer-motion'
-import Image from 'next/image'
 import Slideshow from '@/components/site/Slideshow'
 import { Award, Calendar, ChevronRight, FlaskConical, HeartHandshake, Leaf, ArrowRight, type LucideIcon } from 'lucide-react'
+import KodaguPageHero from '@/components/site/KodaguPageHero'
 
 const TIMELINE_ITEMS = [
   {
     year: '1998',
     title: 'The Beginning',
-    description: 'Our journey started in a small kitchen in Bangalore, where we perfected our first masala blend using traditional recipes passed down through generations.'
+    description: 'Our journey started in a small kitchen in Kodagu, where we perfected our first masala blend using traditional recipes passed down through generations.'
   },
   {
     year: '2005',
@@ -41,68 +40,26 @@ const VALUES: Array<{ icon: LucideIcon; title: string; description: string }> = 
 ]
 
 export default function OurHeritagePage() {
-  const [scrollY, setScrollY] = useState(0)
-
-  useEffect(() => {
-    const handleScroll = () => {
-      setScrollY(window.scrollY)
-    }
-    window.addEventListener('scroll', handleScroll)
-    return () => window.removeEventListener('scroll', handleScroll)
-  }, [])
-
   return (
-    <div className="royal-page royal-grain min-h-screen text-cream">
+    <div className="qms-editorial-page qms-heritage-page royal-grain">
       {/* HERO */}
-      <section className="relative h-screen flex items-center justify-center overflow-hidden">
-        <div className="absolute inset-0">
-          <Image
-            src="/images/QMS.jpeg"
-            alt="Our Heritage"
-            fill
-            className="object-cover opacity-30"
-            priority
-          />
-        </div>
-        <div className="absolute inset-0 bg-gradient-to-b from-black/70 via-black/50 to-black" />
-        <div className="relative z-10 max-w-6xl mx-auto px-8 text-center">
-          <motion.div
-            initial={{ opacity: 0, y: 30 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.6 }}
-          >
-            <div className="royal-eyebrow mb-6">
-              Our Story
-            </div>
-            <h1 className="royal-title mb-8 text-6xl md:text-8xl lg:text-9xl">
-              A legacy of <br />
-              <span className="text-gold">flavour.</span>
-            </h1>
-            <p className="text-lg md:text-2xl text-white/60 max-w-2xl mx-auto mb-12 font-serif italic">
-              Crafted in Coorg with a passion for authentic spices and shipped all over India.
-            </p>
-            <motion.a
-              href="#story"
-              whileHover={{ scale: 1.05 }}
-              className="royal-button px-10 py-5"
-            >
-              Read Our Story <ChevronRight size={18} />
-            </motion.a>
-          </motion.div>
-        </div>
-        
-        {/* Scroll Indicator */}
-        <motion.div
-          className="absolute bottom-10 left-1/2 -translate-x-1/2"
-          animate={{ y: [0, 10, 0] }}
-          transition={{ repeat: Infinity, duration: 2 }}
-        >
-          <div className="w-px h-12 bg-gradient-to-b from-gold to-transparent" />
-        </motion.div>
-      </section>
+      <KodaguPageHero
+        eyebrow="Our heritage"
+        index="04"
+        title={<>Kodagu in <strong>every batch.</strong></>}
+        description="A family legacy shaped by traditional recipes, careful sourcing and the aroma of spices ground fresh—not mass-produced into sameness."
+        meta={['Kodagu rooted', 'Traditional methods', 'Made for Indian kitchens']}
+        image="/images/QMS.jpeg"
+        imageAlt="Whole and ground Indian spices arranged on a dark textured surface"
+        imageLabel="Heritage Ledger / Kodagu"
+      >
+        <a href="#story" className="royal-button px-7 py-4">
+          Read Our Story <ChevronRight size={18} />
+        </a>
+      </KodaguPageHero>
 
       {/* STORY */}
-      <section id="story" className="py-24 px-8">
+      <section id="story" className="qms-heritage-story py-24 px-8">
         <div className="max-w-6xl mx-auto">
           <div className="grid md:grid-cols-2 gap-16 items-center mb-24">
             <motion.div
@@ -181,7 +138,7 @@ export default function OurHeritagePage() {
       </section>
 
       {/* TIMELINE */}
-      <section className="border-y border-gold/10 bg-oxblood-deep/10 px-8 py-24">
+      <section className="qms-heritage-timeline border-y border-gold/10 bg-oxblood-deep/10 px-8 py-24">
         <div className="max-w-5xl mx-auto">
           <motion.div
             initial={{ opacity: 0, y: 30 }}
@@ -241,7 +198,7 @@ export default function OurHeritagePage() {
       </section>
 
       {/* QUOTE */}
-      <section className="py-24 px-8 bg-gradient-to-b from-dark to-black relative overflow-hidden">
+      <section className="qms-heritage-quote py-24 px-8 bg-gradient-to-b from-dark to-black relative overflow-hidden">
         <div className="absolute inset-0 opacity-10">
           <div className="absolute inset-0 font-display text-[20vw] text-gold flex items-center justify-center pointer-events-none">
             SPICE
@@ -265,7 +222,7 @@ export default function OurHeritagePage() {
       </section>
 
       {/* VALUES */}
-      <section className="py-24 px-8">
+      <section className="qms-heritage-values py-24 px-8">
         <div className="max-w-6xl mx-auto">
           <motion.div
             initial={{ opacity: 0, y: 30 }}
@@ -305,7 +262,7 @@ export default function OurHeritagePage() {
       </section>
 
       {/* CTA */}
-      <section className="border-y border-gold/20 bg-[linear-gradient(125deg,#290a0b,#5b1718_52%,#24100f)] px-8 py-24">
+      <section className="qms-heritage-cta border-y border-gold/20 bg-[linear-gradient(125deg,#290a0b,#5b1718_52%,#24100f)] px-8 py-24">
         <div className="mx-auto max-w-4xl text-center text-cream">
           <motion.div
             initial={{ opacity: 0, y: 30 }}

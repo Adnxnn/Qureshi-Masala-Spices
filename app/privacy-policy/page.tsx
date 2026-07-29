@@ -1,19 +1,23 @@
 import Link from 'next/link'
 import { SITE } from '@/lib/site-config'
+import KodaguPageHero from '@/components/site/KodaguPageHero'
 
 const LAST_UPDATED = 'July 15, 2026'
 
 export default function PrivacyPolicyPage() {
   return (
-    <div className="royal-page royal-grain min-h-screen pb-20 pt-24">
-      <div className="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="mb-12">
-          <p className="royal-eyebrow mb-3">Legal</p>
-          <h1 className="royal-title mb-4 text-5xl sm:text-6xl md:text-7xl">
-            Privacy policy.
-          </h1>
-          <p className="text-white/40 text-sm">Last Updated: {LAST_UPDATED}</p>
-        </div>
+    <div className="qms-editorial-page qms-legal-page">
+      <KodaguPageHero
+        eyebrow="Legal"
+        index="09"
+        title={<>Privacy <strong>policy.</strong></>}
+        description="How Qureshi's Masala & Spices handles the information used for ordering, support and the website experience."
+        meta={[`Last updated · ${LAST_UPDATED}`, 'Customer data', 'WhatsApp orders']}
+        compact
+      />
+
+      <section className="qms-legal-section">
+        <div className="qms-page-body qms-page-body--narrow">
 
         <div className="royal-prose space-y-8">
           <section>
@@ -145,7 +149,8 @@ export default function PrivacyPolicyPage() {
             </div>
           </section>
         </div>
+        </div>
+      </section>
       </div>
-    </div>
   )
 }

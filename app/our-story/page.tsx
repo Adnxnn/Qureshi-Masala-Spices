@@ -1,47 +1,25 @@
 'use client'
 import { motion } from 'framer-motion'
-import Image from 'next/image'
 import Link from 'next/link'
-import { ArrowRight, ChefHat, Heart, Leaf, Shield, Sparkles } from 'lucide-react'
+import { Heart, Leaf, Shield, Sparkles } from 'lucide-react'
+import KodaguPageHero from '@/components/site/KodaguPageHero'
 
 export default function OurStoryPage() {
   return (
-    <div className="royal-page royal-grain min-h-screen">
-      {/* Hero */}
-      <section className="relative pt-32 pb-24 overflow-hidden">
-        <div className="absolute inset-0 opacity-20">
-          <Image
-            src="/images/Authentic.jpeg"
-            alt="Our Story Background"
-            fill
-            className="object-cover"
-            priority
-          />
-          <div className="absolute inset-0 bg-gradient-to-b from-black via-black/70 to-black" />
-        </div>
-        <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
-          <motion.div
-            initial={{ opacity: 0, y: 30 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.8, ease: 'easeOut' }}
-            className="text-center"
-          >
-            <div className="royal-eyebrow mb-6">
-              Our Story
-            </div>
-            <h1 className="royal-title mb-6 text-5xl sm:text-6xl md:text-7xl lg:text-8xl">
-              More than masala.<br />
-              <span className="text-gradient-gold">A tradition shared.</span>
-            </h1>
-            <p className="text-white/60 text-base sm:text-lg md:text-xl max-w-2xl mx-auto font-serif italic">
-              Crafted with love, passed down through generations
-            </p>
-          </motion.div>
-        </div>
-      </section>
+    <div className="qms-editorial-page qms-story-page royal-grain">
+      <KodaguPageHero
+        eyebrow="Our story"
+        index="03"
+        title={<>More than masala. <strong>A tradition shared.</strong></>}
+        description="Family recipes, careful hands and the belief that authentic food deserves authentic spice—carried from one kitchen to the next."
+        meta={['Family rooted', 'Small-batch craft', 'Pure flavour']}
+        image="/images/our_heritage_2.jpeg"
+        imageAlt="A hand seasoning freshly ground spices on a traditional preparation surface"
+        imageLabel="The Qureshi's Story / Kodagu"
+      />
 
       {/* Introduction */}
-      <section className="py-20 px-4 sm:px-6 lg:px-8">
+      <section className="qms-story-intro py-20 px-4 sm:px-6 lg:px-8">
         <div className="max-w-6xl mx-auto">
           <div className="grid md:grid-cols-2 gap-12 lg:gap-16 items-center">
             <motion.div
@@ -91,7 +69,7 @@ export default function OurStoryPage() {
       </section>
 
       {/* Values */}
-      <section className="border-y border-gold/10 bg-oxblood-deep/10 px-4 py-20 sm:px-6 lg:px-8">
+      <section className="qms-story-values border-y border-gold/10 bg-oxblood-deep/10 px-4 py-20 sm:px-6 lg:px-8">
         <div className="max-w-6xl mx-auto">
           <motion.div
             initial={{ opacity: 0, y: 30 }}
@@ -150,7 +128,7 @@ export default function OurStoryPage() {
       </section>
 
       {/* Process */}
-      <section className="py-20 px-4 sm:px-6 lg:px-8">
+      <section className="qms-story-process py-20 px-4 sm:px-6 lg:px-8">
         <div className="max-w-5xl mx-auto">
           <motion.div
             initial={{ opacity: 0, y: 30 }}
@@ -212,7 +190,7 @@ export default function OurStoryPage() {
       </section>
 
       {/* CTA */}
-      <section className="border-y border-gold/20 bg-[linear-gradient(125deg,#290a0b,#5b1718_52%,#24100f)] px-4 py-20 sm:px-6 lg:px-8">
+      <section className="qms-story-cta border-y border-gold/20 bg-[linear-gradient(125deg,#290a0b,#5b1718_52%,#24100f)] px-4 py-20 sm:px-6 lg:px-8">
         <div className="mx-auto max-w-4xl text-center text-cream">
           <motion.div
             initial={{ opacity: 0, y: 30 }}
