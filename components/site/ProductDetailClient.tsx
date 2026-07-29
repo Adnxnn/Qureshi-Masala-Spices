@@ -61,7 +61,7 @@ export default function ProductDetailClient({ product }: { product: Product }) {
   const bestUsedIcons = categoryIcons[product.category] || [Wheat, Soup, CookingPot, UtensilsCrossed]
 
   return (
-    <div className="qms-cinematic-page qms-product-page royal-page royal-grain min-h-screen pb-24">
+    <div className="qms-editorial-page qms-cinematic-page qms-product-page royal-page royal-grain min-h-screen pb-24">
       {/* Back button */}
       <div className="pt-24 sm:pt-32 pb-6 sm:pb-8 px-4 sm:px-8 max-w-6xl mx-auto">
         <Link href="/shop" className="royal-eyebrow inline-flex min-h-11 items-center gap-2 text-muted transition-colors hover:text-gold">

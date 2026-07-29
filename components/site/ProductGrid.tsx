@@ -341,7 +341,7 @@ export default function ProductGrid({ products, loading = false }: { products: P
                           if (!isOutOfStock) handleSelectVariant(p.id, idx)
                         }}
                         disabled={isOutOfStock}
-                        className={`min-h-9 rounded-[2px] border px-2.5 py-1.5 text-[8px] font-bold uppercase tracking-[0.18em] transition-colors duration-200 sm:px-3 sm:text-[9px] ${
+                        className={`min-h-11 min-w-11 rounded-[2px] border px-2.5 py-1.5 text-[8px] font-bold uppercase tracking-[0.18em] transition-colors duration-200 sm:px-3 sm:text-[9px] ${
                           selectedVariants[p.id] === idx
                             ? 'border-gold text-gold bg-gold/10'
                             : 'border-white/10 text-white/35 hover:border-white/20 hover:text-white/60 bg-black/40'

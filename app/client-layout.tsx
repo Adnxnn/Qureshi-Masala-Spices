@@ -22,6 +22,11 @@ export default function ClientLayout({
   const isAdmin = pathname.startsWith('/admin')
 
   useEffect(() => {
+    document.documentElement.dataset.theme = 'dark'
+    window.localStorage.removeItem('qms-theme-v1')
+  }, [])
+
+  useEffect(() => {
     if (!isAdmin) {
       loadUser()
     }

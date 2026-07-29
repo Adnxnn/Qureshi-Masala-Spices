@@ -71,7 +71,7 @@ export default function RecipeDetailPage({ params }: { params: { slug: string } 
   const relatedProducts = recipe.recipe_products?.map((rp: any) => rp.products) || []
 
   return (
-    <div className="royal-page royal-grain min-h-screen pb-20 pt-24">
+    <div className="qms-editorial-page qms-recipe-detail-page royal-page royal-grain min-h-screen pb-20 pt-24">
       <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8">
         {/* Back Button */}
         <div className="mb-8">

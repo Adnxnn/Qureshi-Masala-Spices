@@ -2,6 +2,7 @@
 import { useState } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
 import { ChevronDown, ChevronUp } from 'lucide-react'
+import KodaguPageHero from '@/components/site/KodaguPageHero'
 
 interface FAQItem {
   question: string
@@ -83,25 +84,18 @@ export default function FAQPage() {
     : FAQ_DATA.filter(item => item.category === selectedCategory)
 
   return (
-    <div className="royal-page royal-grain min-h-screen pb-20 pt-24">
-      <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
-        {/* Hero */}
-        <motion.div
-          initial={{ opacity: 0, y: -20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.6 }}
-          className="text-center mb-12"
-        >
-          <div className="royal-eyebrow mb-4">
-            FAQ
-          </div>
-          <h1 className="royal-title mb-6 text-5xl sm:text-6xl md:text-7xl">
-            Questions, answered.
-          </h1>
-          <p className="text-white/60 text-base sm:text-lg md:text-xl max-w-2xl mx-auto">
-            Find answers to common questions about our products and services
-          </p>
-        </motion.div>
+    <div className="qms-editorial-page qms-faq-page">
+      <KodaguPageHero
+        eyebrow="Frequently asked"
+        index="08"
+        title={<>Questions, <strong>answered.</strong></>}
+        description="Products, pack sizes, delivery, storage and WhatsApp checkout—clear answers before you order."
+        meta={['Products', 'Ordering', 'Delivery', 'Retail']}
+        compact
+      />
+
+      <section className="qms-faq-section">
+        <div className="qms-page-body qms-page-body--narrow">
 
         {/* Category Filter */}
         <motion.div
@@ -114,11 +108,13 @@ export default function FAQPage() {
             {CATEGORIES.map((category) => (
               <button
                 key={category}
+                type="button"
+                aria-pressed={selectedCategory === category}
                 onClick={() => {
                   setSelectedCategory(category)
                   setOpenId(null)
                 }}
-                className={`min-h-11 rounded-[2px] border px-5 py-2.5 text-[10px] font-bold uppercase tracking-[0.22em] transition-colors duration-300 sm:text-xs ${
+                className={`qms-filter-pill min-h-11 rounded-[2px] border px-5 py-2.5 text-[10px] font-bold uppercase tracking-[0.22em] transition-colors duration-300 sm:text-xs ${
                   selectedCategory === category
                     ? 'border-gold text-gold bg-gold/10'
                     : 'border-white/10 text-white/40 hover:border-white/30 hover:text-white/70'
@@ -140,6 +136,7 @@ export default function FAQPage() {
           {filteredFAQs.map((faq, index) => (
             <FAQItem
               key={index}
+              id={`faq-${selectedCategory.toLowerCase().replace(/\s+/g, '-')}-${index}`}
               faq={faq}
               isOpen={openId === index}
               onToggle={() => setOpenId(openId === index ? null : index)}
@@ -176,21 +173,25 @@ export default function FAQPage() {
             </a>
           </div>
         </motion.div>
+        </div>
+      </section>
       </div>
-    </div>
   )
 }
 
-function FAQItem({ faq, isOpen, onToggle }: { faq: FAQItem; isOpen: boolean; onToggle: () => void }) {
+function FAQItem({ id, faq, isOpen, onToggle }: { id: string; faq: FAQItem; isOpen: boolean; onToggle: () => void }) {
   return (
     <motion.div
       initial={{ opacity: 0, y: 20 }}
       whileInView={{ opacity: 1, y: 0 }}
       viewport={{ once: true }}
-      className="royal-panel overflow-hidden rounded-[3px] transition-colors duration-300 hover:border-gold/25"
+      className="qms-faq-item royal-panel overflow-hidden rounded-[3px] transition-colors duration-300 hover:border-gold/25"
     >
       <button
+        type="button"
         onClick={onToggle}
+        aria-expanded={isOpen}
+        aria-controls={id}
         className="w-full px-6 sm:px-8 py-6 text-left flex items-center justify-between gap-4"
       >
         <span className="font-medium text-white flex-1">{faq.question}</span>
@@ -201,6 +202,7 @@ function FAQItem({ faq, isOpen, onToggle }: { faq: FAQItem; isOpen: boolean; onT
       <AnimatePresence>
         {isOpen && (
           <motion.div
+            id={id}
             initial={{ height: 0, opacity: 0 }}
             animate={{ height: 'auto', opacity: 1 }}
             exit={{ height: 0, opacity: 0 }}

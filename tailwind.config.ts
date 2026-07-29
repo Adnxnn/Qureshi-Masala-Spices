@@ -23,9 +23,9 @@ const config: Config = {
         'orange-brand': '#E8730A',
       },
       fontFamily: {
-        display: ['Cormorant Garamond', 'Georgia', 'serif'],
-        serif:   ['Cormorant Garamond', 'Georgia', 'serif'],
-        sans:    ['Manrope', 'system-ui', 'sans-serif'],
+        display: ['Fraunces Variable', 'Fraunces', 'Georgia', 'serif'],
+        serif:   ['Fraunces Variable', 'Fraunces', 'Georgia', 'serif'],
+        sans:    ['Noto Sans Variable', 'Noto Sans', 'system-ui', 'sans-serif'],
       },
       animation: {
         marquee:     'marquee 22s linear infinite',

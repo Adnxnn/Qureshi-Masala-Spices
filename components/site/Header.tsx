@@ -9,12 +9,10 @@ import {
   User, 
   Menu, 
   X, 
-  ChevronDown, 
-  Search 
+  ChevronDown
 } from 'lucide-react'
 import { useCart } from '@/lib/cart'
 import type { User as UserType } from '@/types'
-import ThemeToggle from './ThemeToggle'
 
 const navLinks = [
   { href: '/shop', label: 'Shop', hasMega: true },
@@ -235,13 +233,6 @@ export default function Header({ user }: { user: UserType | null }) {
 
             {/* Right Icons */}
             <div className="flex items-center gap-1 sm:gap-3 lg:gap-5">
-              <ThemeToggle />
-              <button
-                aria-label="Search"
-                className="qms-icon-button hidden size-10 items-center justify-center text-white/70 transition-colors hover:text-gold focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-gold sm:flex"
-              >
-                <Search size={18} />
-              </button>
               <Link
                 href={user ? '/account' : '/login?next=/account'}
                 aria-label={user ? 'Open my account' : 'Sign in'}
@@ -293,7 +284,7 @@ export default function Header({ user }: { user: UserType | null }) {
             animate={{ opacity: 1 }}
             exit={{ opacity: prefersReducedMotion ? 1 : 0 }}
             transition={{ duration: prefersReducedMotion ? 0 : 0.2, ease: 'easeOut' }}
-            className="fixed inset-0 z-50 lg:hidden"
+            className="fixed inset-0 z-50 h-[100dvh] lg:hidden"
           >
             <button
               type="button"
@@ -312,7 +303,7 @@ export default function Header({ user }: { user: UserType | null }) {
               aria-modal="true"
               aria-label="Site navigation"
               id="mobile-site-menu"
-              className="qms-mobile-menu absolute inset-y-0 right-0 flex w-[min(94vw,27rem)] flex-col overflow-hidden border-l border-white/[0.08] bg-[#0b0908] shadow-[-32px_0_90px_rgba(0,0,0,0.64)]"
+              className="qms-mobile-menu absolute inset-y-0 right-0 flex h-[100dvh] w-[min(94vw,27rem)] flex-col overflow-hidden border-l border-white/[0.08] bg-[#0b0908] shadow-[-32px_0_90px_rgba(0,0,0,0.64)]"
             >
               <div className="flex items-center justify-between border-b border-gold/20 px-6 py-5">
                 <Link href="/" className="qms-logo-plate" onClick={() => setIsMobileMenuOpen(false)}>
@@ -430,8 +421,6 @@ export default function Header({ user }: { user: UserType | null }) {
         )}
       </AnimatePresence>
 
-      {/* Spacer for fixed header */}
-      <div className={`h-[72px] sm:h-[88px]`} />
     </>
   )
 }

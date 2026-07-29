@@ -120,7 +120,6 @@ export default function HeroSection() {
   const [showIntro, setShowIntro] = useState(true)
   const [canUse3D, setCanUse3D] = useState(false)
   const [webglReady, setWebglReady] = useState(false)
-  const [isLight, setIsLight] = useState(false)
   const [particleLimit, setParticleLimit] = useState(72)
   const [burstSignal, setBurstSignal] = useState(0)
   const [announcement, setAnnouncement] = useState('')
@@ -158,9 +157,6 @@ export default function HeroSection() {
   }, [])
 
   useEffect(() => {
-    const syncTheme = () => {
-      setIsLight(document.documentElement.dataset.theme === 'light')
-    }
     const desktopQuery = window.matchMedia('(min-width: 900px)')
     const reducedMotionQuery = window.matchMedia('(prefers-reduced-motion: reduce)')
     const navigatorDetails = navigator as Navigator & {
@@ -172,9 +168,7 @@ export default function HeroSection() {
       setParticleLimit(desktopQuery.matches ? 160 : 72)
     }
 
-    syncTheme()
     syncParticleLimit()
-    window.addEventListener('qms-theme-change', syncTheme)
     desktopQuery.addEventListener('change', syncParticleLimit)
 
     const lowEndDevice = (
@@ -187,13 +181,11 @@ export default function HeroSection() {
       const enableTimer = window.setTimeout(() => setCanUse3D(true), 180)
       return () => {
         window.clearTimeout(enableTimer)
-        window.removeEventListener('qms-theme-change', syncTheme)
         desktopQuery.removeEventListener('change', syncParticleLimit)
       }
     }
 
     return () => {
-      window.removeEventListener('qms-theme-change', syncTheme)
       desktopQuery.removeEventListener('change', syncParticleLimit)
     }
   }, [])
@@ -488,7 +480,7 @@ export default function HeroSection() {
               <Hero3DErrorBoundary onError={disable3D}>
                 <LivingPouchScene
                   burstSignal={burstSignal}
-                  isLight={isLight}
+                  isLight={false}
                   onReady={() => setWebglReady(true)}
                   particleLimit={particleLimit}
                   scrollProgressRef={scrollProgressRef}

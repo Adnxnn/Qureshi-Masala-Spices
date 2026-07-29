@@ -3,6 +3,7 @@ import { useState } from 'react'
 import { motion } from 'framer-motion'
 import { Phone, Mail, MessageCircle, Send } from 'lucide-react'
 import { SITE } from '@/lib/site-config'
+import KodaguPageHero from '@/components/site/KodaguPageHero'
 
 const ENQUIRY_TYPES = ['Product Enquiry', 'Order Support', 'Retail Partnership', 'Recipe Question', 'General Enquiry'] as const
 
@@ -42,25 +43,20 @@ Please get back to me soon!`
   }
 
   return (
-    <div className="royal-page royal-grain min-h-screen pb-20 pt-24">
-      <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
-        {/* Hero */}
-        <motion.div
-          initial={{ opacity: 0, y: -20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.6 }}
-          className="text-center mb-16"
-        >
-          <div className="royal-eyebrow mb-4">
-            Get in Touch
-          </div>
-          <h1 className="royal-title mb-6 text-5xl sm:text-6xl md:text-7xl">
-            Let&apos;s talk spice.
-          </h1>
-          <p className="text-white/60 text-base sm:text-lg md:text-xl max-w-2xl mx-auto">
-            Have a question or want to get in touch? We&apos;d love to hear from you!
-          </p>
-        </motion.div>
+    <div className="qms-editorial-page qms-contact-page">
+      <KodaguPageHero
+        eyebrow="Get in touch"
+        index="06"
+        title={<>Let&apos;s talk <strong>spice.</strong></>}
+        description="Product questions, order help, recipe guidance or retail enquiries—choose the route you need and speak directly with the Qureshi's team."
+        meta={['WhatsApp first', 'Order support', 'Retail enquiries']}
+        image="/images/Qm6.jpeg"
+        imageAlt="Assorted whole and ground spices arranged on a dark surface"
+        imageLabel="Direct Support / Qureshi's"
+      />
+
+      <section className="qms-contact-section">
+        <div className="qms-page-body">
 
         <div className="grid lg:grid-cols-12 gap-12">
           {/* Contact Info */}
@@ -170,11 +166,13 @@ Please get back to me soon!`
                     <input
                       type="text"
                       id="name"
+                      name="name"
+                      autoComplete="name"
                       required
                       value={formData.name}
                       onChange={(e) => setFormData({ ...formData, name: e.target.value })}
                       className="royal-field px-4 py-3.5 sm:px-6 sm:py-4"
-                      placeholder="Your name"
+                      placeholder="Your name…"
                     />
                   </div>
                   <div className="space-y-2">
@@ -184,11 +182,14 @@ Please get back to me soon!`
                     <input
                       type="tel"
                       id="phone"
+                      name="phone"
+                      inputMode="tel"
+                      autoComplete="tel"
                       required
                       value={formData.phone}
                       onChange={(e) => setFormData({ ...formData, phone: e.target.value })}
                       className="royal-field px-4 py-3.5 sm:px-6 sm:py-4"
-                      placeholder="Your phone number"
+                      placeholder="+91 98765 43210…"
                     />
                   </div>
                 </div>
@@ -200,11 +201,15 @@ Please get back to me soon!`
                   <input
                     type="email"
                     id="email"
+                    name="email"
+                    inputMode="email"
+                    autoComplete="email"
+                    spellCheck={false}
                     required
                     value={formData.email}
                     onChange={(e) => setFormData({ ...formData, email: e.target.value })}
                     className="royal-field px-4 py-3.5 sm:px-6 sm:py-4"
-                    placeholder="Your email address"
+                    placeholder="name@example.com…"
                   />
                 </div>
 
@@ -233,11 +238,13 @@ Please get back to me soon!`
                   <input
                     type="text"
                     id="subject"
+                    name="subject"
+                    autoComplete="off"
                     required
                     value={formData.subject}
                     onChange={(e) => setFormData({ ...formData, subject: e.target.value })}
                     className="royal-field px-4 py-3.5 sm:px-6 sm:py-4"
-                    placeholder="Subject"
+                    placeholder="What can we help with?…"
                   />
                 </div>
 
@@ -247,12 +254,13 @@ Please get back to me soon!`
                   </label>
                   <textarea
                     id="message"
+                    name="message"
                     required
                     rows={5}
                     value={formData.message}
                     onChange={(e) => setFormData({ ...formData, message: e.target.value })}
                     className="royal-field resize-none px-4 py-3.5 sm:px-6 sm:py-4"
-                    placeholder="Your message..."
+                    placeholder="Write your message…"
                   />
                 </div>
 
@@ -268,7 +276,8 @@ Please get back to me soon!`
             </div>
           </motion.div>
         </div>
+        </div>
+      </section>
       </div>
-    </div>
   )
 }
