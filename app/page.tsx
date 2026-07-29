@@ -1,11 +1,11 @@
 import Link from 'next/link'
-import Image from 'next/image'
 import { getProducts } from '@/lib/actions'
 import HeroSection from '@/components/site/HeroSection'
 import Slideshow from '@/components/site/Slideshow'
-import InfiniteProductCarousel from '@/components/site/InfiniteProductCarousel'
+import SpiceTable from '@/components/site/SpiceTable'
 import CinematicShopCTA from '@/components/site/CinematicShopCTA'
-import type { Product } from '@/types'
+import StatsMarquee from '@/components/site/StatsMarquee'
+import QureshiDifference from '@/components/site/QureshiDifference'
 
 export const dynamic = 'force-dynamic'
 
@@ -140,199 +140,43 @@ export default async function HomePage() {
     <>
       <HeroSection />
 
-      {/* STATS BAR */}
-      <div className="overflow-hidden border-y border-gold-light/35 bg-gold py-2">
-        <div className="flex whitespace-nowrap animate-marquee-reverse">
-          {[...Array(2)].map((_, di) =>
-            [
-              { num: '100%', label: 'Natural' },
-              { num: '0', label: 'Preservatives' },
-              { num: '12+', label: 'Signature Blends' },
-              { num: 'Small Batch', label: 'Crafted Fresh' },
-              { num: '★ 4.9', label: 'Customer Rating' },
-            ].map((s, i) => (
-              <div key={`${di}-${s.label}`} className="flex items-center gap-1 sm:gap-2 px-4 sm:px-8">
-                <div className="font-display text-lg sm:text-xl md:text-2xl text-black leading-none">{s.num}</div>
-                <div className="text-[7px] sm:text-[9px] md:text-[10px] tracking-[0.15em] sm:tracking-[0.2em] uppercase text-black/60">{s.label}</div>
-                <span className="text-black/20 text-sm sm:text-lg">·</span>
-              </div>
-            ))
-          )}
-        </div>
-      </div>
+      <StatsMarquee />
 
-      {/* MARQUEE */}
-      <div className="overflow-hidden border-b border-gold/15 bg-charcoal py-2.5 sm:py-3">
-        <div className="flex whitespace-nowrap animate-marquee">
-          {[...Array(2)].map((_, di) =>
-            ['Kebab Masala','Fish Fry Masala','Fish Curry Masala','Biryani Masala','Chicken Masala','Garam Masala'].map(item => (
-              <span key={`${di}-${item}`} className="font-display text-base sm:text-xl tracking-widest uppercase text-white/30 px-4 sm:px-8">
-                {item} <span className="text-gold/40">·</span>
-              </span>
-            ))
-          )}
-        </div>
-      </div>
-
-      {/* PRODUCTS CAROUSEL SECTION */}
-      <section id="products" className="royal-page overflow-hidden px-4 py-16 sm:px-8 sm:py-28">
-        <div className="max-w-6xl mx-auto mb-8 sm:mb-14 text-center">
-          <div className="text-[9px] sm:text-[11px] tracking-[0.35em] sm:tracking-[0.4em] uppercase text-gold mb-2 sm:mb-4">Our Masalas</div>
-          <h2 className="royal-title text-4xl sm:text-6xl lg:text-7xl">
-            Pure flavour.<br /><span className="text-gradient-gold">Endless taste.</span>
-          </h2>
-          <div className="w-16 sm:w-24 h-0.5 sm:h-1 bg-gradient-to-r from-gold/0 via-gold to-gold/0 mx-auto mt-3 sm:mt-6"></div>
+      {/* SPICE TABLE PRODUCT SHOWCASE */}
+      <section id="products" className="qms-spice-table">
+        <div className="qms-spice-table-heading">
+          <div>
+            <div className="qms-spice-table-kicker">The Spice Table / Batch No. 01</div>
+            <h2 className="qms-spice-table-title">
+              Pick your<br />kind of heat.
+            </h2>
+          </div>
+          <div className="qms-spice-table-intro">
+            <span aria-hidden="true">✦</span>
+            <p>
+              Freshly ground blends, stacked like a Kodagu market table.
+              Choose a weight, see the real price, and add it straight to your bag.
+            </p>
+          </div>
         </div>
 
-        {/* INFINITE SCROLLING CAROUSEL - with auto & manual scroll */}
-        <InfiniteProductCarousel products={products} />
+        <SpiceTable products={products} />
 
-        {/* EXPLORE BUTTON */}
-        <div className="text-center mt-12 sm:mt-24">
+        <div className="qms-spice-table-footer">
+          <span>20 heritage blends / Ground in small batches</span>
           <Link
             href="/shop"
-            className="royal-button group"
+            className="qms-spice-explore"
           >
-            Explore Our Collections
-            <svg className="h-3 w-3 transition-transform duration-200 group-hover:translate-x-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            Explore All Masalas
+            <svg className="h-3.5 w-3.5 transition-transform duration-200 group-hover:translate-x-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M17 8l4 4m0 0l-4 4m4-4H3"/>
             </svg>
           </Link>
         </div>
       </section>
 
-      {/* WHY QURESHI'S SECTION */}
-      <section className="relative overflow-hidden border-y border-gold/15 bg-charcoal px-4 py-16 sm:px-8 sm:py-28">
-        <div className="pointer-events-none absolute inset-y-0 left-[7%] w-px bg-gradient-to-b from-transparent via-gold/10 to-transparent" aria-hidden="true" />
-        <div className="pointer-events-none absolute inset-y-0 right-[7%] w-px bg-gradient-to-b from-transparent via-gold/10 to-transparent" aria-hidden="true" />
-        
-        <div className="max-w-6xl mx-auto relative z-10">
-          <div className="text-center mb-10 sm:mb-16 md:mb-20">
-            <div className="text-[9px] sm:text-[11px] tracking-[0.35em] sm:tracking-[0.4em] uppercase text-gold mb-2 sm:mb-4">The Qureshi Difference</div>
-            <h2 className="royal-title text-4xl sm:text-6xl lg:text-7xl">
-              Crafted with<br /><span className="text-gradient-gold">a point of view.</span>
-            </h2>
-            <div className="w-16 sm:w-24 h-px bg-gradient-to-r from-transparent via-gold/30 to-transparent mx-auto mb-3 sm:mb-6"></div>
-            <p className="text-white/60 max-w-2xl mx-auto text-sm sm:text-lg">
-              Every blend is a testament to our commitment to quality and authenticity
-            </p>
-          </div>
-          
-          {/* Desktop View - Grid */}
-          <div className="hidden sm:grid sm:grid-cols-2 lg:grid-cols-4 gap-6 sm:gap-8">
-            {[
-              { 
-                image: '/images/herbs.png', 
-                title: '100% Natural', 
-                stat: 'No Preservatives',
-                description: 'Pure, unadulterated spices without any additives'
-              },
-              { 
-                image: '/images/freshly grounded.png', 
-                title: 'Freshly Ground', 
-                stat: 'Small Batches',
-                description: 'Blended in small batches for maximum freshness'
-              },
-              { 
-                image: '/images/handpicked.png', 
-                title: 'Premium Quality', 
-                stat: 'Hand-Picked',
-                description: 'Sourcing only the finest ingredients available'
-              },
-              { 
-                image: '/images/heritage crafted.jpeg', 
-                title: 'Heritage Crafted', 
-                stat: '15+ Years',
-                description: 'Generations of traditional blending expertise'
-              }
-            ].map((item, index) => (
-              <div key={index} className="group">
-                <div className="relative h-full overflow-hidden rounded-[3px] border border-gold/15 bg-gradient-to-b from-dark to-black transition-[border-color,transform] duration-300 group-hover:-translate-y-1 group-hover:border-gold/40">
-                  {/* Image container */}
-                  <div className="aspect-[4/5] relative overflow-hidden">
-                    <Image
-                      src={item.image}
-                      alt={item.title}
-                      fill
-                      className="object-cover group-hover:scale-110 transition-transform duration-700"
-                    />
-                    <div className="absolute inset-0 bg-gradient-to-t from-black via-black/50 to-transparent"></div>
-                    
-                    {/* Gold accent line */}
-                    <div className="absolute bottom-0 left-1/2 h-px w-16 -translate-x-1/2 bg-gradient-to-r from-transparent via-gold to-transparent"></div>
-                  </div>
-                  
-                  {/* Content */}
-                  <div className="p-6 sm:p-8">
-                    <div className="text-gold text-2xl sm:text-3xl font-display font-bold mb-2">{item.stat}</div>
-                    <h3 className="font-display text-2xl font-semibold text-white sm:text-3xl">{item.title}</h3>
-                    <p className="text-white/50 text-sm leading-relaxed">{item.description}</p>
-                  </div>
-                </div>
-              </div>
-            ))}
-          </div>
-
-          {/* Mobile View - Infinite Carousel */}
-          <div className="sm:hidden overflow-hidden">
-            <div className="flex gap-4 animate-scroll">
-              {[...Array(2)].map((_, loopIndex) => 
-                [
-                  { 
-                    image: '/images/herbs.png', 
-                    title: '100% Natural', 
-                    stat: 'No Preservatives',
-                    description: 'Pure, unadulterated spices without any additives'
-                  },
-                  { 
-                    image: '/images/freshly grounded.png', 
-                    title: 'Freshly Ground', 
-                    stat: 'Small Batches',
-                    description: 'Blended in small batches for maximum freshness'
-                  },
-                  { 
-                    image: '/images/handpicked.png', 
-                    title: 'Premium Quality', 
-                    stat: 'Hand-Picked',
-                    description: 'Sourcing only the finest ingredients available'
-                  },
-                  { 
-                    image: '/images/heritage crafted.jpeg', 
-                    title: 'Heritage Crafted', 
-                    stat: '15+ Years',
-                    description: 'Generations of traditional blending expertise'
-                  }
-                ].map((item, index) => (
-                  <div key={`${loopIndex}-${index}`} className="w-[160px] group flex-shrink-0">
-                    <div className="relative h-full overflow-hidden rounded-[3px] border border-gold/15 bg-gradient-to-b from-dark to-black">
-                      {/* Image container */}
-                      <div className="aspect-[3/4] relative overflow-hidden">
-                        <Image
-                          src={item.image}
-                          alt={item.title}
-                          fill
-                          className="object-cover"
-                        />
-                        <div className="absolute inset-0 bg-gradient-to-t from-black via-black/50 to-transparent"></div>
-                        
-                        {/* Gold accent line */}
-                        <div className="absolute bottom-0 left-1/2 -translate-x-1/2 w-8 h-0.5 bg-gradient-to-r from-transparent via-gold to-transparent"></div>
-                      </div>
-                      
-                      {/* Content */}
-                      <div className="p-3">
-                        <div className="text-gold text-sm font-display font-bold mb-1">{item.stat}</div>
-                        <h3 className="mb-2 font-display text-lg font-semibold text-white">{item.title}</h3>
-                        <p className="text-white/50 text-[10px] leading-relaxed">{item.description}</p>
-                      </div>
-                    </div>
-                  </div>
-                ))
-              )}
-            </div>
-          </div>
-        </div>
-      </section>
+      <QureshiDifference />
 
       {/* OUR HERITAGE SECTION */}
       <section id="heritage" className="royal-page relative overflow-hidden px-4 py-16 sm:px-8 sm:py-28">
