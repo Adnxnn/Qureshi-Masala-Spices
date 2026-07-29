@@ -1,7 +1,6 @@
 import type { Metadata } from 'next'
-import '@fontsource-variable/fraunces/wght.css'
-import '@fontsource-variable/noto-sans/wght.css'
 import './globals.css'
+import './minimal.css'
 import ClientLayout from './client-layout'
 
 export const metadata: Metadata = {
@@ -19,7 +18,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
   return (
     <html lang="en" data-theme="dark">
       <head>
-        <meta name="theme-color" content="#0b0402" />
+        <meta name="theme-color" content="#0a0a0a" />
       </head>
       <body className="antialiased">
         <ClientLayout>{children}</ClientLayout>

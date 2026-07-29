@@ -5,7 +5,6 @@ import { usePathname } from 'next/navigation'
 import { Toaster } from 'react-hot-toast'
 import { CartNotificationsProvider } from '@/lib/cart-notifications'
 import PremiumCartNotification from '@/components/site/PremiumCartNotification'
-import CinematicMotion from '@/components/site/CinematicMotion'
 import { getCurrentUser } from '@/lib/actions'
 import type { User as UserType } from '@/types'
 import Header from '@/components/site/Header'
@@ -49,7 +48,6 @@ export default function ClientLayout({
   return (
     <CartNotificationsProvider>
       <div className="qms-public-shell">
-        <CinematicMotion />
         <Header user={user} />
 
         <main className="min-h-screen w-full overflow-x-hidden">
@@ -63,15 +61,16 @@ export default function ClientLayout({
           toastOptions={{
             className: 'qms-toast',
             style: {
-              background: 'rgb(var(--surface-rgb) / 0.96)',
-              color: 'rgb(var(--cream-rgb))',
-              border: '1px solid rgb(var(--gold-rgb) / 0.28)',
-              borderRadius: '4px',
+              background: '#1d1d1f',
+              color: '#f5f5f7',
+              border: '1px solid rgba(255,255,255,.12)',
+              borderRadius: '14px',
+              boxShadow: '0 18px 60px rgba(0,0,0,.4)',
             },
             success: {
               iconTheme: {
-                primary: 'rgb(var(--gold-rgb))',
-                secondary: 'rgb(var(--black-rgb))',
+                primary: '#d63b32',
+                secondary: '#ffffff',
               },
             },
           }}
