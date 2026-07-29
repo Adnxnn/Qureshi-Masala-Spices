@@ -1,4 +1,6 @@
 import type { Metadata } from 'next'
+import '@fontsource-variable/fraunces/wght.css'
+import '@fontsource-variable/noto-sans/wght.css'
 import './globals.css'
 import ClientLayout from './client-layout'
 
