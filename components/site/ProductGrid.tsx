@@ -200,7 +200,7 @@ export default function ProductGrid({ products, loading = false }: { products: P
   const { addItem } = useCart()
   const { addNotification } = useCartNotifications()
   const [selectedVariants, setSelectedVariants] = useState<Record<string, number>>({})
-  const [isLoading, setIsLoading] = useState(true)
+  const [isLoading, setIsLoading] = useState(loading)
   const [quickViewProduct, setQuickViewProduct] = useState<Product | null>(null)
   const [pressedProductId, setPressedProductId] = useState<string | null>(null)
 
@@ -259,7 +259,7 @@ export default function ProductGrid({ products, loading = false }: { products: P
             >
               <motion.div
                 className={`qms-product-card group relative flex h-full flex-col overflow-hidden rounded-[3px] bg-white/[0.018] transition-[background-color,transform,box-shadow] duration-300 hover:-translate-y-1 hover:bg-white/[0.032] hover:shadow-[0_28px_80px_rgba(0,0,0,0.34)] ${isOutOfStock ? 'opacity-70' : ''}`}
-                initial={{ opacity: 0, y: 20 }}
+                initial={false}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.5, delay: i * 0.05 }}
               >
