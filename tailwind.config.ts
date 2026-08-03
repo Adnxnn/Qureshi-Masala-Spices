@@ -9,23 +9,21 @@ const config: Config = {
   theme: {
     extend: {
       colors: {
-        black:    'rgb(var(--black-rgb) / <alpha-value>)',
-        charcoal: 'rgb(var(--charcoal-rgb) / <alpha-value>)',
-        dark:     'rgb(var(--dark-rgb) / <alpha-value>)',
-        surface:  'rgb(var(--surface-rgb) / <alpha-value>)',
-        gold:     'rgb(var(--gold-rgb) / <alpha-value>)',
-        'gold-light': 'rgb(var(--gold-light-rgb) / <alpha-value>)',
-        'gold-dark': 'rgb(var(--gold-dark-rgb) / <alpha-value>)',
-        cream:    'rgb(var(--cream-rgb) / <alpha-value>)',
-        muted:    'rgb(var(--muted-rgb) / <alpha-value>)',
+        black:    '#080705',
+        charcoal: '#100d0a',
+        dark:     '#17110e',
+        gold:     '#c7a15a',
+        'gold-light': '#e0c889',
+        'gold-dark': '#8b6730',
+        cream:    '#f4ede0',
         'red-brand':    '#5b1718',
         'blue-brand':   '#1565C0',
         'orange-brand': '#E8730A',
       },
       fontFamily: {
-        display: ['Fraunces Variable', 'Fraunces', 'Georgia', 'serif'],
-        serif:   ['Fraunces Variable', 'Fraunces', 'Georgia', 'serif'],
-        sans:    ['Noto Sans Variable', 'Noto Sans', 'system-ui', 'sans-serif'],
+        display: ['Cormorant Garamond', 'Georgia', 'serif'],
+        serif:   ['Cormorant Garamond', 'Georgia', 'serif'],
+        sans:    ['Manrope', 'system-ui', 'sans-serif'],
       },
       animation: {
         marquee:     'marquee 22s linear infinite',

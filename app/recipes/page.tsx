@@ -11,7 +11,6 @@ import {
   Search,
 } from 'lucide-react'
 import { getPublicRecipes } from '@/lib/actions'
-import KodaguPageHero from '@/components/site/KodaguPageHero'
 
 export const dynamic = 'force-dynamic'
 
@@ -67,20 +66,22 @@ export default function RecipesPage() {
   }, [searchQuery, allRecipes])
 
   return (
-    <div className="qms-editorial-page qms-recipes-page">
-      <KodaguPageHero
-        eyebrow="The recipe ledger"
-        index="05"
-        title={<>Cook with <strong>character.</strong></>}
-        description="Step-by-step dishes built around the exact Qureshi's blend they need, with timing, serving details and the right masala always close at hand."
-        meta={['Kitchen-tested methods', 'Masala paired', 'Save your next dish']}
-        image="/images/our_heritage_1.jpeg"
-        imageAlt="Traditional spices being ground with a mortar and pestle"
-        imageLabel="Recipe Ledger / Ground Fresh"
-      />
+    <div className="royal-page royal-grain min-h-screen w-full overflow-x-hidden pb-20 pt-24">
+      <div className="mx-auto w-full max-w-6xl px-4 sm:px-6 lg:px-8">
+        <header className="mb-10 text-center sm:mb-16">
+          <div className="royal-eyebrow mb-4">
+            Recipes
+          </div>
 
-      <section className="qms-recipes-section">
-        <div className="qms-page-body">
+          <h1 className="royal-title mb-6 text-5xl sm:text-6xl md:text-7xl">
+            Cook with character.
+          </h1>
+
+          <p className="mx-auto max-w-2xl text-base text-white/60 sm:text-lg md:text-xl">
+            Discover authentic recipes made with Qureshi&apos;s
+            Masala &amp; Spices
+          </p>
+        </header>
 
         <div className="relative mx-auto mb-12 w-full max-w-lg">
           <Search
@@ -92,7 +93,7 @@ export default function RecipesPage() {
           <input
             type="search"
             aria-label="Search recipes"
-            placeholder="Search recipes…"
+            placeholder="Search recipes..."
             value={searchQuery}
             onChange={(event) =>
               setSearchQuery(event.target.value)
@@ -120,9 +121,8 @@ export default function RecipesPage() {
             ))}
           </div>
         )}
-        </div>
-      </section>
       </div>
+    </div>
   )
 }
 
@@ -143,7 +143,7 @@ function RecipeCard({ recipe }: { recipe: any }) {
       href={`/recipes/${recipe.slug}`}
       className="group block h-full w-full min-w-0"
     >
-      <article className="qms-recipe-card royal-panel flex h-full w-full min-w-0 flex-col overflow-hidden rounded-[3px] transition-colors duration-300 hover:border-gold/30">
+      <article className="royal-panel flex h-full w-full min-w-0 flex-col overflow-hidden rounded-[3px] transition-colors duration-300 hover:border-gold/30">
         <div className="relative h-56 w-full overflow-hidden">
           {imageUrl ? (
             <Image

@@ -61,7 +61,7 @@ export default function ProductDetailClient({ product }: { product: Product }) {
   const bestUsedIcons = categoryIcons[product.category] || [Wheat, Soup, CookingPot, UtensilsCrossed]
 
   return (
-    <div className="qms-editorial-page qms-cinematic-page qms-product-page royal-page royal-grain min-h-screen pb-24">
+    <div className="royal-page royal-grain min-h-screen pb-24">
       {/* Back button */}
       <div className="pt-24 sm:pt-32 pb-6 sm:pb-8 px-4 sm:px-8 max-w-6xl mx-auto">
         <Link href="/shop" className="royal-eyebrow inline-flex min-h-11 items-center gap-2 text-muted transition-colors hover:text-gold">
@@ -77,7 +77,7 @@ export default function ProductDetailClient({ product }: { product: Product }) {
           <div className="relative">
             {/* Main image */}
             <div
-              className="qms-product-stage group relative flex aspect-square items-center justify-center overflow-hidden rounded-[3px] border border-gold/15 bg-[radial-gradient(circle_at_50%_40%,rgba(91,23,24,0.35),transparent_38%),linear-gradient(145deg,#211713,#0a0806_72%)] p-6 shadow-[0_34px_80px_rgba(0,0,0,0.48)] sm:p-8 lg:p-12"
+              className="group relative flex aspect-square items-center justify-center overflow-hidden rounded-[3px] border border-gold/15 bg-[radial-gradient(circle_at_50%_40%,rgba(91,23,24,0.35),transparent_38%),linear-gradient(145deg,#211713,#0a0806_72%)] p-6 shadow-[0_34px_80px_rgba(0,0,0,0.48)] sm:p-8 lg:p-12"
             >
               {product.image_url ? (
                 <Image
@@ -282,7 +282,7 @@ export default function ProductDetailClient({ product }: { product: Product }) {
       </div>
 
       {/* Sticky Bottom Bar - Mobile */}
-      <div className="qms-mobile-dock fixed bottom-0 left-0 right-0 z-50 border-t border-gold/15 bg-[#080705]/95 p-4 backdrop-blur-md sm:p-5 lg:hidden">
+      <div className="fixed bottom-0 left-0 right-0 z-50 border-t border-gold/15 bg-[#080705]/95 p-4 backdrop-blur-md sm:p-5 lg:hidden">
         <div className="flex items-center justify-between gap-4 max-w-6xl mx-auto">
           <div>
             <div className="text-white/50 text-[8px] sm:text-[10px] tracking-[0.3em] uppercase mb-0.5">Total</div>

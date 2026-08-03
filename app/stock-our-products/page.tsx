@@ -1,9 +1,9 @@
 'use client';
 
 import { useState } from 'react';
+import Slideshow from '@/components/site/Slideshow';
 import { motion } from 'framer-motion';
-import { MessageCircle, PackageCheck, Store, Headphones } from 'lucide-react';
-import KodaguPageHero from '@/components/site/KodaguPageHero';
+import { MessageCircle } from 'lucide-react';
 
 export default function DealershipPage() {
   const [name, setName] = useState('');
@@ -20,54 +20,43 @@ export default function DealershipPage() {
   };
 
   return (
-    <div className="qms-editorial-page qms-stock-page">
-      <KodaguPageHero
-        eyebrow="Retail partnerships"
-        index="07"
-        title={<>Put Qureshi&apos;s <strong>on your shelf.</strong></>}
-        description="For shops, supermarkets and independent retailers who want a distinctive, small-batch masala range backed by direct WhatsApp support."
-        meta={['Retail ready', 'Direct enquiry', 'Full product range']}
-        image="/images/Stock1.PNG"
-        imageAlt="Qureshi's Masala and Spices surrounded by an explosion of whole and ground spices"
-        imageLabel="Retail Partners / Kodagu"
-      />
-
-      <section className="qms-stock-section">
-        <div className="qms-page-body">
+    <div className="royal-page royal-grain min-h-screen pb-20 pt-28">
+      <div className="container mx-auto px-4 sm:px-6 lg:px-8">
+        {/* Hero Section */}
+        <motion.div
+          initial={{ opacity: 0, y: -20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.5 }}
+          className="text-center mb-16"
+        >
+          <p className="royal-eyebrow mb-4">Retail partnerships</p>
+          <h1 className="royal-title mb-6 text-5xl sm:text-6xl md:text-7xl">
+            Stock <span className="text-gradient-gold">our products.</span>
+          </h1>
+          <p className="text-white/60 text-base sm:text-lg max-w-3xl mx-auto leading-relaxed">
+            Are you interested in stocking Qureshi's Masala products in your shop, market, or supermarket? 
+            We'd love to hear from you!
+          </p>
+        </motion.div>
 
         {/* Main Content */}
         <div className="grid lg:grid-cols-12 gap-8 lg:gap-12 max-w-7xl mx-auto">
-          {/* Retail information */}
+          {/* Left Side: Media Slideshow (Bigger) */}
           <motion.div
             initial={{ opacity: 0, x: -30 }}
             animate={{ opacity: 1, x: 0 }}
             transition={{ duration: 0.5, delay: 0.2 }}
             className="lg:col-span-7"
           >
-            <div className="minimal-retail-intro">
-              <p className="minimal-kicker">A better shelf proposition</p>
-              <h2>Distinctive products. Straightforward support.</h2>
-              <p>
-                Bring an authentic Kodagu-ground masala collection to your customers, with clear pack sizes, premium presentation and direct access to our team.
-              </p>
-              <div className="minimal-retail-benefits">
-                {[
-                  [PackageCheck, 'Retail-ready range', 'A broad collection across everyday spices, meat, seafood and vegetarian blends.'],
-                  [Store, 'Built for real shelves', 'Clear product identities and pack sizes that are easy for customers to understand.'],
-                  [Headphones, 'Direct support', 'Speak with the Qureshi’s team on WhatsApp for product and ordering guidance.'],
-                ].map(([Icon, title, copy]) => {
-                  const BenefitIcon = Icon as typeof PackageCheck
-                  return (
-                    <article key={title as string}>
-                      <BenefitIcon size={22} strokeWidth={1.5} />
-                      <div>
-                        <h3>{title as string}</h3>
-                        <p>{copy as string}</p>
-                      </div>
-                    </article>
-                  )
-                })}
-              </div>
+            <div className="relative">
+              <Slideshow 
+                slides={[
+                  '/images/Stock2.MP4',
+                  '/images/Stock3.MP4',
+                  '/images/Stock4.MP4'
+                ]}
+                aspectRatio="aspect-[12/9]"
+              />
             </div>
           </motion.div>
 
@@ -96,9 +85,8 @@ export default function DealershipPage() {
                     type="text"
                     id="name"
                     name="name"
-                    autoComplete="name"
                     className="royal-field px-4 py-3.5 text-sm placeholder-white/30"
-                    placeholder="Your full name…"
+                    placeholder="Your Full Name"
                     value={name}
                     onChange={(e) => setName(e.target.value)}
                   />
@@ -113,10 +101,8 @@ export default function DealershipPage() {
                     type="tel"
                     id="phone"
                     name="phone"
-                    inputMode="tel"
-                    autoComplete="tel"
                     className="royal-field px-4 py-3.5 text-sm placeholder-white/30"
-                    placeholder="+91 98765 43210…"
+                    placeholder="+91 98765 43210"
                     value={phone}
                     onChange={(e) => setPhone(e.target.value)}
                   />
@@ -131,11 +117,8 @@ export default function DealershipPage() {
                     type="email"
                     id="email"
                     name="email"
-                    inputMode="email"
-                    autoComplete="email"
-                    spellCheck={false}
                     className="royal-field px-4 py-3.5 text-sm placeholder-white/30"
-                    placeholder="name@example.com…"
+                    placeholder="your@email.com"
                     value={email}
                     onChange={(e) => setEmail(e.target.value)}
                   />
@@ -180,7 +163,7 @@ export default function DealershipPage() {
                         name="shopAddress"
                         rows={3}
                         className="royal-field resize-none px-4 py-3.5 text-sm placeholder-white/30"
-                        placeholder="Enter your shop address…"
+                        placeholder="Enter your shop address"
                         value={shopAddress}
                         onChange={(e) => setShopAddress(e.target.value)}
                       />
@@ -196,7 +179,7 @@ export default function DealershipPage() {
                         name="shopDetails"
                         rows={3}
                         className="royal-field resize-none px-4 py-3.5 text-sm placeholder-white/30"
-                        placeholder="Tell us more about your business…"
+                        placeholder="Tell us more about your business"
                         value={shopDetails}
                         onChange={(e) => setShopDetails(e.target.value)}
                       />
@@ -217,8 +200,7 @@ export default function DealershipPage() {
             </div>
           </motion.div>
         </div>
-        </div>
-      </section>
       </div>
+    </div>
   );
 }

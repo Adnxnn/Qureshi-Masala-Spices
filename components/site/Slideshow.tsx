@@ -127,36 +127,25 @@ export default function Slideshow({
       {/* Navigation */}
       <button
         onClick={(e) => { e.stopPropagation(); prev(); }}
-        aria-label="Show previous slide"
-        className="absolute left-4 top-1/2 z-20 flex size-11 -translate-y-1/2 items-center justify-center rounded-full bg-black/60 text-white transition-all hover:bg-gold hover:text-black"
+        className="absolute left-4 top-1/2 -translate-y-1/2 w-10 h-10 rounded-full bg-black/60 hover:bg-gold hover:text-black text-white flex items-center justify-center transition-all z-20"
       >
         &lt;
       </button>
       <button
         onClick={(e) => { e.stopPropagation(); next(); }}
-        aria-label="Show next slide"
-        className="absolute right-4 top-1/2 z-20 flex size-11 -translate-y-1/2 items-center justify-center rounded-full bg-black/60 text-white transition-all hover:bg-gold hover:text-black"
+        className="absolute right-4 top-1/2 -translate-y-1/2 w-10 h-10 rounded-full bg-black/60 hover:bg-gold hover:text-black text-white flex items-center justify-center transition-all z-20"
       >
         &gt;
       </button>
 
       {/* Dots */}
-      <div className="absolute bottom-1 left-1/2 z-20 flex -translate-x-1/2 gap-0.5">
+      <div className="absolute bottom-4 left-1/2 -translate-x-1/2 flex gap-2 z-20">
         {slides.map((_, i) => (
           <button
             key={i}
             onClick={(e) => { e.stopPropagation(); goTo(i); }}
-            aria-label={`Show slide ${i + 1} of ${slides.length}`}
-            aria-current={i === index ? 'true' : undefined}
-            className="group grid size-11 place-items-center rounded-full"
-          >
-            <span
-              aria-hidden="true"
-              className={`h-2 rounded-full transition-all ${
-                i === index ? 'w-8 bg-gold' : 'w-2 bg-white/40 group-hover:bg-white/70'
-              }`}
-            />
-          </button>
+            className={`w-2 h-2 rounded-full transition-all ${i === index ? 'w-8 bg-gold' : 'bg-white/40 hover:bg-white/70'}`}
+          />
         ))}
       </div>
     </div>
