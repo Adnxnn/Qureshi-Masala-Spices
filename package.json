@@ -9,12 +9,8 @@
     "lint": "next lint"
   },
   "dependencies": {
-    "@fontsource-variable/fraunces": "^5.2.8",
-    "@fontsource-variable/noto-sans": "^5.2.8",
     "@gsap/react": "^2.1.2",
     "@hookform/resolvers": "^3.3.4",
-    "@react-three/drei": "^9.122.0",
-    "@react-three/fiber": "^8.18.0",
     "@supabase/ssr": "^0.3.0",
     "@supabase/supabase-js": "^2.110.2",
     "clsx": "^2.1.1",
@@ -27,7 +23,6 @@
     "react-hook-form": "^7.51.4",
     "react-hot-toast": "^2.4.1",
     "tailwind-merge": "^2.3.0",
-    "three": "^0.170.0",
     "zod": "^3.23.8",
     "zustand": "^4.5.2"
   },

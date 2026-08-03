@@ -119,7 +119,7 @@ function CheckoutInput({
         autoComplete={autoComplete}
         placeholder={placeholder}
         {...register(id)}
-        className={`qms-field min-h-12 w-full min-w-0 rounded-[2px] border bg-[#11100f] px-4 text-sm text-[#f5efe6] outline-none transition-colors placeholder:text-[#f5efe6]/20 ${
+        className={`min-h-12 w-full min-w-0 rounded-[2px] border bg-[#11100f] px-4 text-sm text-[#f5efe6] outline-none transition-colors placeholder:text-[#f5efe6]/20 ${
           error
             ? "border-red-400/50 focus:border-red-400"
             : "border-white/10 focus:border-[#c9a45f]/70"
@@ -147,7 +147,7 @@ function CheckoutProgress({
     <div
       role="tablist"
       aria-label="Checkout steps"
-      className="qms-checkout-progress grid w-full grid-cols-2 gap-1 rounded-[3px] border border-gold/15 bg-black/25 p-1.5 shadow-lg shadow-black/10 sm:w-auto sm:min-w-[310px]"
+      className="grid w-full grid-cols-2 gap-1 rounded-[3px] border border-gold/15 bg-black/25 p-1.5 shadow-lg shadow-black/10 sm:w-auto sm:min-w-[310px]"
     >
       <button
         type="button"
@@ -233,7 +233,7 @@ function TrustStrip() {
   ];
 
   return (
-    <div className="qms-trust-strip grid grid-cols-1 divide-y divide-white/10 rounded-[3px] border border-gold/10 bg-white/[0.025] sm:grid-cols-3 sm:divide-x sm:divide-y-0">
+    <div className="grid grid-cols-1 divide-y divide-white/10 rounded-[3px] border border-gold/10 bg-white/[0.025] sm:grid-cols-3 sm:divide-x sm:divide-y-0">
       {items.map((item) => {
         const Icon = item.icon;
 
@@ -271,7 +271,7 @@ function CartProductRow({
   const { product, variant, quantity } = item;
 
   return (
-    <article className="qms-cart-row grid min-w-0 grid-cols-[64px_minmax(0,1fr)_auto] gap-x-3 gap-y-3 border-b border-white/[0.07] py-4 last:border-b-0 sm:grid-cols-[72px_minmax(0,1fr)_auto_auto] sm:items-center sm:gap-x-4">
+    <article className="grid min-w-0 grid-cols-[64px_minmax(0,1fr)_auto] gap-x-3 gap-y-3 border-b border-white/[0.07] py-4 last:border-b-0 sm:grid-cols-[72px_minmax(0,1fr)_auto_auto] sm:items-center sm:gap-x-4">
       <div className="relative flex h-16 w-16 shrink-0 items-center justify-center overflow-hidden rounded-xl border border-white/10 bg-gradient-to-br from-[#211611] to-[#0d0c0b] sm:h-[72px] sm:w-[72px]">
         <div className="absolute inset-0 bg-[radial-gradient(circle_at_center,rgba(201,164,95,0.12),transparent_70%)]" />
 
@@ -360,7 +360,7 @@ function OrderSuccess({
   openWhatsApp: () => void;
 }) {
   return (
-    <div className="qms-cinematic-page qms-order-page royal-page royal-grain relative min-h-screen w-full overflow-x-hidden pb-16 pt-24">
+    <div className="royal-page royal-grain relative min-h-screen w-full overflow-x-hidden pb-16 pt-24">
       <div className="pointer-events-none absolute inset-0 overflow-hidden">
         <div className="absolute inset-x-[8%] top-0 h-px bg-gradient-to-r from-transparent via-gold/35 to-transparent" />
       </div>
@@ -714,7 +714,7 @@ Please confirm this order.`,
 
   if (loading) {
     return (
-      <div className="qms-cinematic-page qms-order-page royal-page flex min-h-screen w-full items-center justify-center overflow-x-hidden px-4">
+      <div className="royal-page flex min-h-screen w-full items-center justify-center overflow-x-hidden px-4">
         <div className="text-center">
           <div className="mx-auto h-10 w-10 animate-spin rounded-full border-2 border-white/10 border-t-[#c9a45f]" />
 
@@ -739,7 +739,7 @@ Please confirm this order.`,
   }
 
   return (
-    <div className="qms-cinematic-page qms-order-page royal-page royal-grain relative min-h-screen w-full overflow-x-hidden pb-32 pt-24 sm:pt-28 lg:pb-20">
+    <div className="royal-page royal-grain relative min-h-screen w-full overflow-x-hidden pb-32 pt-24 sm:pt-28 lg:pb-20">
       <div className="pointer-events-none absolute inset-0 overflow-hidden">
         <div className="absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-[#c9a45f]/30 to-transparent" />
       </div>
@@ -945,7 +945,7 @@ Please confirm this order.`,
                                 setPromoError("");
                               }}
                               placeholder="ENTER CODE"
-                              className="qms-field min-h-11 w-full min-w-0 flex-1 rounded-xl border border-white/10 bg-black/25 px-3 text-xs uppercase tracking-[0.12em] text-[#f5efe6] outline-none placeholder:text-white/15 focus:border-[#c9a45f]/60"
+                              className="min-h-11 w-full min-w-0 flex-1 rounded-xl border border-white/10 bg-black/25 px-3 text-xs uppercase tracking-[0.12em] text-[#f5efe6] outline-none placeholder:text-white/15 focus:border-[#c9a45f]/60"
                             />
 
                             <button
@@ -1110,7 +1110,7 @@ Please confirm this order.`,
                       autoComplete="street-address"
                       placeholder="House number, street, landmark and area"
                       {...register("customer_address")}
-                      className={`qms-field w-full min-w-0 resize-none rounded-xl border bg-[#11100f] px-4 py-3 text-sm leading-6 text-[#f5efe6] outline-none placeholder:text-[#f5efe6]/20 ${
+                      className={`w-full min-w-0 resize-none rounded-xl border bg-[#11100f] px-4 py-3 text-sm leading-6 text-[#f5efe6] outline-none placeholder:text-[#f5efe6]/20 ${
                         errors.customer_address
                           ? "border-red-400/50 focus:border-red-400"
                           : "border-white/10 focus:border-[#c9a45f]/70"
@@ -1160,7 +1160,7 @@ Please confirm this order.`,
                       rows={3}
                       placeholder="Delivery instructions or anything we should know"
                       {...register("notes")}
-                      className="qms-field w-full min-w-0 resize-none rounded-xl border border-white/10 bg-[#11100f] px-4 py-3 text-sm leading-6 text-[#f5efe6] outline-none placeholder:text-[#f5efe6]/20 focus:border-[#c9a45f]/70"
+                      className="w-full min-w-0 resize-none rounded-xl border border-white/10 bg-[#11100f] px-4 py-3 text-sm leading-6 text-[#f5efe6] outline-none placeholder:text-[#f5efe6]/20 focus:border-[#c9a45f]/70"
                     />
                   </div>
                 </div>
@@ -1278,7 +1278,7 @@ Please confirm this order.`,
 
       {items.length > 0 && (
         <div
-          className="qms-mobile-dock fixed inset-x-0 bottom-0 z-40 border-t border-white/10 bg-[#0b0a09]/95 px-4 pt-3 shadow-[0_-16px_40px_rgba(0,0,0,0.45)] backdrop-blur-xl lg:hidden"
+          className="fixed inset-x-0 bottom-0 z-40 border-t border-white/10 bg-[#0b0a09]/95 px-4 pt-3 shadow-[0_-16px_40px_rgba(0,0,0,0.45)] backdrop-blur-xl lg:hidden"
           style={{
             paddingBottom: "calc(0.75rem + env(safe-area-inset-bottom))",
           }}
