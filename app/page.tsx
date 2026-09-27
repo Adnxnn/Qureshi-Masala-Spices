@@ -2,6 +2,7 @@ import Image from 'next/image'
 import Link from 'next/link'
 import { ArrowDown, ArrowUpRight, MessageCircle, Package, Utensils } from 'lucide-react'
 import { getProducts } from '@/lib/actions'
+import HeroProductCarousel from '@/components/site/HeroProductCarousel'
 import ProductGrid from '@/components/site/ProductGrid'
 import styles from '@/components/site/Storefront.module.css'
 
@@ -27,13 +28,12 @@ export default async function HomePage() {
         <div className={styles.heroActions}><Link href="/shop" className={styles.primaryButton}>Explore the spices <ArrowUpRight size={19} /></Link><Link href="/our-story" className={styles.textLink}>Our story <ArrowUpRight size={17} /></Link></div>
         <a href="#collection" className={styles.discover}><ArrowDown size={16} /> Discover your next favourite</a>
       </div>
-      <div className={styles.heroArt}>
-        <div className={styles.heroHalo} />
-        <span className={styles.heroVertical}>PURE FLAVOUR / ENDLESS TASTE</span>
-        <div className={styles.heroPack}><Image src="/images/Biryani Masala.png" alt="Qureshi's Biryani Masala pack" fill priority sizes="(max-width: 767px) 70vw, 38vw" /></div>
-        <span className={styles.heroStamp}>The art of<br /><em>everyday</em><br />flavour.</span>
-        <div className={styles.heroCaption}><span>From our spice cupboard to yours.</span><Link href="/shop?q=biryani" aria-label="Explore biryani spices"><ArrowUpRight size={22} /></Link></div>
-      </div>
+      <HeroProductCarousel products={products.filter(product => product.is_active && product.image_url).map(product => ({
+        id: product.id,
+        name: product.name,
+        image: product.image_url,
+        href: `/product/${product.slug || product.name.toLowerCase().trim().replace(/&/g, 'and').replace(/[^a-z0-9]+/g, '-').replace(/^-+|-+$/g, '')}`,
+      }))} />
     </section>
 
     <div className={styles.serviceBar}>
