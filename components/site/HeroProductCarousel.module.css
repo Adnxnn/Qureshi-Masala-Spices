@@ -1,0 +1,16 @@
+.art { overflow: hidden; }
+.slide { position: absolute; inset: 0; }
+.preload { position: absolute; inset: 0; opacity: 0; pointer-events: none; }
+.caption { gap: 12px; flex-wrap: wrap; }
+.name { flex: 1; min-width: 130px; display: flex; flex-direction: column; gap: 5px; }
+.name > span { font-size: 9px; letter-spacing: .16em; color: #d9ba79; }
+.name strong { font-weight: 500; font-size: 13px; line-height: 1.4; }
+.controls { display: flex; align-items: center; gap: 6px; }
+.controls button { display: grid; place-items: center; width: 44px; height: 44px; border: 1px solid #d9ba7960; border-radius: 50%; color: #e0c889; background: #211a12; }
+.controls button:hover, .controls a:hover { background: #493922; }
+@media (max-width: 767px) {
+  .art { min-height: 460px; }
+  .art .pack { bottom: 25%; }
+  .art .stamp { bottom: 29%; }
+  .caption { bottom: 16px; }
+}
