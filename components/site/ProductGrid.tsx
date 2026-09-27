@@ -1,423 +1,65 @@
 'use client'
-import { useState, useEffect } from 'react'
+
+import { useEffect, useState } from 'react'
 import Image from 'next/image'
 import Link from 'next/link'
-import { useRouter } from 'next/navigation'
-import { motion, AnimatePresence } from 'framer-motion'
-import { ShoppingBag, ArrowRight, X, Plus, Eye } from 'lucide-react'
+import { Plus, ShoppingBag } from 'lucide-react'
 import { useCart } from '@/lib/cart'
 import { useCartNotifications } from '@/lib/cart-notifications'
-import type { Product, ProductVariant } from '@/types'
+import type { Product } from '@/types'
+import styles from './Storefront.module.css'
 
-// Helper to generate slug
-const generateSlug = (name: string) =>
-  name
-    .toLowerCase()
-    .trim()
-    .replace(/&/g, 'and')
-    .replace(/[^a-z0-9]+/g, '-')
-    .replace(/^-+|-+$/g, '')
+const weight = (grams: number) => grams >= 1000 ? `${grams / 1000} kg` : `${grams} g`
+const money = (value: number) => new Intl.NumberFormat('en-IN', { style: 'currency', currency: 'INR', maximumFractionDigits: 0 }).format(value)
+const slug = (product: Product) => product.slug || product.name.toLowerCase().trim().replace(/&/g, 'and').replace(/[^a-z0-9]+/g, '-').replace(/^-+|-+$/g, '')
 
-// Helper to format weight (g or kg)
-const formatWeight = (grams: number) => {
-  if (grams >= 1000) {
-    return `${grams / 1000}kg`
-  }
-  return `${grams}g`
-}
-
-// Skeleton component
-function ProductSkeleton() {
-  return (
-    <div className="relative flex flex-col bg-transparent p-2 sm:p-3">
-      <div className="animate-pulse">
-        <div className="mb-4 sm:mb-6 flex justify-center">
-          <div className="flex aspect-square w-full items-center justify-center rounded-[3px] bg-gradient-to-br from-zinc-900 to-zinc-950 p-4 sm:p-6">
-            <div className="bg-white/10 h-20 sm:h-32 w-20 sm:w-32 rounded-full" />
-          </div>
-        </div>
-        <div className="h-4 sm:h-5 bg-white/5 rounded w-3/4 mb-1.5" />
-        <div className="h-3 sm:h-4 bg-white/5 rounded w-1/2 mb-3 sm:mb-4" />
-        <div className="flex gap-1.5 sm:gap-2 mb-3 sm:mb-4">
-          <div className="h-8 sm:h-9 bg-white/5 rounded-lg w-16 sm:w-20" />
-          <div className="h-8 sm:h-9 bg-white/5 rounded-lg w-16 sm:w-20" />
-        </div>
-        <div className="mt-auto">
-          <div className="h-10 sm:h-12 w-full bg-white/5 rounded-xl" />
-        </div>
-      </div>
-    </div>
-  )
-}
-
-// Quick View Modal
-function QuickViewModal({ product, onClose }: { product: Product; onClose: () => void }) {
-  const { addItem } = useCart()
+function ProductCard({ product }: { product: Product }) {
+  const [selectedWeight, setSelectedWeight] = useState(product.variants[0]?.weight_grams)
+  const [feedback, setFeedback] = useState('')
+  const [hydrated, setHydrated] = useState(false)
+  useEffect(() => { setHydrated(true) }, [])
+  const addItem = useCart(state => state.addItem)
+  const items = useCart(state => state.items)
   const { addNotification } = useCartNotifications()
-  const [selectedVariantIndex, setSelectedVariantIndex] = useState(0)
-  const selectedVariant = product.variants[selectedVariantIndex]
-  const [adding, setAdding] = useState(false)
-  const [buttonState, setButtonState] = useState<'idle' | 'pressed' | 'sparking'>('idle')
+  const variant = product.variants.find(item => item.weight_grams === selectedWeight) || product.variants[0]
+  const quantityInCart = items.filter(item => item.product.id === product.id).reduce((total, item) => total + item.quantity, 0)
+  const soldOut = !product.is_active || product.stock_qty <= 0 || !variant
+  const atLimit = hydrated && quantityInCart >= product.stock_qty
+  const href = `/product/${slug(product)}`
 
-  const handleAdd = () => {
-    setButtonState('pressed')
-    setTimeout(() => {
-      setButtonState('sparking')
-      addItem(product, selectedVariant)
-      addNotification(product.name, product.image_url)
-      setAdding(true)
-      setTimeout(() => {
-        setAdding(false)
-        setButtonState('idle')
-        onClose()
-      }, 500)
-    }, 150)
+  function add() {
+    if (!variant || soldOut || atLimit) return
+    addItem(product, variant)
+    addNotification(product.name, product.image_url)
+    setFeedback(`${weight(variant.weight_grams)} added to your cart.`)
   }
 
   return (
-    <div className="fixed inset-0 z-[100] flex items-end sm:items-center justify-center bg-black/90 backdrop-blur-md p-0 sm:p-8" onClick={onClose}>
-      <AnimatePresence>
-        <motion.div
-          initial={{ opacity: 0, scale: 0.95, y: 40 }}
-          animate={{ opacity: 1, scale: 1, y: 0 }}
-          exit={{ opacity: 0, scale: 0.95, y: 40 }}
-          transition={{ duration: 0.4, ease: [0.22, 1, 0.36, 1] }}
-          className="max-h-[90vh] w-full overflow-y-auto rounded-t-[3px] border border-gold/20 bg-gradient-to-b from-dark to-black shadow-[0_35px_100px_rgba(0,0,0,0.62)] sm:max-w-4xl sm:rounded-[3px]"
-          onClick={(e) => e.stopPropagation()}
-        >
-          <div className="flex justify-between items-center p-4 sm:p-6 border-b border-white/10">
-            <div>
-              <h3 className="font-display text-2xl font-semibold text-white sm:text-3xl">{product.name}</h3>
-              <p className="text-[9px] sm:text-[10px] uppercase text-white/30 mt-1 tracking-[0.3em]">{product.category}</p>
-            </div>
-            <button onClick={onClose} className="flex size-11 items-center justify-center rounded-[2px] text-white/40 transition-colors hover:bg-white/5 hover:text-white" aria-label="Close quick view">
-              <X size={20} />
-            </button>
-          </div>
-
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-6 sm:gap-8 p-4 sm:p-6">
-            <div className="flex items-center justify-center rounded-[3px] border border-gold/10 bg-[radial-gradient(circle_at_50%_42%,rgba(91,23,24,0.2),transparent_52%),#0c0907] p-6 sm:p-8">
-              <Image
-                src={product.image_url}
-                alt={product.name}
-                width={350}
-                height={350}
-                className="max-h-full max-w-full object-contain"
-                priority
-                placeholder="blur"
-                blurDataURL="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='350' height='350' viewBox='0 0 350 350'%3E%3Crect width='350' height='350' fill='%231f2937'/%3E%3C/svg%3E"
-              />
-            </div>
-
-            <div className="flex flex-col py-2">
-              <p className="text-white/50 text-sm sm:text-base md:text-lg mb-5 sm:mb-7 leading-relaxed">{product.short_description || product.description}</p>
-
-              <div className="mb-5 sm:mb-7">
-                <p className="text-[9px] sm:text-[10px] uppercase text-white/30 mb-3 sm:mb-4 font-medium tracking-[0.3em]">Select Weight</p>
-                <div className="flex flex-wrap gap-2 sm:gap-2.5">
-                  {product.variants.map((variant, idx) => (
-                    <button
-                      key={idx}
-                      onClick={() => setSelectedVariantIndex(idx)}
-                      className={`min-h-11 min-w-[90px] flex-1 rounded-[2px] border px-4 py-2.5 text-[9px] font-bold uppercase tracking-[0.22em] transition-colors duration-200 sm:min-w-[100px] sm:px-5 sm:py-3 sm:text-[10px] ${
-                        idx === selectedVariantIndex
-                          ? 'border-gold text-gold bg-gold/10'
-                          : 'border-white/10 text-white/40 hover:border-white/20 hover:text-white/70 bg-black/40'
-                      }`}
-                    >
-                      {formatWeight(variant.weight_grams)} · ₹{variant.price}
-                    </button>
-                  ))}
-                </div>
-              </div>
-
-              <div className="flex items-center gap-3 sm:gap-4 mb-5 sm:mb-7">
-                <span className="font-display text-2xl sm:text-3xl md:text-4xl text-white">₹{selectedVariant.price}</span>
-                {selectedVariant.original_price && selectedVariant.original_price > selectedVariant.price && (
-                  <>
-                    <span className="font-display text-lg sm:text-xl text-white/30 line-through">₹{selectedVariant.original_price}</span>
-                    <span className="px-2.5 py-1 text-[8px] font-bold tracking-[0.25em] uppercase text-gold bg-gold/10 border border-gold/20 rounded-full">
-                      {Math.round((1 - selectedVariant.price / selectedVariant.original_price) * 100)}% OFF
-                    </span>
-                  </>
-                )}
-              </div>
-
-              <div className="mt-auto space-y-3 sm:space-y-4">
-                <motion.button
-                  onClick={handleAdd}
-                  disabled={adding}
-                  animate={{
-                    scale: buttonState === 'pressed' ? 0.97 : buttonState === 'sparking' ? 1.03 : 1,
-                    boxShadow: buttonState === 'sparking'
-                      ? '0 18px 48px rgba(0,0,0,0.48)'
-                      : 'none',
-                  }}
-                  transition={{ type: 'spring', stiffness: 500, damping: 15 }}
-                  className="royal-button relative w-full overflow-hidden"
-                >
-                  <ShoppingBag size={18} />
-                  {adding ? 'Adding to Cart...' : 'Add to Cart'}
-                  {buttonState === 'sparking' && (
-                    <div className="absolute inset-0 overflow-hidden pointer-events-none">
-                      {[...Array(6)].map((_, i) => (
-                        <motion.div
-                          key={i}
-                          className="absolute w-1.5 h-1.5 bg-white/80 rounded-full"
-                          initial={{ x: '50%', y: '50%', opacity: 0, scale: 0 }}
-                          animate={{
-                            x: `${30 + i * 15}%`,
-                            y: `${28 + i * 10}%`,
-                            opacity: [0, 1, 0],
-                            scale: [0, 2, 0],
-                          }}
-                          transition={{ duration: 0.6, delay: i * 0.03 }}
-                        />
-                      ))}
-                    </div>
-                  )}
-                </motion.button>
-
-                <Link
-                  href={`/product/${product.slug || generateSlug(product.name)}`}
-                  onClick={onClose}
-                  className="royal-button-secondary w-full"
-                >
-                  View Full Details
-                  <ArrowRight size={14} />
-                </Link>
-              </div>
-            </div>
-          </div>
-        </motion.div>
-      </AnimatePresence>
-    </div>
+    <article className={styles.productCard}>
+      <Link href={href} className={styles.productImage} aria-label={`Explore ${product.name}`}>
+        {product.image_url ? <Image src={product.image_url} alt={product.name} fill sizes="(max-width: 639px) 50vw, (max-width: 1023px) 33vw, 25vw" className={styles.packImage} /> : <ShoppingBag size={64} aria-hidden="true" />}
+        {soldOut && <span className={styles.productBadge}>Sold out</span>}
+        <span className={styles.imageHint}>Explore blend ↗</span>
+      </Link>
+      <div className={styles.productBody}>
+        <p className={styles.eyebrow}>{product.category === 'spice' ? 'Spices & blends' : product.category}</p>
+        <h3><Link href={href}>{product.name}</Link></h3>
+        <p className={styles.productDescription}>{product.short_description || 'Find your next favourite flavour.'}</p>
+        {variant && <fieldset className={styles.weights}>
+          <legend className={styles.srOnly}>Choose pack size for {product.name}</legend>
+          {product.variants.map(option => <button type="button" key={option.weight_grams} aria-pressed={option.weight_grams === variant.weight_grams} disabled={soldOut} onClick={() => { setSelectedWeight(option.weight_grams); setFeedback('') }}>{weight(option.weight_grams)}</button>)}
+        </fieldset>}
+        <div className={styles.productBottom}>
+          <div><span className={styles.price}>{variant ? money(variant.price) : 'Unavailable'}</span>{variant && variant.original_price > variant.price && <del className={styles.oldPrice}>{money(variant.original_price)}</del>}</div>
+          <button type="button" className={styles.addButton} disabled={soldOut || atLimit} onClick={add} aria-label={soldOut ? `${product.name} unavailable` : atLimit ? `Stock limit reached for ${product.name}` : `Add ${product.name}, ${variant ? weight(variant.weight_grams) : ''} to cart`}><Plus size={17} aria-hidden="true" /><span>{soldOut ? 'Unavailable' : atLimit ? 'In cart' : 'Add'}</span></button>
+        </div>
+        <span className={styles.srOnly} role="status">{feedback}</span>
+      </div>
+    </article>
   )
 }
 
 export default function ProductGrid({ products, loading = false }: { products: Product[]; loading?: boolean }) {
-  const router = useRouter()
-  const { addItem } = useCart()
-  const { addNotification } = useCartNotifications()
-  const [selectedVariants, setSelectedVariants] = useState<Record<string, number>>({})
-  const [isLoading, setIsLoading] = useState(true)
-  const [quickViewProduct, setQuickViewProduct] = useState<Product | null>(null)
-  const [pressedProductId, setPressedProductId] = useState<string | null>(null)
-
-  useEffect(() => {
-    if (loading) {
-      setIsLoading(true)
-      const timer = setTimeout(() => setIsLoading(false), 1000)
-      return () => clearTimeout(timer)
-    }
-    setIsLoading(false)
-  }, [loading])
-
-  const handleSelectVariant = (productId: string, variantIndex: number) => {
-    setSelectedVariants(prev => ({
-      ...prev,
-      [productId]: variantIndex
-    }))
-  }
-
-  const getSelectedVariant = (product: Product): ProductVariant => {
-    const selectedIndex = selectedVariants[product.id] ?? 0
-    return product.variants[selectedIndex]
-  }
-
-  if (isLoading) {
-    return (
-      <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-4 sm:gap-6 lg:gap-8">
-        {[...Array(12)].map((_, i) => (
-          <ProductSkeleton key={i} />
-        ))}
-      </div>
-    )
-  }
-
-  return (
-    <>
-      <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-4 sm:gap-6 lg:gap-8">
-        {products.map((p, i) => {
-          const selectedVariant = getSelectedVariant(p)
-          const isOutOfStock = p.stock_qty <= 0
-
-          return (
-            <motion.div
-              key={p.id}
-              role="link"
-              tabIndex={0}
-              aria-label={`View ${p.name}`}
-              onClick={() => router.push(`/product/${p.slug || generateSlug(p.name)}`)}
-              onKeyDown={(event) => {
-                if (event.key === 'Enter' || event.key === ' ') {
-                  event.preventDefault()
-                  router.push(`/product/${p.slug || generateSlug(p.name)}`)
-                }
-              }}
-              className="h-full cursor-pointer rounded-[3px] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-gold focus-visible:ring-offset-4 focus-visible:ring-offset-black"
-            >
-              <motion.div
-                className={`group relative flex h-full flex-col overflow-hidden rounded-[3px] bg-white/[0.018] transition-[background-color,transform,box-shadow] duration-300 hover:-translate-y-1 hover:bg-white/[0.032] hover:shadow-[0_28px_80px_rgba(0,0,0,0.34)] ${isOutOfStock ? 'opacity-70' : ''}`}
-                initial={{ opacity: 0, y: 20 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.5, delay: i * 0.05 }}
-              >
-                {/* Product Image */}
-                <div className="p-4 sm:p-6 flex justify-center">
-                  <div className="relative flex aspect-square w-full items-center justify-center overflow-hidden rounded-[3px] bg-[radial-gradient(circle_at_50%_38%,rgba(199,161,90,0.08),transparent_25%),radial-gradient(circle_at_50%_55%,rgba(91,23,24,0.16),transparent_54%),#0c0a08] shadow-[0_22px_55px_rgba(0,0,0,0.22)]">
-                    {p.image_url ? (
-                      <Image
-                        src={p.image_url}
-                        alt={p.name}
-                        width={220}
-                        height={220}
-                        className="max-h-full max-w-full object-contain p-3 drop-shadow-[0_22px_24px_rgba(0,0,0,0.58)] transition-transform duration-500 group-hover:-translate-y-1 group-hover:scale-[1.04]"
-                        priority={i < 4}
-                        placeholder="blur"
-                        blurDataURL="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='220' height='220' viewBox='0 0 220 220'%3E%3Crect width='220' height='220' fill='%231f2937'/%3E%3C/svg%3E"
-                      />
-                    ) : (
-                      <div className="w-24 h-24 bg-zinc-800 rounded-full flex items-center justify-center">
-                        <svg className="w-12 h-12 text-zinc-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m16 10v4M4 7v10l8 4" />
-                        </svg>
-                      </div>
-                    )}
-
-                    {/* Subtle shine */}
-                    <div className="absolute inset-0 bg-gradient-to-tr from-transparent via-white/5 to-transparent -translate-x-full group-hover:translate-x-full transition-transform duration-1000" />
-
-                    {/* Quick view button */}
-                    <button
-                      onClick={(e) => {
-                        e.preventDefault()
-                        e.stopPropagation()
-                        setQuickViewProduct(p)
-                      }}
-                      className="absolute right-3 top-3 flex size-11 items-center justify-center rounded-[2px] border border-gold/20 bg-black/75 text-white opacity-100 backdrop-blur-md transition-colors hover:border-gold hover:bg-gold hover:text-black sm:opacity-0 sm:group-focus-within:opacity-100 sm:group-hover:opacity-100"
-                      aria-label={`Quick view ${p.name}`}
-                    >
-                      <Eye size={16} />
-                    </button>
-
-                    {/* Category badge */}
-                    <div className="absolute top-3 left-3">
-                      <span className="border border-gold/15 bg-black/80 px-3 py-1.5 text-[8px] font-bold uppercase tracking-[0.2em] text-white/60 backdrop-blur-md sm:text-[9px]">
-                        {p.category}
-                      </span>
-                    </div>
-
-                    {/* Out of stock badge */}
-                    {isOutOfStock && (
-                      <div className="absolute inset-0 bg-black/75 flex items-center justify-center backdrop-blur-md">
-                        <span className="px-4 py-2 bg-white/10 text-white/70 text-[10px] tracking-[0.3em] uppercase font-bold rounded-full border border-white/20">
-                          Out of Stock
-                        </span>
-                      </div>
-                    )}
-                  </div>
-                </div>
-
-                {/* Content */}
-                <div className="px-4 sm:px-6 pb-4 sm:pb-6 flex flex-col flex-1">
-                  <div className="mb-3 sm:mb-4">
-                    <h3 className="line-clamp-2 min-h-[2.04em] font-display text-lg font-semibold leading-[1.02] text-white transition-colors duration-200 group-hover:text-gold-light sm:text-xl md:text-2xl">
-                      {p.name}
-                    </h3>
-                    <p className="mt-1.5 min-h-[2.5rem] line-clamp-2 text-xs leading-5 text-white/40">
-                      {p.short_description || '\u00a0'}
-                    </p>
-                  </div>
-
-                  {/* Weight pills */}
-                  <div className="flex gap-1.5 sm:gap-2 mb-3 sm:mb-4 flex-wrap">
-                    {p.variants.slice(0, 3).map((variant, idx) => (
-                      <button
-                        key={idx}
-                        onClick={(e) => {
-                          e.preventDefault()
-                          e.stopPropagation()
-                          if (!isOutOfStock) handleSelectVariant(p.id, idx)
-                        }}
-                        disabled={isOutOfStock}
-                        className={`min-h-9 rounded-[2px] border px-2.5 py-1.5 text-[8px] font-bold uppercase tracking-[0.18em] transition-colors duration-200 sm:px-3 sm:text-[9px] ${
-                          selectedVariants[p.id] === idx
-                            ? 'border-gold text-gold bg-gold/10'
-                            : 'border-white/10 text-white/35 hover:border-white/20 hover:text-white/60 bg-black/40'
-                        } ${isOutOfStock ? 'cursor-not-allowed' : ''}`}
-                      >
-                        {formatWeight(variant.weight_grams)}
-                      </button>
-                    ))}
-                  </div>
-
-                  {/* Price & Add Button */}
-                  <div className="mt-auto">
-                    <div className="flex items-center gap-2 sm:gap-3 mb-3 sm:mb-4">
-                      <span className="font-display text-base sm:text-lg md:text-xl text-white">₹{selectedVariant.price}</span>
-                      {selectedVariant.original_price && selectedVariant.original_price > selectedVariant.price && (
-                        <span className="font-display text-xs sm:text-sm text-white/30 line-through">₹{selectedVariant.original_price}</span>
-                      )}
-                    </div>
-                    <motion.button
-                      onClick={(e) => {
-                        e.preventDefault()
-                        e.stopPropagation()
-                        if (isOutOfStock) return
-                        setPressedProductId(p.id)
-                        setTimeout(() => {
-                          addItem(p, selectedVariant)
-                          addNotification(p.name, p.image_url)
-                          setTimeout(() => setPressedProductId(null), 400)
-                        }, 150)
-                      }}
-                      disabled={isOutOfStock}
-                      animate={{
-                        scale: pressedProductId === p.id ? [1, 0.97, 1.03, 1] : 1,
-                        boxShadow: pressedProductId === p.id
-                          ? '0 16px 42px rgba(0,0,0,0.5)'
-                          : 'none',
-                      }}
-                      transition={{ type: 'spring', stiffness: 500, damping: 15 }}
-                      className={`relative flex min-h-11 w-full items-center justify-center gap-2 overflow-hidden rounded-[2px] border px-4 py-3 text-[9px] font-bold uppercase tracking-[0.2em] transition-colors duration-200 sm:text-[10px] ${
-                        isOutOfStock
-                          ? 'cursor-not-allowed border-white/10 bg-white/5 text-white/30'
-                          : 'border-gold-light bg-gold text-black hover:bg-gold-light'
-                      }`}
-                    >
-                      <Plus size={14} />
-                      Quick Add
-                      {pressedProductId === p.id && (
-                        <div className="absolute inset-0 overflow-hidden pointer-events-none">
-                          {[...Array(5)].map((_, i) => (
-                            <motion.div
-                              key={i}
-                              className="absolute w-1.5 h-1.5 bg-white/80 rounded-full"
-                              initial={{ x: '50%', y: '50%', opacity: 0, scale: 0 }}
-                              animate={{
-                                x: `${30 + i * 18}%`,
-                                y: `${30 + i * 12}%`,
-                                opacity: [0, 1, 0],
-                                scale: [0, 1.8, 0],
-                              }}
-                              transition={{ duration: 0.5, delay: i * 0.04 }}
-                            />
-                          ))}
-                        </div>
-                      )}
-                    </motion.button>
-                  </div>
-                </div>
-              </motion.div>
-            </motion.div>
-          )
-        })}
-      </div>
-
-      {quickViewProduct && (
-        <QuickViewModal product={quickViewProduct} onClose={() => setQuickViewProduct(null)} />
-      )}
-    </>
-  )
+  if (loading) return <div className={styles.productGrid} aria-busy="true" aria-label="Loading products">{Array.from({ length: 4 }, (_, index) => <div className={styles.skeleton} key={index} />)}</div>
+  return <div className={styles.productGrid}>{products.map(product => <ProductCard key={product.id} product={product} />)}</div>
 }
