@@ -1,157 +1,87 @@
 'use client'
-import { useState, useMemo } from 'react'
-import Image from 'next/image'
-import { Search, ArrowUpDown } from 'lucide-react'
+
+import { useEffect, useMemo, useState } from 'react'
+import Link from 'next/link'
+import { Search, X, ArrowUpRight } from 'lucide-react'
 import ProductGrid from '@/components/site/ProductGrid'
 import type { Product } from '@/types'
+import styles from '@/components/site/Storefront.module.css'
+
+const categories = [
+  { value: 'all', label: 'All spices' },
+  { value: 'chicken', label: 'Chicken' },
+  { value: 'seafood', label: 'Seafood' },
+  { value: 'vegetarian', label: 'Vegetarian' },
+  { value: 'spice', label: 'Spices & blends' },
+]
+const sorts = ['featured', 'price-low', 'price-high', 'name']
+const startingPrice = (product: Product) => product.variants.length ? Math.min(...product.variants.map(variant => variant.price)) : Infinity
 
 export default function ClientShopPage({ initialProducts }: { initialProducts: Product[] }) {
   const [searchQuery, setSearchQuery] = useState('')
-  const [selectedCategory, setSelectedCategory] = useState<string>('all')
-  const [sortBy, setSortBy] = useState<string>('featured')
+  const [selectedCategory, setSelectedCategory] = useState('all')
+  const [sortBy, setSortBy] = useState('featured')
+  const [inStock, setInStock] = useState(false)
+  const [ready, setReady] = useState(false)
 
-  // Categories
-  const categories = [
-    { value: 'all', label: 'All Products' },
-    { value: 'chicken', label: 'Chicken' },
-    { value: 'seafood', label: 'Seafood' },
-    { value: 'vegetarian', label: 'Vegetarian' },
-    { value: 'spice', label: 'Spices' },
-  ]
-
-  // Filter and sort products (client side)
-  const filteredProducts = useMemo(() => {
-    let result = [...initialProducts]
-
-    // Filter by category
-    if (selectedCategory !== 'all') {
-      result = result.filter(p => p.category === selectedCategory)
+  useEffect(() => {
+    function restore() {
+      const params = new URLSearchParams(window.location.search)
+      setSearchQuery(params.get('q') || '')
+      setSelectedCategory(categories.some(item => item.value === params.get('category')) ? params.get('category')! : 'all')
+      setSortBy(sorts.includes(params.get('sort') || '') ? params.get('sort')! : 'featured')
+      setInStock(params.get('stock') === 'available')
+      setReady(true)
     }
+    restore()
+    window.addEventListener('popstate', restore)
+    return () => window.removeEventListener('popstate', restore)
+  }, [])
 
-    // Search
-    if (searchQuery.trim()) {
-      const query = searchQuery.toLowerCase()
-      result = result.filter(
-        p => 
-          p.name.toLowerCase().includes(query) ||
-          p.description.toLowerCase().includes(query) ||
-          p.tags.some(tag => tag.toLowerCase().includes(query))
-      )
-    }
+  useEffect(() => {
+    if (!ready) return
+    const params = new URLSearchParams(window.location.search)
+    for (const key of ['q', 'category', 'sort', 'stock']) params.delete(key)
+    if (searchQuery) params.set('q', searchQuery)
+    if (selectedCategory !== 'all') params.set('category', selectedCategory)
+    if (sortBy !== 'featured') params.set('sort', sortBy)
+    if (inStock) params.set('stock', 'available')
+    const query = params.toString()
+    window.history.replaceState(window.history.state, '', window.location.pathname + (query ? '?' + query : '') + window.location.hash)
+  }, [ready, searchQuery, selectedCategory, sortBy, inStock])
 
-    // Sort
-    switch (sortBy) {
-      case 'price-low':
-        result.sort((a, b) => a.variants[0].price - b.variants[0].price)
-        break
-      case 'price-high':
-        result.sort((a, b) => b.variants[0].price - a.variants[0].price)
-        break
-      case 'name':
-        result.sort((a, b) => a.name.localeCompare(b.name))
-        break
-      case 'featured':
-      default:
-        // Keep original order with best sellers first
-        break
-    }
+  const filtered = useMemo(() => {
+    const query = searchQuery.trim().toLowerCase()
+    const products = initialProducts.filter(product => product.is_active && (selectedCategory === 'all' || product.category === selectedCategory) && (!inStock || (product.stock_qty > 0 && product.variants.length > 0)) && (!query || [product.name, product.description, ...(product.tags || [])].join(' ').toLowerCase().includes(query)))
+    if (sortBy === 'price-low') products.sort((a, b) => startingPrice(a) - startingPrice(b))
+    if (sortBy === 'price-high') products.sort((a, b) => (Number.isFinite(startingPrice(b)) ? startingPrice(b) : -1) - (Number.isFinite(startingPrice(a)) ? startingPrice(a) : -1))
+    if (sortBy === 'name') products.sort((a, b) => a.name.localeCompare(b.name))
+    return products
+  }, [initialProducts, selectedCategory, inStock, searchQuery, sortBy])
 
-    return result
-  }, [initialProducts, selectedCategory, searchQuery, sortBy])
+  const hasFilters = !!searchQuery || selectedCategory !== 'all' || inStock || sortBy !== 'featured'
+  function reset() { setSearchQuery(''); setSelectedCategory('all'); setInStock(false); setSortBy('featured') }
 
-  return (
-    <div className="royal-page royal-grain px-4 pb-20 pt-24 sm:px-6 sm:pb-28 sm:pt-32 lg:px-8">
-      <div className="max-w-7xl mx-auto relative">
-        {/* Decorative background logo */}
-        <div className="pointer-events-none absolute left-1/2 top-6 z-0 w-[250px] -translate-x-1/2 select-none opacity-[0.035] sm:top-10 sm:w-[600px] lg:w-[900px]">
-          <Image
-            src="/images/Qureshi's Nav.png"
-            alt=""
-            width={900}
-            height={228}
-            className="h-auto w-full"
-          />
-        </div>
-        
-        {/* Header */}
-        <div className="mb-8 sm:mb-12 relative z-10">
-          <p className="royal-eyebrow mb-3">The Qureshi&apos;s collection</p>
-          <h1 className="royal-title mb-3 text-5xl sm:mb-4 sm:text-6xl md:text-7xl lg:text-8xl">A spice for every story.</h1>
-          <p className="max-w-2xl text-sm leading-relaxed text-muted sm:text-base md:text-lg">Explore our collection of authentic, handcrafted spice blends made with traditional recipes.</p>
-        </div>
-
-        {/* Filters - All in One Horizontal Line */}
-        <div className="mb-8 sm:mb-12 relative z-10">
-          <div className="flex flex-col lg:flex-row gap-4 items-stretch">
-            {/* Search */}
-            <div className="flex-1 relative">
-              <Search className="absolute left-4 sm:left-5 top-1/2 -translate-y-1/2 text-white/30" size={18} />
-              <input
-                type="text"
-                placeholder="Search products..."
-                value={searchQuery}
-                onChange={(e) => setSearchQuery(e.target.value)}
-                className="royal-field py-3.5 pl-11 pr-4 text-sm placeholder:text-white/20 sm:py-4 sm:pr-5 sm:text-base"
-              />
-            </div>
-
-            {/* Category Pills */}
-            <div className="flex flex-1 items-center gap-2 sm:gap-2.5 overflow-x-auto hide-scrollbar pb-1">
-              {categories.map((cat) => (
-                <button
-                  key={cat.value}
-                  onClick={() => setSelectedCategory(cat.value)}
-                  className={`min-h-11 flex-shrink-0 rounded-[2px] border px-4 py-2.5 text-[9px] font-bold uppercase tracking-[0.24em] transition-colors sm:px-5 sm:py-3 sm:text-[10px] ${
-                    selectedCategory === cat.value
-                      ? 'border-gold/65 bg-gold/10 text-gold-light'
-                      : 'border-white/10 bg-black/30 text-muted hover:border-gold/30 hover:text-cream'
-                  }`}
-                >
-                  {cat.label}
-                </button>
-              ))}
-            </div>
-
-            {/* Sort Dropdown */}
-            <div className="min-w-[160px] sm:min-w-[180px]">
-              <div className="relative">
-                <ArrowUpDown className="absolute right-4 top-1/2 -translate-y-1/2 text-white/30 pointer-events-none" size={16} />
-                <select
-                  value={sortBy}
-                  onChange={(e) => setSortBy(e.target.value)}
-                  className="royal-field cursor-pointer appearance-none px-4 py-3.5 text-sm sm:px-5 sm:py-4 sm:text-base"
-                >
-                  <option value="featured">Featured</option>
-                  <option value="price-low">Price: Low → High</option>
-                  <option value="price-high">Price: High → Low</option>
-                  <option value="name">Name: A → Z</option>
-                </select>
-              </div>
-            </div>
-          </div>
-        </div>
-
-        {/* Results count */}
-        <div className="flex items-center justify-between mb-8 sm:mb-10 relative z-10">
-          <div className="inline-flex items-center gap-3 px-4 sm:px-5 py-2 border-b border-white/10">
-            <span className="text-white/40 text-[10px] sm:text-[11px] tracking-[0.3em] uppercase">
-              <span className="text-gold font-semibold">{filteredProducts.length}</span> {filteredProducts.length === 1 ? 'product' : 'products'} found
-            </span>
-          </div>
-        </div>
-
-        {/* Product Grid */}
-        {filteredProducts.length > 0 ? (
-          <div className="relative z-10">
-            <ProductGrid products={filteredProducts} loading={false} />
-          </div>
-        ) : (
-          <div className="royal-panel py-20 text-center sm:py-32">
-            <div className="font-display text-4xl text-white/30 sm:mb-5 sm:text-5xl md:text-6xl">No products found.</div>
-            <p className="text-white/20 text-sm sm:text-base md:text-lg max-w-md mx-auto">Try adjusting your filters or search query to find what you're looking for.</p>
-          </div>
-        )}
+  return <div className={styles.storefront}>
+    <div className={styles.shopIntro}>
+      <div className={styles.container}>
+        <nav className={styles.breadcrumb} aria-label="Breadcrumb"><Link href="/">Home</Link><span>/</span><span aria-current="page">The spice collection</span></nav>
+        <p className={styles.eyebrow}>A little spice. A lot of possibility.</p>
+        <h1 className={styles.title}>Find your<br /><em>signature flavour.</em></h1>
+        <div className={styles.introBottom}><p>From everyday favourites to the centrepiece of your next feast. Find a blend, choose your pack, and make it your own.</p><Link href="/recipes" className={styles.textLink}>Need inspiration? Explore recipes <ArrowUpRight size={18} /></Link></div>
       </div>
     </div>
-  )
+    <section className={styles.section} aria-label="Shop spices">
+      <div className={styles.container}>
+        <div className={styles.toolbar}>
+          <div className={styles.searchField}><Search size={20} aria-hidden="true" /><label htmlFor="spice-search" className={styles.srOnly}>Search spices</label><input id="spice-search" type="search" placeholder="Search a spice, dish or flavour…" value={searchQuery} onChange={event => setSearchQuery(event.target.value)} /></div>
+          <div className={styles.sortField}><label htmlFor="spice-sort">Sort by</label><select id="spice-sort" value={sortBy} onChange={event => setSortBy(event.target.value)}><option value="featured">Collection order</option><option value="price-low">Starting price: low to high</option><option value="price-high">Starting price: high to low</option><option value="name">Name: A to Z</option></select></div>
+        </div>
+        <div className={styles.filterRow}><div className={styles.categoryPills} role="group" aria-label="Filter by category">{categories.map(category => <button type="button" key={category.value} aria-pressed={selectedCategory === category.value} onClick={() => setSelectedCategory(category.value)}>{category.label}</button>)}</div><label className={styles.stockToggle}><input type="checkbox" checked={inStock} onChange={event => setInStock(event.target.checked)} /> In stock only</label></div>
+        <div className={styles.results}><p role="status">{filtered.length} {filtered.length === 1 ? 'blend' : 'blends'} to explore</p>{hasFilters && <button type="button" onClick={reset}>Clear filters <X size={14} aria-hidden="true" /></button>}</div>
+        {filtered.length ? <ProductGrid products={filtered} /> : <div className={styles.empty}><Search size={32} aria-hidden="true" /><h2>No blends found.</h2><p>Try another spice name or clear your filters to explore the collection.</p><button type="button" onClick={reset} className={styles.primaryButton}>View all spices</button></div>}
+        <div className={styles.helpStrip}><div><p className={styles.eyebrow}>Good food starts with a conversation</p><h2>Need a hand choosing?</h2></div><Link href="/contact" className={styles.outlineButton}>Talk to our team <ArrowUpRight size={17} /></Link></div>
+      </div>
+    </section>
+  </div>
 }
