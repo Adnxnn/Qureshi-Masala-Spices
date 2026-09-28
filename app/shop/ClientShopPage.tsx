@@ -2,6 +2,7 @@
 
 import { useEffect, useMemo, useState } from 'react'
 import Link from 'next/link'
+import { useSearchParams } from 'next/navigation'
 import { Search, X, ArrowUpRight } from 'lucide-react'
 import ProductGrid from '@/components/site/ProductGrid'
 import type { Product } from '@/types'
@@ -18,6 +19,7 @@ const sorts = ['featured', 'price-low', 'price-high', 'name']
 const startingPrice = (product: Product) => product.variants.length ? Math.min(...product.variants.map(variant => variant.price)) : Infinity
 
 export default function ClientShopPage({ initialProducts }: { initialProducts: Product[] }) {
+  const routeQuery = useSearchParams().toString()
   const [searchQuery, setSearchQuery] = useState('')
   const [selectedCategory, setSelectedCategory] = useState('all')
   const [sortBy, setSortBy] = useState('featured')
@@ -36,7 +38,7 @@ export default function ClientShopPage({ initialProducts }: { initialProducts: P
     restore()
     window.addEventListener('popstate', restore)
     return () => window.removeEventListener('popstate', restore)
-  }, [])
+  }, [routeQuery])
 
   useEffect(() => {
     if (!ready) return

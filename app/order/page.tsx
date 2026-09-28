@@ -48,7 +48,8 @@ const checkoutSchema = z.object({
   customer_phone: z
     .string()
     .trim()
-    .regex(/^\+?[0-9\s-]{10,16}$/, "Enter a valid phone number"),
+    .regex(/^\+?[0-9\s-]{10,16}$/, "Enter a valid phone number")
+    .refine(value => value.replace(/\D/g, "").length >= 10, "Enter a valid phone number"),
 
   customer_email: z.string().trim().email("Enter a valid email address"),
 
@@ -1327,4 +1328,3 @@ Please confirm this order.`,
     </div>
   );
 }
-
