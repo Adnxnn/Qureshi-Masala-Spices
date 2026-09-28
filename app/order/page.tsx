@@ -48,8 +48,7 @@ const checkoutSchema = z.object({
   customer_phone: z
     .string()
     .trim()
-    .min(10, "Enter a valid phone number")
-    .max(13, "Enter a valid phone number"),
+    .regex(/^\+?[0-9\s-]{10,16}$/, "Enter a valid phone number"),
 
   customer_email: z.string().trim().email("Enter a valid email address"),
 
@@ -63,7 +62,7 @@ const checkoutSchema = z.object({
   customer_pincode: z
     .string()
     .trim()
-    .length(6, "Enter a valid 6-digit pincode"),
+    .regex(/^[0-9]{6}$/, "Enter a valid 6-digit pincode"),
 
   notes: z.string().optional(),
 });
@@ -117,6 +116,9 @@ function CheckoutInput({
         id={id}
         type={type}
         autoComplete={autoComplete}
+        inputMode={id === "customer_pincode" ? "numeric" : type === "tel" ? "tel" : undefined}
+        aria-invalid={!!error}
+        aria-describedby={error ? id + "-error" : undefined}
         placeholder={placeholder}
         {...register(id)}
         className={`min-h-12 w-full min-w-0 rounded-xl border bg-[#11100f] px-4 text-sm text-[#f5efe6] outline-none transition-colors placeholder:text-[#f5efe6]/20 ${
@@ -126,7 +128,7 @@ function CheckoutInput({
         }`}
       />
 
-      {error && <p className="text-[12px] text-red-300">{error.message}</p>}
+      {error && <p id={id + "-error"} role="alert" className="text-[12px] text-red-300">{error.message}</p>}
     </div>
   );
 }
@@ -269,6 +271,8 @@ function CartProductRow({
   removeProduct: (productId: string, weight: number) => void;
 }) {
   const { product, variant, quantity } = item;
+  const allItems = useCart(state => state.items);
+  const atLimit = allItems.filter(row => row.product.id === product.id).reduce((sum, row) => sum + row.quantity, 0) >= product.stock_qty;
 
   return (
     <article className="grid min-w-0 grid-cols-[64px_minmax(0,1fr)_auto] gap-x-3 gap-y-3 border-b border-white/[0.07] py-4 last:border-b-0 sm:grid-cols-[72px_minmax(0,1fr)_auto_auto] sm:items-center sm:gap-x-4">
@@ -324,6 +328,7 @@ function CartProductRow({
           <button
             type="button"
             aria-label={`Increase ${product.name} quantity`}
+            disabled={atLimit}
             onClick={() =>
               updateQuantity(product.id, variant.weight_grams, quantity + 1)
             }
@@ -739,7 +744,7 @@ Please confirm this order.`,
   }
 
   return (
-    <div className="royal-page royal-grain relative min-h-screen w-full overflow-x-hidden pb-32 pt-8 sm:pt-12 lg:pb-20">
+    <div className="checkout-page royal-page relative min-h-screen w-full overflow-x-hidden pb-32 pt-8 sm:pt-12 lg:pb-20">
       <div className="pointer-events-none absolute inset-0 overflow-hidden">
         <div className="absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-[#c9a45f]/30 to-transparent" />
       </div>
@@ -752,12 +757,12 @@ Please confirm this order.`,
                 <Sparkles size={14} />
 
                 <span className="text-sm font-semibold tracking-normal">
-                  Qureshi&apos;s Order Desk
+                  From our shelves to your kitchen
                 </span>
               </div>
 
               <h1 className="royal-title break-words text-5xl sm:text-6xl md:text-7xl">
-                {checkoutStep === "cart" ? "Your Cart" : "Place Your Order"}
+                {checkoutStep === "cart" ? "A bag full of flavour." : "Where shall we send it?"}
               </h1>
 
               <p className="mt-4 max-w-xl text-sm leading-6 text-[#f5efe6]/70 sm:text-base">
@@ -779,6 +784,7 @@ Please confirm this order.`,
         </header>
 
         <TrustStrip />
+        <div className="checkout-guidance"><Link href="/shop"><ArrowLeft size={16} /> Keep exploring</Link><span>No payment is collected on this website.</span><Link href="/contact">Need a hand? <MessageCircle size={16} /></Link></div>
 
         {checkoutStep === "cart" ? (
           <div

@@ -4,6 +4,7 @@ import { SITE } from '@/lib/site-config'
 
 export default function Footer() {
   return <footer className="site-footer"><div className="footer-inner">
+    <div className="footer-signoff"><p>A little spice.<br /><em>Endless possibilities.</em></p><span>Make something worth sharing.</span></div>
     <div className="footer-intro"><div><Link href="/" aria-label="Qureshi's home"><Image src="/images/qureshis-navbar-logo.png" alt="Qureshi's Masala and Spices" width={542} height={192} className="h-auto w-[168px]" /></Link><p>For the meals you grew up with.<br />And the ones you&apos;ll make your own.</p></div><Link href="/shop" className="royal-button">Find your next favourite ↗</Link></div>
     <nav aria-label="Footer navigation" className="footer-links">
       <div><h2>Explore</h2><Link href="/shop">All spices</Link><Link href="/recipes">Recipes</Link><Link href="/our-story">Our story</Link><Link href="/our-heritage">Our heritage</Link></div>

@@ -4,6 +4,7 @@ import { ArrowDown, ArrowUpRight, MessageCircle, Package, Utensils } from 'lucid
 import { getProducts } from '@/lib/actions'
 import HeroProductCarousel from '@/components/site/HeroProductCarousel'
 import ProductGrid from '@/components/site/ProductGrid'
+import SpiceFinder from '@/components/site/SpiceFinder'
 import styles from '@/components/site/Storefront.module.css'
 
 export const dynamic = 'force-dynamic'
@@ -42,6 +43,7 @@ export default async function HomePage() {
       <div><MessageCircle size={19} /><span>Order with a personal touch on WhatsApp</span></div>
     </div>
 
+    <SpiceFinder />
     <section id="collection" className={styles.section}>
       <div className={styles.container}>
         <div className={styles.sectionHeading}><div><p className={styles.eyebrow}>The collection</p><h2>A flavour for<br /><em>every kind of cook.</em></h2></div><p>Weeknight comfort. Weekend feasts. Find the spices that belong in your kitchen.</p></div>

@@ -67,12 +67,13 @@ export default function ClientShopPage({ initialProducts }: { initialProducts: P
       <div className={styles.container}>
         <nav className={styles.breadcrumb} aria-label="Breadcrumb"><Link href="/">Home</Link><span>/</span><span aria-current="page">The spice collection</span></nav>
         <p className={styles.eyebrow}>A little spice. A lot of possibility.</p>
-        <h1 className={styles.title}>Find your<br /><em>signature flavour.</em></h1>
+        <h1 className={styles.title}>Your next great meal<br /><em>starts here.</em></h1>
         <div className={styles.introBottom}><p>From everyday favourites to the centrepiece of your next feast. Find a blend, choose your pack, and make it your own.</p><Link href="/recipes" className={styles.textLink}>Need inspiration? Explore recipes <ArrowUpRight size={18} /></Link></div>
       </div>
     </div>
     <section className={styles.section} aria-label="Shop spices">
       <div className={styles.container}>
+        <div className={styles.quickSearch} role="group" aria-label="Popular spice searches"><span>In the mood for</span>{['Biryani', 'Kebab', 'Garam', 'Turmeric'].map(query => <button key={query} type="button" onClick={() => { setSearchQuery(query); setSelectedCategory('all') }}>{query}<ArrowUpRight size={14} /></button>)}</div>
         <div className={styles.toolbar}>
           <div className={styles.searchField}><Search size={20} aria-hidden="true" /><label htmlFor="spice-search" className={styles.srOnly}>Search spices</label><input id="spice-search" type="search" placeholder="Search a spice, dish or flavour…" value={searchQuery} onChange={event => setSearchQuery(event.target.value)} /></div>
           <div className={styles.sortField}><label htmlFor="spice-sort">Sort by</label><select id="spice-sort" value={sortBy} onChange={event => setSortBy(event.target.value)}><option value="featured">Collection order</option><option value="price-low">Starting price: low to high</option><option value="price-high">Starting price: high to low</option><option value="name">Name: A to Z</option></select></div>

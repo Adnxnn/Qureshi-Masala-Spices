@@ -45,3 +45,25 @@
  .cta { padding: 28px 22px; }
 }
 @media(max-width: 359px) { .cards { grid-template-columns: 1fr; } }
+.page { background:#f3ecdf; color:#303628; }
+.eyebrow { color:#8c4f31; }
+.hero em { color:#536743; }
+.hero p:not(.eyebrow),.copy p,.card p,.step p,.event p { color:#676e59; }
+.hero .image { border-radius:160px 160px 20px 20px; }
+.section { border-color:#cbd0bc; }
+.card { background:#e5e7d8; border-color:#c3cbb1; }
+.card svg { color:#526d41; }
+.step { background:#fffbf3; border-color:#cbd0bc; }
+.step>span { background:#e5e8d8; color:#4b603b; }
+.timeline { border-color:#a7b38e; }
+.event { background:#fffbf3; border-color:#cbd0bc; }
+.event>span { color:#8c4f31; }
+.event::before { background:#60734b; box-shadow:0 0 0 5px #f3ecdf; }
+.cta { color:#f5eddd; background:#33462f; border-color:#61714c; }
+.cta p { color:#d0d6c3; }
+.page :global(.royal-button) { background:#354d31; border-color:#354d31; color:#fff7e6; }
+.page :global(.royal-button-secondary) { color:#455e39; border-color:#879777; }
+.cta :global(.royal-button) { background:#e0c38b; color:#2b3721; border-color:#e0c38b; }
+.cta :global(.royal-button-secondary) { color:#f1dcaf; border-color:#f1dcaf88; }
+.page :focus-visible { outline-color:#60734b; }
+@media(max-width:767px) { .hero .image { border-radius:90px 90px 18px 18px; } }

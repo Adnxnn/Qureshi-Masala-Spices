@@ -28,7 +28,8 @@ function ProductCard({ product }: { product: Product }) {
   const href = `/product/${slug(product)}`
 
   function add() {
-    if (!variant || soldOut || atLimit) return
+    const currentQuantity = useCart.getState().items.filter(item => item.product.id === product.id).reduce((sum, item) => sum + item.quantity, 0)
+    if (!variant || soldOut || currentQuantity >= product.stock_qty) return
     addItem(product, variant)
     addNotification(product.name, product.image_url)
     setFeedback(`${weight(variant.weight_grams)} added to your cart.`)

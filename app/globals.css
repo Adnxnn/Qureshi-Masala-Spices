@@ -504,3 +504,39 @@ a {
  .footer-links > div:last-child { grid-column: 1 / -1; }
  .site-footer { padding-bottom: calc(32px + env(safe-area-inset-bottom)); }
 }
+/* Shared customer surfaces. Admin and operational screens keep their own theme. */
+.customer-site { background:#1b231b; }
+.customer-site .royal-page { background:radial-gradient(ellipse at 95% 0,#51623a30,transparent 45%),#1b231b; }
+.customer-site .royal-grain::after { opacity:.025; }
+.customer-site .royal-panel { background:#242f23; border-color:#c2c8a82e; box-shadow:0 10px 32px #080e081c; }
+.customer-site .royal-title { letter-spacing:-.035em; font-weight:500; }
+.customer-site .royal-auth-stage { background:radial-gradient(ellipse at top,#445c3338,transparent 60%),#1b231b; padding-top:40px; min-height:70vh; }
+.customer-site .royal-auth-card { background:#253023ed; border-color:#c2c8a844; }
+.customer-site .royal-field { background:#151e14; border-color:#b3bc9d44; }
+.customer-site .royal-button { box-shadow:none; background:#dfc18b; color:#283420; }
+.customer-site .royal-button-secondary { background:transparent; }
+.customer-site input::placeholder,.customer-site textarea::placeholder { opacity:1; }
+.checkout-page>div>header { padding:28px; border:1px solid #c5cda83a; border-radius:18px; background:linear-gradient(120deg,#394a2f,#273323); }
+.checkout-guidance { display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:8px 20px; margin:18px 0; color:#c3cbb3; font-size:12px; }
+.checkout-guidance a { display:flex; align-items:center; gap:8px; min-height:44px; color:#ead09a; }
+.checkout-page input,.checkout-page textarea { border-color:#b3bc9d55; }
+.checkout-page button:disabled { opacity:.4; }
+.checkout-page article { padding-block:24px; }
+.site-footer { background:#172116; border-color:#c2c8a82e; padding-top:54px; }
+.footer-signoff { display:flex; justify-content:space-between; align-items:end; gap:24px; padding-bottom:36px; margin-bottom:32px; border-bottom:1px solid #c2c8a82e; }
+.footer-signoff>p { font:clamp(32px,4vw,52px)/1.18 var(--font-display); color:#f0e7d4; letter-spacing:-.04em; }
+.footer-signoff em { color:#d8bb82; }
+.footer-signoff>span { font-size:13px; color:#bdc5ad; }
+.footer-links a,.footer-intro p,.footer-bottom { color:#bdc5ad; }
+.cart-alert { background:#243521fa; border-color:#aebb8e66; }
+.recipe-topics { display:flex; flex-wrap:wrap; justify-content:center; gap:8px; margin:-20px 0 32px; }
+.recipe-topics button { min-height:44px; padding:10px 16px; border-radius:30px; border:1px solid #bac69a44; color:#d2ddc2; font-size:13px; }
+.recipe-topics button[aria-pressed=true] { background:#dfc18b; color:#283420; border-color:#dfc18b; }
+@media(max-width:767px) {
+ .checkout-page>div>header { padding:20px 18px; margin-bottom:22px; }
+ .checkout-page h1.royal-title { font-size:32px; }
+ .checkout-guidance>span { order:3; flex-basis:100%; }
+ .customer-site .royal-auth-stage { padding-top:28px; }
+ .footer-signoff { flex-direction:column; align-items:start; gap:18px; }
+ .customer-site .royal-page label { line-height:1.6; }
+}

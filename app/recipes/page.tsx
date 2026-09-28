@@ -83,6 +83,7 @@ export default function RecipesPage() {
           </p>
         </header>
 
+        <div className="recipe-topics" role="group" aria-label="Recipe inspiration">{['All recipes', 'Chicken', 'Mutton', 'Vegetarian', 'Seafood'].map(topic => <button key={topic} type="button" aria-pressed={searchQuery === (topic === 'All recipes' ? '' : topic)} onClick={() => setSearchQuery(topic === 'All recipes' ? '' : topic)}>{topic}</button>)}</div>
         <div className="relative mx-auto mb-12 w-full max-w-lg">
           <Search
             className="absolute left-4 top-1/2 -translate-y-1/2 text-white/65"

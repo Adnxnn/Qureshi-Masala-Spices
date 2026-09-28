@@ -1,443 +1,60 @@
 'use client'
-import { useState, useEffect } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import Link from 'next/link'
 import Image from 'next/image'
 import { usePathname } from 'next/navigation'
-import { motion, AnimatePresence, useReducedMotion } from 'framer-motion'
-import { 
-  ShoppingBag, 
-  User, 
-  Menu, 
-  X, 
-  ChevronDown, 
-  Search 
-} from 'lucide-react'
+import { ArrowUpRight, Menu, Search, ShoppingBag, User, X, Minus, Plus, Trash2 } from 'lucide-react'
 import { useCart } from '@/lib/cart'
 import type { User as UserType } from '@/types'
+import styles from './Navigation.module.css'
 
-const navLinks = [
-  { href: '/shop', label: 'Shop', hasMega: true },
-  { href: '/our-story', label: 'Our Story', hasMega: false },
-  { href: '/our-heritage', label: 'Heritage', hasMega: false },
-  { href: '/recipes', label: 'Recipes', hasMega: false },
-  { href: '/stock-our-products', label: 'Stock Our Products', hasMega: false },
-  { href: '/contact', label: 'Contact', hasMega: false },
-]
-
-const products = [
-  { name: 'Chicken Kebab Masala', href: '/product/chicken-kebab-masala' },
-  { name: 'Green Chicken Kebab Masala', href: '/product/green-chicken-kebab-masala' },
-  { name: 'Pepper Masala (Chicken/Mutton)', href: '/product/pepper-masala-chicken-mutton' },
-  { name: 'Mutton Masala', href: '/product/mutton-masala' },
-  { name: 'Chicken Masala', href: '/product/chicken-masala' },
-]
-
-const recipeLinks = [
-  { name: 'All Recipes', href: '/recipes' },
-  { name: 'Chicken Recipes', href: '/recipes?category=chicken' },
-  { name: 'Mutton Recipes', href: '/recipes?category=mutton' },
-  { name: 'Vegetarian Recipes', href: '/recipes?category=vegetarian' },
-  { name: 'Seafood Recipes', href: '/recipes?category=seafood' },
-]
-
-const featuredLinks = [
-  { name: 'Best Sellers', href: '/shop?bestSeller=true' },
-  { name: 'Family Packs', href: '/shop?size=family' },
-  { name: 'Complete Collection', href: '/shop' },
-]
-
+const links = [['/shop', 'Shop spices'], ['/recipes', 'Recipes'], ['/our-story', 'Our story'], ['/our-heritage', 'Our heritage'], ['/stock-our-products', 'For retailers'], ['/contact', 'Contact']]
 export default function Header({ user }: { user: UserType | null }) {
   const pathname = usePathname()
-  const { totalItems } = useCart()
+  const dialog = useRef<HTMLDialogElement>(null)
+  const trigger = useRef<HTMLButtonElement | null>(null)
+  const [panel, setPanel] = useState<'menu' | 'search' | 'cart'>('menu')
   const [mounted, setMounted] = useState(false)
-  const [isScrolled, setIsScrolled] = useState(false)
-  const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false)
-  const [activeMega, setActiveMega] = useState<string | null>(null)
-  const prefersReducedMotion = useReducedMotion()
-  
-  const count = mounted ? totalItems() : 0
-
+  const { items, updateQty, removeItem } = useCart()
+  const count = mounted ? items.reduce((sum, item) => sum + item.quantity, 0) : 0
+  const subtotal = items.reduce((sum, item) => sum + item.quantity * item.variant.price, 0)
+  useEffect(() => { setMounted(true) }, [])
+  useEffect(() => { dialog.current?.close() }, [pathname])
   useEffect(() => {
-    setMounted(true)
+    const element = dialog.current
+    const restore = () => { document.body.style.overflow = ''; trigger.current?.focus() }
+    element?.addEventListener('close', restore)
+    return () => { element?.removeEventListener('close', restore); document.body.style.overflow = '' }
   }, [])
-
-  useEffect(() => {
-    const handleScroll = () => {
-      setIsScrolled(window.scrollY > 20)
-    }
-    window.addEventListener('scroll', handleScroll)
-    return () => window.removeEventListener('scroll', handleScroll)
-  }, [])
-
-  useEffect(() => {
-    setIsMobileMenuOpen(false)
-    setActiveMega(null)
-  }, [pathname])
-
-  useEffect(() => {
-    if (!isMobileMenuOpen) return
-
-    const previousOverflow = document.body.style.overflow
-    const closeOnEscape = (event: KeyboardEvent) => {
-      if (event.key === 'Escape') setIsMobileMenuOpen(false)
-    }
-
+  function openPanel(next: typeof panel, button: HTMLButtonElement) {
+    trigger.current = button
+    setPanel(next)
+    dialog.current?.showModal()
     document.body.style.overflow = 'hidden'
-    window.addEventListener('keydown', closeOnEscape)
-
-    return () => {
-      document.body.style.overflow = previousOverflow
-      window.removeEventListener('keydown', closeOnEscape)
-    }
-  }, [isMobileMenuOpen])
-
-  return (
-    <>
-      {/* Desktop Header */}
-      <motion.header
-        initial={{ y: -100 }}
-        animate={{ y: 0 }}
-        className={`fixed left-0 right-0 top-0 z-40 border-b transition-[background-color,border-color,padding] duration-300 ${
-          isScrolled 
-            ? 'border-gold/20 bg-[#080705]/94 py-2.5 backdrop-blur-xl'
-            : 'border-gold/10 bg-gradient-to-b from-black/80 to-transparent py-4'
-        }`}
-      >
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="flex items-center justify-between">
-            {/* Logo */}
-            <Link href="/" className="z-50 flex items-center" aria-label="Qureshi's home">
-              <Image
-                src="/images/qureshis-navbar-logo.png"
-                alt="Qureshi's Masala & Spices"
-                width={542}
-                height={192}
-                className="h-auto w-[122px] object-contain sm:w-[150px]"
-                priority
-              />
-            </Link>
-
-            {/* Desktop Nav */}
-            <nav className="hidden items-center gap-7 lg:flex xl:gap-9">
-              {navLinks.map((link) => (
-                <div
-                  key={link.href}
-                  className="relative group"
-                  onMouseEnter={() => link.hasMega && setActiveMega(link.href)}
-                  onMouseLeave={() => setActiveMega(null)}
-                >
-                  <Link
-                    href={link.href}
-                    className={`flex items-center gap-1 text-[12px] font-semibold tracking-[0.14em] uppercase transition-colors ${
-                      pathname.startsWith(link.href) 
-                        ? 'text-gold'
-                        : 'text-white/70 hover:text-gold'
-                    }`}
-                  >
-                    {link.label}
-                    {link.hasMega && (
-                      <ChevronDown 
-                        size={14} 
-                        className={`transition-transform duration-200 ${
-                          activeMega === link.href ? 'rotate-180' : ''
-                        }`} 
-                      />
-                    )}
-                  </Link>
-
-                  {/* Mega Menu for Shop */}
-                  {link.hasMega && (
-                    <AnimatePresence>
-                      {activeMega === link.href && (
-                        <motion.div
-                          initial={{ opacity: 0, y: 10 }}
-                          animate={{ opacity: 1, y: 0 }}
-                          exit={{ opacity: 0, y: 10 }}
-                          transition={{ duration: 0.2 }}
-                          className="absolute left-1/2 top-full mt-4 w-[900px] -translate-x-1/2 overflow-hidden rounded-2xl border border-gold/20 bg-[#100d0a]/98 shadow-[0_30px_90px_rgba(0,0,0,0.6)] backdrop-blur-xl"
-                        >
-                          <div className="grid grid-cols-12 gap-6 p-8">
-                            {/* Shop by Product */}
-                            <div className="col-span-4">
-                              <h3 className="text-gold text-[12px] font-bold tracking-[0.08em] uppercase mb-4">Shop by Product</h3>
-                              <ul className="space-y-3">
-                                {products.map((product) => (
-                                  <li key={product.href}>
-                                    <Link
-                                      href={product.href}
-                                      className="text-white/70 hover:text-gold transition-colors text-sm block"
-                                    >
-                                      {product.name}
-                                    </Link>
-                                  </li>
-                                ))}
-                                <li className="pt-2">
-                                  <Link
-                                    href="/shop"
-                                    className="royal-button px-4 py-2"
-                                  >
-                                    Explore the Products
-                                    <ChevronDown size={14} className="rotate-[-90deg]" />
-                                  </Link>
-                                </li>
-                              </ul>
-                            </div>
-
-                            {/* Recipes */}
-                            <div className="col-span-4">
-                              <h3 className="text-gold text-[12px] font-bold tracking-[0.08em] uppercase mb-4">Recipes</h3>
-                              <ul className="space-y-3">
-                                {recipeLinks.map((recipe) => (
-                                  <li key={recipe.href}>
-                                    <Link
-                                      href={recipe.href}
-                                      className="text-white/70 hover:text-gold transition-colors text-sm block"
-                                    >
-                                      {recipe.name}
-                                    </Link>
-                                  </li>
-                                ))}
-                              </ul>
-                            </div>
-
-                            {/* Featured & Image */}
-                            <div className="col-span-4">
-                              <h3 className="text-gold text-[12px] font-bold tracking-[0.08em] uppercase mb-4">Featured</h3>
-                              <ul className="space-y-3 mb-6">
-                                {featuredLinks.map((item) => (
-                                  <li key={item.href}>
-                                    <Link
-                                      href={item.href}
-                                      className="text-white/70 hover:text-gold transition-colors text-sm block"
-                                    >
-                                      {item.name}
-                                    </Link>
-                                  </li>
-                                ))}
-                              </ul>
-                              <div className="border-y border-gold/20 bg-gradient-to-r from-[#5b1718]/25 to-transparent p-4">
-                                <p className="text-white/70 text-xs leading-relaxed">
-                                  Discover our full range of authentic, freshly ground masalas crafted with care.
-                                </p>
-                              </div>
-                            </div>
-                          </div>
-                        </motion.div>
-                      )}
-                    </AnimatePresence>
-                  )}
-                </div>
-              ))}
-            </nav>
-
-            {/* Right Icons */}
-            <div className="flex items-center gap-1 sm:gap-3 lg:gap-5">
-              <Link
-                href="/shop"
-                aria-label="Search spices"
-                className="hidden size-10 items-center justify-center text-white/70 transition-colors hover:text-gold focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-gold sm:flex"
-              >
-                <Search size={18} />
-              </Link>
-              <Link
-                href={user ? '/account' : '/login?next=/account'}
-                aria-label={user ? 'Open my account' : 'Sign in'}
-                className="flex size-10 items-center justify-center text-white/70 transition-colors hover:text-gold focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-gold"
-              >
-                <User size={20} />
-              </Link>
-              <Link
-                href="/order"
-                aria-label={`View cart with ${count} item${count === 1 ? '' : 's'}`}
-                className="group relative flex min-h-10 min-w-10 items-center justify-center gap-2 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-gold sm:px-1"
-              >
-                <ShoppingBag size={18} className="text-white/70 group-hover:text-gold transition-colors" />
-                {count > 0 && (
-                  <motion.span
-                    key={count}
-                    initial={{ scale: 0 }}
-                    animate={{ scale: 1 }}
-                    className="absolute -top-2 -right-2 w-5 h-5 rounded-full bg-gold text-black text-[12px] font-bold flex items-center justify-center"
-                  >
-                    {count}
-                  </motion.span>
-                )}
-                <span className="text-xs tracking-[0.08em] uppercase text-white/60 group-hover:text-gold transition-colors hidden sm:block">
-                  Cart
-                </span>
-              </Link>
-
-              {/* Mobile Menu Toggle */}
-              <button
-                onClick={() => setIsMobileMenuOpen(true)}
-                className="flex size-11 items-center justify-center rounded-2xl border border-white/[0.09] bg-[#14110e] text-white shadow-[0_10px_30px_rgba(0,0,0,0.28)] transition-[background-color,border-color,color,transform] duration-200 hover:border-gold/35 hover:bg-[#1b1612] hover:text-gold active:scale-[0.97] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-gold lg:hidden"
-                aria-label="Open menu"
-                aria-expanded={isMobileMenuOpen}
-                aria-controls="mobile-site-menu"
-              >
-                <Menu size={24} />
-              </button>
-            </div>
-          </div>
-        </div>
-      </motion.header>
-
-      {/* Mobile Menu Overlay */}
-      <AnimatePresence>
-        {isMobileMenuOpen && (
-          <motion.div
-            initial={{ opacity: prefersReducedMotion ? 1 : 0 }}
-            animate={{ opacity: 1 }}
-            exit={{ opacity: prefersReducedMotion ? 1 : 0 }}
-            transition={{ duration: prefersReducedMotion ? 0 : 0.2, ease: 'easeOut' }}
-            className="fixed inset-0 z-50 lg:hidden"
-          >
-            <button
-              type="button"
-              className="absolute inset-0 cursor-default bg-black/[0.82]"
-              onClick={() => setIsMobileMenuOpen(false)}
-              aria-label="Close menu"
-              tabIndex={-1}
-            />
-
-            <motion.aside
-              initial={{ x: prefersReducedMotion ? 0 : '100%' }}
-              animate={{ x: 0 }}
-              exit={{ x: prefersReducedMotion ? 0 : '100%' }}
-              transition={{ duration: prefersReducedMotion ? 0 : 0.28, ease: [0.16, 1, 0.3, 1] }}
-              onKeyDown={event => {
-                if (event.key !== 'Tab') return
-                const controls = event.currentTarget.querySelectorAll<HTMLElement>('a[href], button:not([disabled])')
-                const first = controls[0]
-                const last = controls[controls.length - 1]
-                if (event.shiftKey && document.activeElement === first) { event.preventDefault(); last?.focus() }
-                else if (!event.shiftKey && document.activeElement === last) { event.preventDefault(); first?.focus() }
-              }}
-              role="dialog"
-              aria-modal="true"
-              aria-label="Site navigation"
-              id="mobile-site-menu"
-              className="absolute inset-y-0 right-0 flex w-[min(92vw,26rem)] flex-col overflow-hidden border-l border-white/[0.08] bg-[#0b0908] shadow-[-32px_0_90px_rgba(0,0,0,0.64)]"
-            >
-              <div className="flex items-center justify-between border-b border-gold/20 px-6 py-5">
-                <Link href="/" onClick={() => setIsMobileMenuOpen(false)}>
-                  <Image
-                    src="/images/qureshis-navbar-logo.png"
-                    alt="Qureshi's Masala & Spices"
-                    width={542}
-                    height={192}
-                    className="h-auto w-[132px] object-contain"
-                  />
-                </Link>
-                <button
-                  onClick={() => setIsMobileMenuOpen(false)}
-                  autoFocus
-                  className="flex size-11 items-center justify-center rounded-xl text-white/70 transition-colors hover:bg-white/5 hover:text-gold focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-gold"
-                  aria-label="Close menu"
-                >
-                  <X size={24} />
-                </button>
-              </div>
-
-              <div className="min-h-0 flex-1 overscroll-contain overflow-y-auto px-6 py-8">
-                <nav className="flex flex-col gap-3 border-y border-white/[0.07] py-5">
-                  {navLinks.map((link) => (
-                    <Link
-                      key={link.href}
-                      href={link.href}
-                      onClick={() => setIsMobileMenuOpen(false)}
-                      className={`font-sans text-xl min-h-12 flex items-center font-medium leading-normal transition-colors ${
-                        pathname.startsWith(link.href) 
-                          ? 'text-gold'
-                          : 'text-white hover:text-gold'
-                      }`}
-                    >
-                      {link.label}
-                    </Link>
-                  ))}
-                </nav>
-
-                <div className="mt-10 border-t border-white/[0.07] pt-8">
-                  <h3 className="mb-4 text-xs font-bold uppercase tracking-[0.08em] text-gold">
-                    {user ? `Hello, ${user.full_name.split(' ')[0]}` : 'Your Account'}
-                  </h3>
-                  <div className="divide-y divide-white/[0.06] border-y border-white/[0.07] bg-white/[0.018]">
-                    {user ? (
-                      <>
-                        <Link
-                          href="/account#profile"
-                          onClick={() => setIsMobileMenuOpen(false)}
-                          className="flex min-h-12 items-center gap-3 px-4 text-sm text-white/80 transition hover:bg-white/5 hover:text-gold"
-                        >
-                          <User size={18} aria-hidden="true" />
-                          Profile &amp; saved address
-                        </Link>
-                        <Link
-                          href="/account#orders"
-                          onClick={() => setIsMobileMenuOpen(false)}
-                          className="flex min-h-12 items-center gap-3 px-4 text-sm text-white/80 transition hover:bg-white/5 hover:text-gold"
-                        >
-                          <ShoppingBag size={18} aria-hidden="true" />
-                          Order history
-                        </Link>
-                      </>
-                    ) : (
-                      <>
-                        <Link
-                          href="/login?next=/account"
-                          onClick={() => setIsMobileMenuOpen(false)}
-                          className="flex min-h-12 items-center gap-3 px-4 text-sm font-semibold text-white transition hover:bg-white/5 hover:text-gold"
-                        >
-                          <User size={18} aria-hidden="true" />
-                          Sign in
-                        </Link>
-                        <Link
-                          href="/register"
-                          onClick={() => setIsMobileMenuOpen(false)}
-                          className="flex min-h-12 items-center px-4 text-sm text-white/70 transition hover:bg-white/5 hover:text-gold"
-                        >
-                          Create account
-                        </Link>
-                      </>
-                    )}
-                  </div>
-                </div>
-
-                <div className="mt-10 border-t border-white/[0.07] pt-8">
-                  <h3 className="text-gold text-xs font-bold tracking-[0.08em] uppercase mb-4">Products</h3>
-                  <div className="grid grid-cols-2 gap-3">
-                    {products.slice(0, 6).map((product) => (
-                      <Link
-                        key={product.href}
-                        href={product.href}
-                        onClick={() => setIsMobileMenuOpen(false)}
-                        className="text-white/70 hover:text-gold transition-colors text-sm block"
-                      >
-                        {product.name}
-                      </Link>
-                    ))}
-                  </div>
-                </div>
-              </div>
-
-              <div className="border-t border-white/[0.08] bg-[#0d0b09] p-6">
-                <Link
-                  href="/order"
-                  onClick={() => setIsMobileMenuOpen(false)}
-                  className="royal-button w-full"
-                >
-                  <ShoppingBag size={18} />
-                  View Cart ({count})
-                </Link>
-              </div>
-            </motion.aside>
-          </motion.div>
-        )}
-      </AnimatePresence>
-
-      {/* Spacer for fixed header */}
-      <div className={`h-[72px] sm:h-[88px]`} />
-    </>
-  )
+  }
+  function close() { dialog.current?.close() }
+  return <>
+    <a className={styles.skip} href="#main-content">Skip to content</a>
+    <header className={styles.header}><div className={styles.bar}>
+      <Link href="/" aria-label="Qureshi's home" className={styles.logo}><Image src="/images/qureshis-navbar-logo.png" alt="Qureshi’s Masala & Spices" width={542} height={192} priority /></Link>
+      <nav aria-label="Main navigation" className={styles.desktop}>{links.map(([href, label]) => <Link key={href} href={href} aria-current={pathname.startsWith(href) ? 'page' : undefined}>{label}</Link>)}</nav>
+      <div className={styles.actions}>
+        <button aria-label="Search spices" onClick={e => openPanel('search', e.currentTarget)}><Search size={21} /></button>
+        <Link className={styles.account} href={user ? '/account' : '/login'} aria-label={user ? 'Your account' : 'Sign in'}><User size={21} /></Link>
+        <button aria-label={'Open shopping bag, ' + count + ' items'} onClick={e => openPanel('cart', e.currentTarget)}><ShoppingBag size={21} />{count > 0 && <span className={styles.count}>{count}</span>}</button>
+        <button className={styles.menuButton} aria-label="Open menu" onClick={e => openPanel('menu', e.currentTarget)}><Menu size={23} /></button>
+      </div>
+    </div></header>
+    <dialog ref={dialog} className={styles.dialog} aria-labelledby="navigation-panel-title" onClick={e => { if (e.target === e.currentTarget) close() }}>
+      <div className={styles.panel}>
+        <div className={styles.panelHeader}><h2 id="navigation-panel-title">{panel === 'cart' ? 'Your bag (' + count + ')' : panel === 'search' ? 'Find your flavour' : 'Explore Qureshi’s'}</h2><button onClick={close} aria-label="Close panel"><X /></button></div>
+        {panel === 'menu' && <><nav className={styles.mobile} aria-label="Mobile navigation">{links.map(([href, label], i) => <Link onClick={close} href={href} key={href} aria-current={pathname.startsWith(href) ? 'page' : undefined}><span>0{i + 1}</span>{label}<ArrowUpRight size={20} /></Link>)}</nav><div className={styles.menuFoot}><Link onClick={close} href={user ? '/account' : '/login'}><User size={19} />{user ? 'Your account & orders' : 'Sign in / create account'}</Link><Link onClick={close} href="/faq">Questions? Visit our help centre</Link></div></>}
+        {panel === 'search' && <div className={styles.search}><p>Search for a spice or the dish you want to cook.</p><form action="/shop" onSubmit={close}><label htmlFor="global-search">Spice or dish name</label><div><input id="global-search" name="q" type="search" placeholder="Try biryani, kebab or turmeric" required /><button type="submit" aria-label="Search"><Search size={20} /></button></div></form><h3>A good place to start</h3><div className={styles.suggestions}>{['Biryani', 'Kebab', 'Chicken', 'Garam'].map(q => <Link onClick={close} key={q} href={'/shop?q=' + q}>{q}<ArrowUpRight size={16} /></Link>)}</div><Link onClick={close} href="/shop" className={styles.primary}>Explore all spices <ArrowUpRight size={18} /></Link></div>}
+        {panel === 'cart' && <><div className={styles.cartItems}>{!count ? <div className={styles.empty}><ShoppingBag size={44} /><h3>Good meals start here.</h3><p>Your bag is ready for its first flavour.</p><Link onClick={close} href="/shop" className={styles.primary}>Discover the collection</Link></div> : items.map(item => {
+          const totalForProduct = items.filter(row => row.product.id === item.product.id).reduce((sum, row) => sum + row.quantity, 0)
+          return <article className={styles.cartItem} key={item.product.id + '-' + item.variant.weight_grams}><Image src={item.product.image_url} alt="" width={80} height={100} /><div><h3>{item.product.name}</h3><p>{item.variant.weight_grams >= 1000 ? item.variant.weight_grams / 1000 + 'kg' : item.variant.weight_grams + 'g'} · ₹{item.variant.price}</p><div className={styles.quantity}><button aria-label={'Decrease ' + item.product.name} onClick={() => updateQty(item.product.id, item.variant.weight_grams, item.quantity - 1)}><Minus size={15} /></button><span>{item.quantity}</span><button aria-label={'Increase ' + item.product.name} disabled={totalForProduct >= item.product.stock_qty} onClick={() => updateQty(item.product.id, item.variant.weight_grams, item.quantity + 1)}><Plus size={15} /></button><button aria-label={'Remove ' + item.product.name} onClick={() => removeItem(item.product.id, item.variant.weight_grams)}><Trash2 size={15} /></button></div></div><strong>₹{item.variant.price * item.quantity}</strong></article>
+        })}</div>{count > 0 && <div className={styles.cartFoot}><div><span>Items subtotal</span><strong>₹{subtotal.toLocaleString('en-IN')}</strong></div><p>Discounts reviewed in cart. Delivery and payment confirmed with our team on WhatsApp.</p><Link onClick={close} href="/order" className={styles.primary}>Review cart & continue <ArrowUpRight size={18} /></Link><button onClick={close}>Continue exploring</button></div>}</>}
+      </div>
+    </dialog>
+  </>
 }
-

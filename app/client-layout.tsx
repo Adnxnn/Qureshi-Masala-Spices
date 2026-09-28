@@ -38,7 +38,7 @@ export default function ClientLayout({
     <CartNotificationsProvider>
       <Header user={user} />
 
-      <main className="customer-site min-h-screen w-full">
+      <main id="main-content" tabIndex={-1} className="customer-site min-h-screen w-full">
         {children}
       </main>
 

@@ -77,10 +77,12 @@ const CATEGORIES = ['All', ...Array.from(new Set(FAQ_DATA.map(item => item.categ
 export default function FAQPage() {
   const [selectedCategory, setSelectedCategory] = useState('All')
   const [openId, setOpenId] = useState<number | null>(null)
+  const [query, setQuery] = useState('')
 
-  const filteredFAQs = selectedCategory === 'All'
+  const categoryFAQs = selectedCategory === 'All'
     ? FAQ_DATA
     : FAQ_DATA.filter(item => item.category === selectedCategory)
+  const filteredFAQs = categoryFAQs.filter(item => (item.question + ' ' + item.answer).toLowerCase().includes(query.toLowerCase().trim()))
 
   return (
     <div className="royal-page royal-grain min-h-screen pb-20 pt-8">
@@ -103,6 +105,8 @@ export default function FAQPage() {
           </p>
         </motion.div>
 
+        <label className="block mb-8 text-sm text-cream">Search the help centre<input type="search" value={query} onChange={e => { setQuery(e.target.value); setOpenId(null) }} placeholder="Try delivery, storage or pack sizes" className="royal-field mt-2 w-full px-4 py-3" /></label>
+        <p role="status" className="mb-4 text-sm text-white/70">{filteredFAQs.length} answers found</p>
         {/* Category Filter */}
         <motion.div
           initial={{ opacity: 0, y: 20 }}
