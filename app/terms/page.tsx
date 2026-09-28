@@ -5,14 +5,14 @@ const LAST_UPDATED = 'July 15, 2026'
 
 export default function TermsAndConditionsPage() {
   return (
-    <div className="royal-page royal-grain min-h-screen pb-20 pt-24">
+    <div className="royal-page royal-grain min-h-screen pb-20 pt-8">
       <div className="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="mb-12">
           <p className="royal-eyebrow mb-3">Legal</p>
           <h1 className="royal-title mb-4 text-5xl sm:text-6xl md:text-7xl">
             Terms and conditions.
           </h1>
-          <p className="text-white/40 text-sm">Last Updated: {LAST_UPDATED}</p>
+          <p className="text-white/65 text-sm">Last Updated: {LAST_UPDATED}</p>
         </div>
 
         <div className="royal-prose space-y-8">
@@ -154,3 +154,4 @@ export default function TermsAndConditionsPage() {
     </div>
   )
 }
+

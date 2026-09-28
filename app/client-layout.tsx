@@ -38,7 +38,7 @@ export default function ClientLayout({
     <CartNotificationsProvider>
       <Header user={user} />
 
-      <main className="min-h-screen w-full overflow-x-hidden">
+      <main className="customer-site min-h-screen w-full">
         {children}
       </main>
 
@@ -47,3 +47,4 @@ export default function ClientLayout({
     </CartNotificationsProvider>
   )
 }
+

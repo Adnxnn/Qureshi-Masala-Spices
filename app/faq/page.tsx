@@ -1,5 +1,5 @@
 'use client'
-import { useState } from 'react'
+import { useId, useState } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
 import { ChevronDown, ChevronUp } from 'lucide-react'
 
@@ -83,7 +83,7 @@ export default function FAQPage() {
     : FAQ_DATA.filter(item => item.category === selectedCategory)
 
   return (
-    <div className="royal-page royal-grain min-h-screen pb-20 pt-24">
+    <div className="royal-page royal-grain min-h-screen pb-20 pt-8">
       <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
         {/* Hero */}
         <motion.div
@@ -118,10 +118,10 @@ export default function FAQPage() {
                   setSelectedCategory(category)
                   setOpenId(null)
                 }}
-                className={`min-h-11 rounded-[2px] border px-5 py-2.5 text-[10px] font-bold uppercase tracking-[0.22em] transition-colors duration-300 sm:text-xs ${
+                className={`min-h-11 rounded-xl border px-5 py-2.5 text-[12px] font-bold uppercase tracking-[0.08em] transition-colors duration-300 sm:text-xs ${
                   selectedCategory === category
                     ? 'border-gold text-gold bg-gold/10'
-                    : 'border-white/10 text-white/40 hover:border-white/30 hover:text-white/70'
+                    : 'border-white/10 text-white/65 hover:border-white/30 hover:text-white/70'
                 }`}
               >
                 {category}
@@ -149,7 +149,7 @@ export default function FAQPage() {
 
         {filteredFAQs.length === 0 && (
           <div className="text-center py-20">
-            <div className="text-white/30 text-lg">No FAQs found in this category</div>
+            <div className="text-white/65 text-lg">No FAQs found in this category</div>
           </div>
         )}
 
@@ -182,15 +182,18 @@ export default function FAQPage() {
 }
 
 function FAQItem({ faq, isOpen, onToggle }: { faq: FAQItem; isOpen: boolean; onToggle: () => void }) {
+  const answerId = useId()
   return (
     <motion.div
       initial={{ opacity: 0, y: 20 }}
       whileInView={{ opacity: 1, y: 0 }}
       viewport={{ once: true }}
-      className="royal-panel overflow-hidden rounded-[3px] transition-colors duration-300 hover:border-gold/25"
+      className="royal-panel overflow-hidden rounded-2xl transition-colors duration-300 hover:border-gold/25"
     >
       <button
         onClick={onToggle}
+        aria-expanded={isOpen}
+        aria-controls={isOpen ? answerId : undefined}
         className="w-full px-6 sm:px-8 py-6 text-left flex items-center justify-between gap-4"
       >
         <span className="font-medium text-white flex-1">{faq.question}</span>
@@ -201,6 +204,7 @@ function FAQItem({ faq, isOpen, onToggle }: { faq: FAQItem; isOpen: boolean; onT
       <AnimatePresence>
         {isOpen && (
           <motion.div
+            id={answerId}
             initial={{ height: 0, opacity: 0 }}
             animate={{ height: 'auto', opacity: 1 }}
             exit={{ height: 0, opacity: 0 }}
@@ -215,3 +219,4 @@ function FAQItem({ faq, isOpen, onToggle }: { faq: FAQItem; isOpen: boolean; onT
     </motion.div>
   )
 }
+

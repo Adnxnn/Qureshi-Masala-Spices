@@ -108,7 +108,7 @@ function CheckoutInput({
     <div className="min-w-0 space-y-2">
       <label
         htmlFor={id}
-        className="block text-[10px] font-semibold uppercase tracking-[0.18em] text-[#d7c8b3]/55"
+        className="block text-[12px] font-semibold uppercase tracking-[0.08em] text-[#d7c8b3]/55"
       >
         {label}
       </label>
@@ -119,14 +119,14 @@ function CheckoutInput({
         autoComplete={autoComplete}
         placeholder={placeholder}
         {...register(id)}
-        className={`min-h-12 w-full min-w-0 rounded-[2px] border bg-[#11100f] px-4 text-sm text-[#f5efe6] outline-none transition-colors placeholder:text-[#f5efe6]/20 ${
+        className={`min-h-12 w-full min-w-0 rounded-xl border bg-[#11100f] px-4 text-sm text-[#f5efe6] outline-none transition-colors placeholder:text-[#f5efe6]/20 ${
           error
             ? "border-red-400/50 focus:border-red-400"
             : "border-white/10 focus:border-[#c9a45f]/70"
         }`}
       />
 
-      {error && <p className="text-[11px] text-red-300">{error.message}</p>}
+      {error && <p className="text-[12px] text-red-300">{error.message}</p>}
     </div>
   );
 }
@@ -147,7 +147,7 @@ function CheckoutProgress({
     <div
       role="tablist"
       aria-label="Checkout steps"
-      className="grid w-full grid-cols-2 gap-1 rounded-[3px] border border-gold/15 bg-black/25 p-1.5 shadow-lg shadow-black/10 sm:w-auto sm:min-w-[310px]"
+      className="grid w-full grid-cols-2 gap-1 rounded-2xl border border-gold/15 bg-black/25 p-1.5 shadow-lg shadow-black/10 sm:w-auto sm:min-w-[310px]"
     >
       <button
         type="button"
@@ -155,14 +155,14 @@ function CheckoutProgress({
         aria-selected={!deliveryActive}
         aria-controls="cart-step-panel"
         onClick={() => onStepChange("cart")}
-        className={`flex min-h-11 min-w-0 items-center justify-center gap-2 rounded-[2px] px-3 text-[10px] font-bold uppercase tracking-[0.14em] transition-colors sm:px-5 ${
+        className={`flex min-h-11 min-w-0 items-center justify-center gap-2 rounded-xl px-3 text-[12px] font-bold uppercase tracking-[0.14em] transition-colors sm:px-5 ${
           !deliveryActive
             ? "bg-[#c9a45f] text-[#130d08] shadow-md shadow-black/20"
             : "text-[#f5efe6]/55 hover:bg-white/5 hover:text-[#f5efe6]"
         }`}
       >
         <span
-          className={`flex h-6 w-6 shrink-0 items-center justify-center rounded-full text-[10px] ${
+          className={`flex h-6 w-6 shrink-0 items-center justify-center rounded-full text-[12px] ${
             deliveryActive ? "bg-green-500/15 text-green-300" : "bg-black/15"
           }`}
         >
@@ -173,7 +173,7 @@ function CheckoutProgress({
 
         {hasItems && (
           <span
-            className={`flex h-5 min-w-5 shrink-0 items-center justify-center rounded-full px-1.5 text-[9px] ${
+            className={`flex h-5 min-w-5 shrink-0 items-center justify-center rounded-full px-1.5 text-[12px] ${
               !deliveryActive
                 ? "bg-black/15 text-[#130d08]"
                 : "bg-[#c9a45f]/10 text-[#d9b56f]"
@@ -193,14 +193,14 @@ function CheckoutProgress({
         aria-disabled={!hasItems}
         disabled={!hasItems}
         onClick={() => onStepChange("delivery")}
-        className={`flex min-h-11 min-w-0 items-center justify-center gap-2 rounded-[2px] px-3 text-[10px] font-bold uppercase tracking-[0.14em] transition-colors sm:px-5 ${
+        className={`flex min-h-11 min-w-0 items-center justify-center gap-2 rounded-xl px-3 text-[12px] font-bold uppercase tracking-[0.14em] transition-colors sm:px-5 ${
           deliveryActive
             ? "bg-[#c9a45f] text-[#130d08] shadow-md shadow-black/20"
             : "text-[#f5efe6]/55 hover:bg-white/5 hover:text-[#f5efe6] disabled:cursor-not-allowed disabled:opacity-30 disabled:hover:bg-transparent"
         }`}
       >
         <span
-          className={`flex h-6 w-6 shrink-0 items-center justify-center rounded-full text-[10px] ${
+          className={`flex h-6 w-6 shrink-0 items-center justify-center rounded-full text-[12px] ${
             deliveryActive ? "bg-black/15" : "bg-white/5"
           }`}
         >
@@ -233,7 +233,7 @@ function TrustStrip() {
   ];
 
   return (
-    <div className="grid grid-cols-1 divide-y divide-white/10 rounded-[3px] border border-gold/10 bg-white/[0.025] sm:grid-cols-3 sm:divide-x sm:divide-y-0">
+    <div className="grid grid-cols-1 divide-y divide-white/10 rounded-2xl border border-gold/10 bg-white/[0.025] sm:grid-cols-3 sm:divide-x sm:divide-y-0">
       {items.map((item) => {
         const Icon = item.icon;
 
@@ -248,7 +248,7 @@ function TrustStrip() {
                 {item.title}
               </p>
 
-              <p className="mt-0.5 text-[10px] text-[#f5efe6]/35">
+              <p className="mt-0.5 text-[12px] text-[#f5efe6]/70">
                 {item.description}
               </p>
             </div>
@@ -285,16 +285,16 @@ function CartProductRow({
       </div>
 
       <div className="min-w-0">
-        <h3 className="truncate text-sm font-semibold text-[#f5efe6] sm:text-base">
+        <h3 className="break-words text-sm font-semibold text-[#f5efe6] sm:text-base">
           {product.name}
         </h3>
 
         <div className="mt-1 flex flex-wrap items-center gap-2">
-          <span className="rounded-full border border-white/10 bg-white/[0.04] px-2 py-1 text-[9px] font-medium uppercase tracking-[0.12em] text-[#f5efe6]/45">
+          <span className="rounded-full border border-white/10 bg-white/[0.04] px-2 py-1 text-[12px] font-medium uppercase tracking-[0.12em] text-[#f5efe6]/70">
             {formatWeight(variant.weight_grams)}
           </span>
 
-          <span className="text-[10px] text-[#f5efe6]/30">
+          <span className="text-[12px] text-[#f5efe6]/70">
             ₹{variant.price} each
           </span>
         </div>
@@ -312,7 +312,7 @@ function CartProductRow({
             onClick={() =>
               updateQuantity(product.id, variant.weight_grams, quantity - 1)
             }
-            className="flex h-8 w-8 items-center justify-center rounded-md text-[#f5efe6]/45 transition-colors hover:bg-white/5 hover:text-[#d9b56f]"
+            className="flex h-11 w-11 items-center justify-center rounded-md text-[#f5efe6]/70 transition-colors hover:bg-white/5 hover:text-[#d9b56f]"
           >
             <Minus size={12} />
           </button>
@@ -327,7 +327,7 @@ function CartProductRow({
             onClick={() =>
               updateQuantity(product.id, variant.weight_grams, quantity + 1)
             }
-            className="flex h-8 w-8 items-center justify-center rounded-md text-[#f5efe6]/45 transition-colors hover:bg-white/5 hover:text-[#d9b56f]"
+            className="flex h-11 w-11 items-center justify-center rounded-md text-[#f5efe6]/70 transition-colors hover:bg-white/5 hover:text-[#d9b56f]"
           >
             <Plus size={12} />
           </button>
@@ -337,7 +337,7 @@ function CartProductRow({
           type="button"
           aria-label={`Remove ${product.name}`}
           onClick={() => removeProduct(product.id, variant.weight_grams)}
-          className="flex h-10 w-10 items-center justify-center rounded-lg text-[#f5efe6]/25 transition-colors hover:bg-red-500/10 hover:text-red-300"
+          className="flex h-11 w-11 items-center justify-center rounded-lg text-[#f5efe6]/25 transition-colors hover:bg-red-500/10 hover:text-red-300"
         >
           <Trash2 size={15} />
         </button>
@@ -360,19 +360,19 @@ function OrderSuccess({
   openWhatsApp: () => void;
 }) {
   return (
-    <div className="royal-page royal-grain relative min-h-screen w-full overflow-x-hidden pb-16 pt-24">
+    <div className="royal-page royal-grain relative min-h-screen w-full overflow-x-hidden pb-16 pt-8">
       <div className="pointer-events-none absolute inset-0 overflow-hidden">
         <div className="absolute inset-x-[8%] top-0 h-px bg-gradient-to-r from-transparent via-gold/35 to-transparent" />
       </div>
 
       <div className="relative mx-auto w-full max-w-3xl px-4 sm:px-6">
-        <div className="royal-panel rounded-[3px] p-5 sm:p-8">
+        <div className="royal-panel rounded-2xl p-5 sm:p-8">
           <div className="text-center">
             <div className="mx-auto mb-6 flex h-20 w-20 items-center justify-center rounded-full border border-green-400/20 bg-green-400/10 text-green-300">
               <CheckCircle2 size={36} />
             </div>
 
-            <p className="mb-3 text-[10px] font-bold uppercase tracking-[0.3em] text-[#c9a45f]">
+            <p className="mb-3 text-sm font-semibold tracking-normal text-[#c9a45f]">
               Order request received
             </p>
 
@@ -380,7 +380,7 @@ function OrderSuccess({
               Thank you.
             </h1>
 
-            <p className="mx-auto mt-4 max-w-md text-sm leading-6 text-[#f5efe6]/45">
+            <p className="mx-auto mt-4 max-w-md text-sm leading-6 text-[#f5efe6]/70">
               Your order has been saved. Continue to WhatsApp so we can confirm
               availability and delivery.
             </p>
@@ -413,7 +413,7 @@ function OrderSuccess({
                     {item.product.name}
                   </p>
 
-                  <p className="text-[10px] text-[#f5efe6]/35">
+                  <p className="text-[12px] text-[#f5efe6]/70">
                     {formatWeight(item.variant.weight_grams)} × {item.quantity}
                   </p>
                 </div>
@@ -428,7 +428,7 @@ function OrderSuccess({
           <div className="my-6 border-t border-white/10" />
 
           <div className="flex items-center justify-between">
-            <span className="text-[10px] font-bold uppercase tracking-[0.25em] text-[#f5efe6]/40">
+            <span className="text-sm font-semibold tracking-normal text-[#f5efe6]/70">
               Order total
             </span>
 
@@ -718,7 +718,7 @@ Please confirm this order.`,
         <div className="text-center">
           <div className="mx-auto h-10 w-10 animate-spin rounded-full border-2 border-white/10 border-t-[#c9a45f]" />
 
-          <p className="mt-5 text-[10px] font-semibold uppercase tracking-[0.25em] text-white/30">
+          <p className="mt-5 text-[12px] font-semibold uppercase tracking-[0.08em] text-white/65">
             Preparing your cart
           </p>
         </div>
@@ -739,7 +739,7 @@ Please confirm this order.`,
   }
 
   return (
-    <div className="royal-page royal-grain relative min-h-screen w-full overflow-x-hidden pb-32 pt-24 sm:pt-28 lg:pb-20">
+    <div className="royal-page royal-grain relative min-h-screen w-full overflow-x-hidden pb-32 pt-8 sm:pt-12 lg:pb-20">
       <div className="pointer-events-none absolute inset-0 overflow-hidden">
         <div className="absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-[#c9a45f]/30 to-transparent" />
       </div>
@@ -751,7 +751,7 @@ Please confirm this order.`,
               <div className="mb-3 flex items-center gap-2 text-[#c9a45f]">
                 <Sparkles size={14} />
 
-                <span className="text-[10px] font-bold uppercase tracking-[0.3em]">
+                <span className="text-sm font-semibold tracking-normal">
                   Qureshi&apos;s Order Desk
                 </span>
               </div>
@@ -760,7 +760,7 @@ Please confirm this order.`,
                 {checkoutStep === "cart" ? "Your Cart" : "Place Your Order"}
               </h1>
 
-              <p className="mt-4 max-w-xl text-sm leading-6 text-[#f5efe6]/40 sm:text-base">
+              <p className="mt-4 max-w-xl text-sm leading-6 text-[#f5efe6]/70 sm:text-base">
                 {checkoutStep === "cart"
                   ? "Review your masalas, adjust quantities and continue when everything looks right."
                   : "Add your delivery details. We will save the order and confirm everything with you on WhatsApp."}
@@ -788,14 +788,14 @@ Please confirm this order.`,
           >
             <section className="min-w-0 lg:col-span-8">
               {!user && (
-                <div className="mb-5 overflow-hidden rounded-[3px] border border-[#c9a45f]/15 bg-gradient-to-r from-[#6b1a1a]/15 to-[#c9a45f]/5 p-4 sm:p-5">
+                <div className="mb-5 overflow-hidden rounded-2xl border border-[#c9a45f]/15 bg-gradient-to-r from-[#6b1a1a]/15 to-[#c9a45f]/5 p-4 sm:p-5">
                   <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
                     <div className="min-w-0">
                       <p className="text-sm font-semibold text-[#f5efe6]">
                         Returning customer?
                       </p>
 
-                      <p className="mt-1 text-xs leading-5 text-[#f5efe6]/40">
+                      <p className="mt-1 text-xs leading-5 text-[#f5efe6]/70">
                         Sign in to automatically fill your saved delivery
                         details.
                       </p>
@@ -804,14 +804,14 @@ Please confirm this order.`,
                     <div className="flex w-full gap-2 sm:w-auto">
                       <Link
                         href="/login"
-                        className="flex min-h-11 flex-1 items-center justify-center rounded-xl border border-white/10 px-5 text-[10px] font-bold uppercase tracking-[0.16em] text-[#f5efe6]/65 transition-colors hover:bg-white/5 hover:text-white sm:flex-none"
+                        className="flex min-h-11 flex-1 items-center justify-center rounded-xl border border-white/10 px-5 text-[12px] font-bold uppercase tracking-[0.16em] text-[#f5efe6]/65 transition-colors hover:bg-white/5 hover:text-white sm:flex-none"
                       >
                         Login
                       </Link>
 
                       <Link
                         href="/register"
-                        className="flex min-h-11 flex-1 items-center justify-center rounded-xl bg-[#c9a45f] px-5 text-[10px] font-bold uppercase tracking-[0.16em] text-[#130d08] transition-colors hover:bg-[#e0bd77] sm:flex-none"
+                        className="flex min-h-11 flex-1 items-center justify-center rounded-xl bg-[#c9a45f] px-5 text-[12px] font-bold uppercase tracking-[0.16em] text-[#130d08] transition-colors hover:bg-[#e0bd77] sm:flex-none"
                       >
                         Create Account
                       </Link>
@@ -821,7 +821,7 @@ Please confirm this order.`,
               )}
 
               {items.length === 0 ? (
-                <div className="royal-panel flex min-h-[420px] flex-col items-center justify-center rounded-[3px] px-5 text-center">
+                <div className="royal-panel flex min-h-[300px] flex-col items-center justify-center rounded-2xl px-5 text-center">
                   <div className="mb-6 flex h-20 w-20 items-center justify-center rounded-full border border-[#c9a45f]/20 bg-[#c9a45f]/10 text-[#c9a45f]">
                     <ShoppingBag size={32} />
                   </div>
@@ -830,28 +830,28 @@ Please confirm this order.`,
                     Your cart is empty.
                   </h2>
 
-                  <p className="mt-3 max-w-sm text-sm leading-6 text-[#f5efe6]/40">
+                  <p className="mt-3 max-w-sm text-sm leading-6 text-[#f5efe6]/70">
                     Explore our handcrafted masalas and add your favourites to
                     begin an order.
                   </p>
 
                   <Link
                     href="/shop"
-                    className="mt-7 inline-flex min-h-12 items-center justify-center gap-2 rounded-xl bg-[#c9a45f] px-7 text-[10px] font-bold uppercase tracking-[0.18em] text-[#130d08] transition-colors hover:bg-[#e0bd77]"
+                    className="mt-7 inline-flex min-h-12 items-center justify-center gap-2 rounded-xl bg-[#c9a45f] px-7 text-sm font-semibold tracking-normal text-[#130d08] transition-colors hover:bg-[#e0bd77]"
                   >
                     Explore Products
                     <ChevronRight size={14} />
                   </Link>
                 </div>
               ) : (
-                <div className="royal-panel w-full min-w-0 overflow-hidden rounded-[3px]">
+                <div className="royal-panel w-full min-w-0 overflow-hidden rounded-2xl">
                   <div className="flex items-center justify-between gap-4 border-b border-white/10 px-4 py-4 sm:px-6 sm:py-5">
                     <div>
-                      <p className="text-[10px] font-bold uppercase tracking-[0.25em] text-[#c9a45f]">
+                      <p className="text-sm font-semibold tracking-normal text-[#c9a45f]">
                         Selected products
                       </p>
 
-                      <p className="mt-1 text-xs text-[#f5efe6]/35">
+                      <p className="mt-1 text-xs text-[#f5efe6]/70">
                         {items.length}{" "}
                         {items.length === 1 ? "product" : "products"} in your
                         cart
@@ -878,16 +878,16 @@ Please confirm this order.`,
             {items.length > 0 && (
               <aside className="min-w-0 lg:col-span-4">
                 <div className="lg:sticky lg:top-24">
-                  <div className="royal-panel overflow-hidden rounded-[3px]">
+                  <div className="royal-panel overflow-hidden rounded-2xl">
                     <div className="relative overflow-hidden border-b border-white/10 bg-gradient-to-br from-[#6b1a1a]/30 to-[#c9a45f]/10 px-5 py-6">
                       <div className="absolute -right-10 -top-10 h-32 w-32 rounded-full border border-[#c9a45f]/10" />
 
-                      <p className="relative text-[10px] font-bold uppercase tracking-[0.25em] text-[#c9a45f]">
+                      <p className="relative text-sm font-semibold tracking-normal text-[#c9a45f]">
                         Order total
                       </p>
 
                       <div className="relative mt-2 flex items-end justify-between gap-4">
-                        <span className="text-xs text-[#f5efe6]/40">
+                        <span className="text-xs text-[#f5efe6]/70">
                           Estimated amount
                         </span>
 
@@ -910,7 +910,7 @@ Please confirm this order.`,
                                 {appliedPromoCode.code}
                               </p>
 
-                              <p className="mt-0.5 text-[10px] text-green-200/45">
+                              <p className="mt-0.5 text-[12px] text-green-200/45">
                                 Promo code applied
                               </p>
                             </div>
@@ -920,7 +920,7 @@ Please confirm this order.`,
                             type="button"
                             aria-label="Remove promo code"
                             onClick={handleRemovePromo}
-                            className="flex h-9 w-9 shrink-0 items-center justify-center rounded-lg text-white/30 hover:bg-white/5 hover:text-white"
+                            className="flex h-9 w-9 shrink-0 items-center justify-center rounded-lg text-white/65 hover:bg-white/5 hover:text-white"
                           >
                             <X size={13} />
                           </button>
@@ -929,7 +929,7 @@ Please confirm this order.`,
                         <div className="space-y-2">
                           <label
                             htmlFor="promo-code"
-                            className="flex items-center gap-2 text-[10px] font-semibold uppercase tracking-[0.18em] text-[#f5efe6]/40"
+                            className="flex items-center gap-2 text-[12px] font-semibold uppercase tracking-[0.08em] text-[#f5efe6]/70"
                           >
                             <Gift size={13} />
                             Have a promo code?
@@ -952,14 +952,14 @@ Please confirm this order.`,
                               type="button"
                               onClick={handleApplyPromo}
                               disabled={applyingPromo}
-                              className="min-h-11 shrink-0 rounded-xl border border-[#c9a45f]/20 bg-[#c9a45f]/10 px-5 text-[10px] font-bold uppercase tracking-[0.16em] text-[#d9b56f] transition-colors hover:bg-[#c9a45f]/15 disabled:opacity-40"
+                              className="min-h-11 shrink-0 rounded-xl border border-[#c9a45f]/20 bg-[#c9a45f]/10 px-5 text-[12px] font-bold uppercase tracking-[0.16em] text-[#d9b56f] transition-colors hover:bg-[#c9a45f]/15 disabled:opacity-40"
                             >
                               {applyingPromo ? "Checking..." : "Apply"}
                             </button>
                           </div>
 
                           {promoError && (
-                            <p className="text-[10px] text-red-300">
+                            <p className="text-[12px] text-red-300">
                               {promoError}
                             </p>
                           )}
@@ -968,7 +968,7 @@ Please confirm this order.`,
 
                       <div className="space-y-3 border-t border-white/10 pt-5">
                         <div className="flex items-center justify-between gap-4">
-                          <span className="text-xs text-[#f5efe6]/40">
+                          <span className="text-xs text-[#f5efe6]/70">
                             Subtotal
                           </span>
 
@@ -991,7 +991,7 @@ Please confirm this order.`,
                         )}
 
                         <div className="flex items-center justify-between gap-4 border-t border-white/10 pt-4">
-                          <span className="text-[10px] font-bold uppercase tracking-[0.2em] text-[#f5efe6]/50">
+                          <span className="text-sm font-semibold tracking-normal text-[#f5efe6]/70">
                             Total
                           </span>
 
@@ -1004,7 +1004,7 @@ Please confirm this order.`,
                       <button
                         type="button"
                         onClick={() => changeCheckoutStep("delivery")}
-                        className="flex min-h-14 w-full items-center justify-center gap-3 rounded-xl bg-[#c9a45f] px-5 text-[10px] font-bold uppercase tracking-[0.18em] text-[#130d08] transition-colors hover:bg-[#e0bd77]"
+                        className="flex min-h-14 w-full items-center justify-center gap-3 rounded-xl bg-[#c9a45f] px-5 text-sm font-semibold tracking-normal text-[#130d08] transition-colors hover:bg-[#e0bd77]"
                       >
                         Continue to Delivery
                         <ArrowRight size={15} />
@@ -1016,7 +1016,7 @@ Please confirm this order.`,
                           className="mt-0.5 shrink-0 text-[#278c4d]"
                         />
 
-                        <p className="text-[10px] leading-5 text-[#f5efe6]/35">
+                        <p className="text-[12px] leading-5 text-[#f5efe6]/70">
                           No payment is collected here. Your order will be
                           confirmed directly on WhatsApp.
                         </p>
@@ -1039,13 +1039,13 @@ Please confirm this order.`,
               <button
                 type="button"
                 onClick={() => changeCheckoutStep("cart")}
-                className="mb-5 inline-flex min-h-11 items-center gap-2 rounded-xl border border-white/10 px-4 text-[10px] font-bold uppercase tracking-[0.16em] text-[#f5efe6]/50 transition-colors hover:bg-white/5 hover:text-white"
+                className="mb-5 inline-flex min-h-11 items-center gap-2 rounded-xl border border-white/10 px-4 text-[12px] font-bold uppercase tracking-[0.16em] text-[#f5efe6]/70 transition-colors hover:bg-white/5 hover:text-white"
               >
                 <ArrowLeft size={14} />
                 Back to Cart
               </button>
 
-              <div className="royal-panel overflow-hidden rounded-[3px]">
+              <div className="royal-panel overflow-hidden rounded-2xl">
                 <div className="border-b border-white/10 bg-gradient-to-r from-[#6b1a1a]/15 to-transparent px-5 py-5 sm:px-7">
                   <div className="flex items-center gap-3">
                     <span className="flex h-10 w-10 items-center justify-center rounded-full bg-[#c9a45f]/10 text-[#c9a45f]">
@@ -1057,7 +1057,7 @@ Please confirm this order.`,
                         Delivery Details
                       </h2>
 
-                      <p className="mt-1 text-[10px] text-[#f5efe6]/35">
+                      <p className="mt-1 text-[12px] text-[#f5efe6]/70">
                         Where should we deliver your order?
                       </p>
                     </div>
@@ -1099,7 +1099,7 @@ Please confirm this order.`,
                   <div className="min-w-0 space-y-2">
                     <label
                       htmlFor="customer_address"
-                      className="block text-[10px] font-semibold uppercase tracking-[0.18em] text-[#d7c8b3]/55"
+                      className="block text-[12px] font-semibold uppercase tracking-[0.08em] text-[#d7c8b3]/55"
                     >
                       Complete delivery address
                     </label>
@@ -1118,7 +1118,7 @@ Please confirm this order.`,
                     />
 
                     {errors.customer_address && (
-                      <p className="text-[11px] text-red-300">
+                      <p className="text-[12px] text-red-300">
                         {errors.customer_address.message}
                       </p>
                     )}
@@ -1147,10 +1147,10 @@ Please confirm this order.`,
                   <div className="min-w-0 space-y-2">
                     <label
                       htmlFor="notes"
-                      className="block text-[10px] font-semibold uppercase tracking-[0.18em] text-[#d7c8b3]/55"
+                      className="block text-[12px] font-semibold uppercase tracking-[0.08em] text-[#d7c8b3]/55"
                     >
                       Order notes{" "}
-                      <span className="normal-case tracking-normal text-white/20">
+                      <span className="normal-case tracking-normal text-white/65">
                         (optional)
                       </span>
                     </label>
@@ -1169,9 +1169,9 @@ Please confirm this order.`,
 
             <aside className="min-w-0 lg:col-span-4">
               <div className="lg:sticky lg:top-24">
-                <div className="royal-panel overflow-hidden rounded-[3px]">
+                <div className="royal-panel overflow-hidden rounded-2xl">
                   <div className="border-b border-white/10 px-5 py-5">
-                    <p className="text-[10px] font-bold uppercase tracking-[0.25em] text-[#c9a45f]">
+                    <p className="text-sm font-semibold tracking-normal text-[#c9a45f]">
                       Final Summary
                     </p>
                   </div>
@@ -1198,7 +1198,7 @@ Please confirm this order.`,
                               {item.product.name}
                             </p>
 
-                            <p className="mt-0.5 text-[9px] text-[#f5efe6]/30">
+                            <p className="mt-0.5 text-[12px] text-[#f5efe6]/70">
                               {formatWeight(item.variant.weight_grams)} ×{" "}
                               {item.quantity}
                             </p>
@@ -1226,7 +1226,7 @@ Please confirm this order.`,
                       )}
 
                       <div className="flex items-end justify-between gap-4">
-                        <span className="text-[10px] font-bold uppercase tracking-[0.2em] text-[#f5efe6]/45">
+                        <span className="text-sm font-semibold tracking-normal text-[#f5efe6]/70">
                           Total
                         </span>
 
@@ -1239,7 +1239,7 @@ Please confirm this order.`,
                     <button
                       type="submit"
                       disabled={isSubmitting}
-                      className="flex min-h-14 w-full items-center justify-center gap-3 rounded-xl bg-[#278c4d] px-4 text-center text-[10px] font-bold uppercase tracking-[0.16em] text-white transition-colors hover:bg-[#31a75c] disabled:cursor-not-allowed disabled:opacity-50"
+                      className="flex min-h-14 w-full items-center justify-center gap-3 rounded-xl bg-[#278c4d] px-4 text-center text-[12px] font-bold uppercase tracking-[0.16em] text-white transition-colors hover:bg-[#31a75c] disabled:cursor-not-allowed disabled:opacity-50"
                     >
                       <MessageCircle size={17} />
 
@@ -1252,7 +1252,7 @@ Please confirm this order.`,
                       <div className="flex items-center gap-3">
                         <Truck size={15} className="shrink-0 text-[#c9a45f]" />
 
-                        <p className="text-[10px] leading-5 text-[#f5efe6]/35">
+                        <p className="text-[12px] leading-5 text-[#f5efe6]/70">
                           Delivery details are confirmed directly with our team.
                         </p>
                       </div>
@@ -1263,7 +1263,7 @@ Please confirm this order.`,
                           className="shrink-0 text-[#c9a45f]"
                         />
 
-                        <p className="text-[10px] leading-5 text-[#f5efe6]/35">
+                        <p className="text-[12px] leading-5 text-[#f5efe6]/70">
                           No payment information is collected on this website.
                         </p>
                       </div>
@@ -1285,7 +1285,7 @@ Please confirm this order.`,
         >
           <div className="mx-auto flex w-full max-w-7xl items-center gap-3">
             <div className="min-w-0 flex-1">
-              <p className="text-[9px] font-bold uppercase tracking-[0.2em] text-[#f5efe6]/35">
+              <p className="text-sm font-semibold tracking-normal text-[#f5efe6]/70">
                 Order total
               </p>
 
@@ -1298,7 +1298,7 @@ Please confirm this order.`,
               <button
                 type="button"
                 onClick={() => changeCheckoutStep("delivery")}
-                className="flex min-h-12 flex-[1.6] items-center justify-center gap-2 rounded-xl bg-[#c9a45f] px-4 text-center text-[10px] font-bold uppercase tracking-[0.14em] text-[#130d08]"
+                className="flex min-h-12 flex-[1.6] items-center justify-center gap-2 rounded-xl bg-[#c9a45f] px-4 text-center text-[12px] font-bold uppercase tracking-[0.14em] text-[#130d08]"
               >
                 Delivery
                 <ArrowRight size={15} />
@@ -1308,7 +1308,7 @@ Please confirm this order.`,
                 type="submit"
                 form="delivery-checkout-form"
                 disabled={isSubmitting}
-                className="flex min-h-12 flex-[1.8] items-center justify-center gap-2 rounded-xl bg-[#278c4d] px-3 text-center text-[10px] font-bold uppercase tracking-[0.12em] text-white disabled:cursor-not-allowed disabled:opacity-50"
+                className="flex min-h-12 flex-[1.8] items-center justify-center gap-2 rounded-xl bg-[#278c4d] px-3 text-center text-[12px] font-bold uppercase tracking-[0.12em] text-white disabled:cursor-not-allowed disabled:opacity-50"
               >
                 <MessageCircle size={16} />
 
@@ -1321,3 +1321,4 @@ Please confirm this order.`,
     </div>
   );
 }
+

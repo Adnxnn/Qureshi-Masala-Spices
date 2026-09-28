@@ -1,4 +1,4 @@
-@import url('https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@500;600;700&family=Manrope:wght@400;500;600;700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Lora:ital,wght@0,400;0,500;0,600;0,700;1,400;1,500&display=swap');
 
 @tailwind base;
 @tailwind components;
@@ -20,8 +20,8 @@
   --muted: #b9ad9b;
   --border: rgba(224, 200, 137, 0.17);
   --border-strong: rgba(224, 200, 137, 0.32);
-  --font-display: 'Cormorant Garamond', Georgia, serif;
-  --font-body: 'Manrope', system-ui, sans-serif;
+  --font-display: 'Lora', Georgia, serif;
+  --font-body: 'DM Sans', system-ui, sans-serif;
   --duration-fast: 120ms;
   --duration-default: 200ms;
   --duration-slow: 340ms;
@@ -320,7 +320,7 @@ a {
   font-family: var(--font-display);
   font-weight: 600;
   letter-spacing: -0.035em;
-  line-height: 0.94;
+  line-height: 1.13;
 }
 
 .royal-divider {
@@ -461,4 +461,46 @@ a {
     scroll-behavior: auto !important;
     transition-duration: 0.01ms !important;
   }
+}
+
+
+/* Customer design system: readable typography and comfortable touch targets. */
+.customer-site { font-size: 16px; line-height: 1.65; }
+.customer-site h1, .customer-site h2, .customer-site h3 { overflow-wrap: break-word; }
+.customer-site .royal-title { line-height: 1.18; }
+.customer-site .royal-panel, .customer-site .royal-auth-card { border-radius: 18px; border-color: #d9ba792e; box-shadow: 0 16px 45px #0002; }
+.customer-site .royal-field { border-radius: 12px; min-height: 50px; font-size: 16px; }
+.customer-site .royal-button, .customer-site .royal-button-secondary, .site-footer .royal-button { border-radius: 12px; min-height: 50px; font-family: var(--font-body); font-size: 14px; font-weight: 600; letter-spacing: 0; line-height: 1.4; text-transform: none; }
+.customer-site .royal-eyebrow { font-size: 12px; letter-spacing: .1em; line-height: 1.6; }
+.customer-site input:not([type=checkbox]):not([type=radio]), .customer-site select, .customer-site textarea { font-family: var(--font-body); font-size: 16px; }
+.customer-site button:disabled { cursor: not-allowed; }
+.customer-site :focus-visible, .site-footer :focus-visible { outline: 2px solid #e0c889; outline-offset: 4px; }
+.customer-site .royal-prose { font-size: 16px; line-height: 1.85; }
+.cart-alerts { position: fixed; z-index: 45; top: 92px; right: 16px; width: min(380px, calc(100% - 32px)); display: grid; gap: 10px; pointer-events: none; }
+.cart-alert { display: grid; grid-template-columns: 44px 1fr 44px; gap: 12px; align-items: center; padding: 14px; border: 1px solid #d9ba7960; border-radius: 16px; background: #221b13fa; color: #f4ede0; box-shadow: 0 14px 40px #0006; pointer-events: auto; }
+.cart-alert img { object-fit: contain; }
+.cart-alert strong { font-size: 14px; line-height: 1.4; display: block; }
+.cart-alert p { color: #e0c889; font-size: 13px; margin-top: 4px; }
+.cart-alert a { display: inline-flex; align-items: center; min-height: 40px; font-size: 14px; color: #e0c889; text-decoration: underline; text-underline-offset: 4px; }
+.cart-alert button { display: grid; place-items: center; width: 44px; height: 44px; border-radius: 10px; }
+.site-footer { padding: 40px 20px 28px; background: #15110d; border-top: 1px solid #d9ba7933; }
+.footer-inner { max-width: 1160px; margin: auto; }
+.footer-intro { display: flex; align-items: center; justify-content: space-between; gap: 24px; padding-bottom: 32px; border-bottom: 1px solid #d9ba7926; }
+.footer-intro p { max-width: 360px; font-size: 15px; line-height: 1.7; color: #c9bfae; margin-top: 16px; }
+.footer-links { display: grid; grid-template-columns: repeat(3, 1fr); gap: 24px; padding-block: 32px; }
+.footer-links h2 { color: #e0c889; font-size: 14px; font-weight: 600; margin-bottom: 8px; }
+.footer-links a { display: flex; align-items: center; min-height: 44px; color: #c9bfae; font-size: 14px; }
+.footer-links a:hover { color: #fff; }
+.footer-bottom { display: flex; flex-wrap: wrap; justify-content: space-between; gap: 12px; padding-top: 24px; border-top: 1px solid #d9ba7926; color: #b7ad9e; font-size: 13px; }
+@media(max-width: 767px) {
+ .customer-site h1.royal-title { font-size: clamp(30px, 8.5vw, 40px); }
+ .customer-site h2.royal-title { font-size: clamp(26px, 7vw, 34px); }
+ .customer-site h3.font-display { font-size: 22px; line-height: 1.35; }
+ .customer-site .royal-page > div > header, .customer-site .royal-page > div > .text-center { margin-bottom: 28px; }
+ .customer-site .royal-auth-stage, .customer-site .royal-page.pt-14, .customer-site .royal-page.pt-16 { padding-top: 28px; }
+ .customer-site .royal-prose > section { padding-left: 16px; }
+ .footer-intro { align-items: flex-start; flex-direction: column; }
+ .footer-links { grid-template-columns: 1fr 1fr; gap: 24px 16px; }
+ .footer-links > div:last-child { grid-column: 1 / -1; }
+ .site-footer { padding-bottom: calc(32px + env(safe-area-inset-bottom)); }
 }

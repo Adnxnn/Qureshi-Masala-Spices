@@ -54,7 +54,7 @@ export default function LoginPage() {
           <h1 className="royal-title text-5xl sm:text-6xl">
             Welcome back.
           </h1>
-          <p className="mt-2 text-sm text-white/55 sm:text-base">
+          <p className="mt-2 text-sm text-white/65 sm:text-base">
             Sign in to view your profile, saved address and orders.
           </p>
         </div>
@@ -64,7 +64,7 @@ export default function LoginPage() {
             {formError ? (
               <div
                 role="alert"
-                className="rounded-[2px] border border-red-400/25 bg-red-500/10 px-4 py-3 text-sm leading-6 text-red-300"
+                className="rounded-xl border border-red-400/25 bg-red-500/10 px-4 py-3 text-sm leading-6 text-red-300"
               >
                 {formError}
               </div>
@@ -90,7 +90,7 @@ export default function LoginPage() {
                     message: 'Enter a valid email address.',
                   },
                 })}
-                className="royal-field px-4 text-base placeholder:text-white/30"
+                className="royal-field px-4 text-base placeholder:text-white/65"
                 placeholder="name@example.com"
               />
               {errors.email ? (
@@ -112,13 +112,13 @@ export default function LoginPage() {
                   aria-invalid={errors.password ? 'true' : 'false'}
                   aria-describedby={errors.password ? 'password-error' : undefined}
                   {...register('password', { required: 'Password is required.' })}
-                  className="royal-field px-4 pr-12 text-base placeholder:text-white/30"
+                  className="royal-field px-4 pr-12 text-base placeholder:text-white/65"
                   placeholder="Enter your password"
                 />
                 <button
                   type="button"
                   onClick={() => setShowPassword((visible) => !visible)}
-                  className="absolute inset-y-0 right-0 flex w-12 items-center justify-center text-white/50 transition hover:text-gold focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-gold"
+                  className="absolute inset-y-0 right-0 flex w-12 items-center justify-center text-white/65 transition hover:text-gold focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-gold"
                   aria-label={showPassword ? 'Hide password' : 'Show password'}
                 >
                   {showPassword ? <EyeOff size={20} /> : <Eye size={20} />}
@@ -142,7 +142,7 @@ export default function LoginPage() {
           </form>
 
           <div className="mt-7 border-t border-white/10 pt-6 text-center">
-            <p className="text-sm text-white/55">
+            <p className="text-sm text-white/65">
               New to Qureshi&apos;s?{' '}
               <Link
                 href="/register"
@@ -157,3 +157,4 @@ export default function LoginPage() {
     </div>
   )
 }
+

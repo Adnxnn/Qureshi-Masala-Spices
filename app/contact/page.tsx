@@ -42,7 +42,7 @@ Please get back to me soon!`
   }
 
   return (
-    <div className="royal-page royal-grain min-h-screen pb-20 pt-24">
+    <div className="royal-page royal-grain min-h-screen pb-20 pt-8">
       <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
         {/* Hero */}
         <motion.div
@@ -164,7 +164,7 @@ Please get back to me soon!`
               <form onSubmit={handleSubmit} className="space-y-6">
                 <div className="grid sm:grid-cols-2 gap-6">
                   <div className="space-y-2">
-                    <label htmlFor="name" className="text-[10px] uppercase tracking-[0.25em] text-white/40">
+                    <label htmlFor="name" className="text-[12px] uppercase tracking-[0.08em] text-white/65">
                       Full Name
                     </label>
                     <input
@@ -178,7 +178,7 @@ Please get back to me soon!`
                     />
                   </div>
                   <div className="space-y-2">
-                    <label htmlFor="phone" className="text-[10px] uppercase tracking-[0.25em] text-white/40">
+                    <label htmlFor="phone" className="text-[12px] uppercase tracking-[0.08em] text-white/65">
                       Phone Number
                     </label>
                     <input
@@ -194,7 +194,7 @@ Please get back to me soon!`
                 </div>
 
                 <div className="space-y-2">
-                  <label htmlFor="email" className="text-[10px] uppercase tracking-[0.25em] text-white/40">
+                  <label htmlFor="email" className="text-[12px] uppercase tracking-[0.08em] text-white/65">
                     Email Address
                   </label>
                   <input
@@ -209,7 +209,7 @@ Please get back to me soon!`
                 </div>
 
                 <div className="space-y-2">
-                  <label htmlFor="enquiryType" className="text-[10px] uppercase tracking-[0.25em] text-white/40">
+                  <label htmlFor="enquiryType" className="text-[12px] uppercase tracking-[0.08em] text-white/65">
                     Enquiry Type
                   </label>
                   <select
@@ -227,7 +227,7 @@ Please get back to me soon!`
                 </div>
 
                 <div className="space-y-2">
-                  <label htmlFor="subject" className="text-[10px] uppercase tracking-[0.25em] text-white/40">
+                  <label htmlFor="subject" className="text-[12px] uppercase tracking-[0.08em] text-white/65">
                     Subject
                   </label>
                   <input
@@ -242,7 +242,7 @@ Please get back to me soon!`
                 </div>
 
                 <div className="space-y-2">
-                  <label htmlFor="message" className="text-[10px] uppercase tracking-[0.25em] text-white/40">
+                  <label htmlFor="message" className="text-[12px] uppercase tracking-[0.08em] text-white/65">
                     Message
                   </label>
                   <textarea
@@ -272,3 +272,4 @@ Please get back to me soon!`
     </div>
   )
 }
+

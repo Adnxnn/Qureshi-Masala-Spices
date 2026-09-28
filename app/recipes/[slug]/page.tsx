@@ -47,7 +47,7 @@ export default function RecipeDetailPage({ params }: { params: { slug: string } 
 
   if (loading) {
     return (
-      <div className="royal-page min-h-screen pt-32 text-center text-white/50">
+      <div className="royal-page min-h-screen pt-32 text-center text-white/65">
         Loading recipe…
       </div>
     )
@@ -57,7 +57,7 @@ export default function RecipeDetailPage({ params }: { params: { slug: string } 
     return (
       <div className="royal-page min-h-screen px-4 pt-32 text-center">
         <h1 className="royal-title text-5xl">Recipe not found.</h1>
-        <p className="mt-4 text-white/50">
+        <p className="mt-4 text-white/65">
           {loadError || 'This recipe is unavailable or has not been published.'}
         </p>
         <Link href="/recipes" className="mt-8 inline-flex text-gold hover:text-white">
@@ -71,19 +71,19 @@ export default function RecipeDetailPage({ params }: { params: { slug: string } 
   const relatedProducts = recipe.recipe_products?.map((rp: any) => rp.products) || []
 
   return (
-    <div className="royal-page royal-grain min-h-screen pb-20 pt-24">
+    <div className="royal-page royal-grain min-h-screen pb-20 pt-8">
       <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8">
         {/* Back Button */}
         <div className="mb-8">
-          <Link href="/recipes" className="inline-flex items-center gap-2 text-white/50 hover:text-gold transition-colors duration-300">
+          <Link href="/recipes" className="inline-flex items-center gap-2 text-white/65 hover:text-gold transition-colors duration-300">
             <ArrowLeft size={16} />
-            <span className="text-[10px] sm:text-xs uppercase tracking-[0.25em]">Back to Recipes</span>
+            <span className="text-[12px] sm:text-xs uppercase tracking-[0.08em]">Back to Recipes</span>
           </Link>
         </div>
 
         {/* Hero */}
         <div className="mb-12">
-          <div className="relative mb-8 overflow-hidden rounded-[3px] border border-gold/15">
+          <div className="relative mb-8 overflow-hidden rounded-2xl border border-gold/15">
             {recipe.thumbnail_url ? (
               <Image
                 src={recipe.thumbnail_url}
@@ -95,18 +95,18 @@ export default function RecipeDetailPage({ params }: { params: { slug: string } 
               />
             ) : (
               <div className="w-full h-72 sm:h-96 bg-white/5 flex items-center justify-center">
-                <ChefHat size={64} className="text-white/20" />
+                <ChefHat size={64} className="text-white/65" />
               </div>
             )}
             <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/40 to-transparent" />
             <div className="absolute bottom-8 left-8 right-8">
               {recipe.cuisine_or_category && (
-                <span className="mb-4 inline-block rounded-[2px] bg-gold px-4 py-2 text-[10px] font-bold uppercase tracking-[0.25em] text-black">
+                <span className="mb-4 inline-block rounded-xl bg-gold px-4 py-2 text-[12px] font-bold uppercase tracking-[0.08em] text-black">
                   {recipe.cuisine_or_category}
                 </span>
               )}
               {recipe.is_vegetarian && (
-                <span className="mb-4 ml-2 inline-block rounded-[2px] border border-green-500/30 bg-green-500/20 px-4 py-2 text-[10px] font-bold uppercase tracking-[0.25em] text-green-400">
+                <span className="mb-4 ml-2 inline-block rounded-xl border border-green-500/30 bg-green-500/20 px-4 py-2 text-[12px] font-bold uppercase tracking-[0.08em] text-green-400">
                   Vegetarian
                 </span>
               )}
@@ -120,7 +120,7 @@ export default function RecipeDetailPage({ params }: { params: { slug: string } 
               <div className="flex items-center gap-2 text-white/60">
                 <Clock size={18} />
                 <div>
-                  <div className="text-[10px] uppercase tracking-[0.25em] text-white/40">Prep Time</div>
+                  <div className="text-[12px] uppercase tracking-[0.08em] text-white/65">Prep Time</div>
                   <div className="text-sm font-medium">{recipe.preparation_time} mins</div>
                 </div>
               </div>
@@ -129,7 +129,7 @@ export default function RecipeDetailPage({ params }: { params: { slug: string } 
               <div className="flex items-center gap-2 text-white/60">
                 <Clock size={18} />
                 <div>
-                  <div className="text-[10px] uppercase tracking-[0.25em] text-white/40">Cook Time</div>
+                  <div className="text-[12px] uppercase tracking-[0.08em] text-white/65">Cook Time</div>
                   <div className="text-sm font-medium">{recipe.cooking_time} mins</div>
                 </div>
               </div>
@@ -138,7 +138,7 @@ export default function RecipeDetailPage({ params }: { params: { slug: string } 
               <div className="flex items-center gap-2 text-white/60">
                 <Clock size={18} />
                 <div>
-                  <div className="text-[10px] uppercase tracking-[0.25em] text-white/40">Total Time</div>
+                  <div className="text-[12px] uppercase tracking-[0.08em] text-white/65">Total Time</div>
                   <div className="text-sm font-medium">{recipe.total_time} mins</div>
                 </div>
               </div>
@@ -147,7 +147,7 @@ export default function RecipeDetailPage({ params }: { params: { slug: string } 
               <div className="flex items-center gap-2 text-white/60">
                 <Users size={18} />
                 <div>
-                  <div className="text-[10px] uppercase tracking-[0.25em] text-white/40">Servings</div>
+                  <div className="text-[12px] uppercase tracking-[0.08em] text-white/65">Servings</div>
                   <div className="text-sm font-medium">{recipe.servings}</div>
                 </div>
               </div>
@@ -155,7 +155,7 @@ export default function RecipeDetailPage({ params }: { params: { slug: string } 
             <div className="flex items-center gap-2 text-white/60">
               <ChefHat size={18} />
               <div>
-                <div className="text-[10px] uppercase tracking-[0.25em] text-white/40">Difficulty</div>
+                <div className="text-[12px] uppercase tracking-[0.08em] text-white/65">Difficulty</div>
                 <div className="text-sm font-medium">{recipe.difficulty}</div>
               </div>
             </div>
@@ -180,7 +180,7 @@ export default function RecipeDetailPage({ params }: { params: { slug: string } 
             {/* Related Masalas */}
             {relatedProducts.length > 0 && (
               <div className="mt-8 space-y-4">
-                <div className="text-[10px] uppercase tracking-[0.3em] text-gold mb-2">
+                <div className="text-[12px] uppercase tracking-[0.08em] text-gold mb-2">
                   You'll Need
                 </div>
                 {relatedProducts.map((product: any) => (
@@ -200,7 +200,7 @@ export default function RecipeDetailPage({ params }: { params: { slug: string } 
                         <div className="font-display text-xl sm:text-2xl text-gold">
                           ₹{product.variants[0].price}
                         </div>
-                        <div className="text-white/40 text-xs">
+                        <div className="text-white/65 text-xs">
                           {product.variants[0].weight_grams}g
                         </div>
                       </div>
@@ -208,7 +208,7 @@ export default function RecipeDetailPage({ params }: { params: { slug: string } 
                     <div className="flex gap-2">
                       <Link
                         href={`/product/${product.slug}`}
-                        className="royal-button-secondary flex-1 px-4 py-3 text-[10px] sm:text-xs"
+                        className="royal-button-secondary flex-1 px-4 py-3 text-[12px] sm:text-xs"
                       >
                         View Product
                       </Link>
@@ -254,7 +254,7 @@ export default function RecipeDetailPage({ params }: { params: { slug: string } 
             <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-8">
               {relatedRecipes.map((r: any) => (
                 <Link key={r.id} href={`/recipes/${r.slug}`} className="group">
-                  <div className="royal-panel overflow-hidden rounded-[3px] transition-colors duration-300 hover:border-gold/30">
+                  <div className="royal-panel overflow-hidden rounded-2xl transition-colors duration-300 hover:border-gold/30">
                     <div className="relative h-48 overflow-hidden">
                       {r.thumbnail_url ? (
                         <Image
@@ -265,7 +265,7 @@ export default function RecipeDetailPage({ params }: { params: { slug: string } 
                         />
                       ) : (
                         <div className="w-full h-full bg-white/5 flex items-center justify-center">
-                          <ChefHat size={32} className="text-white/20" />
+                          <ChefHat size={32} className="text-white/65" />
                         </div>
                       )}
                     </div>
@@ -273,8 +273,8 @@ export default function RecipeDetailPage({ params }: { params: { slug: string } 
                       <h3 className="mb-2 font-display text-3xl text-cream transition-colors duration-300 group-hover:text-gold sm:text-4xl">
                         {r.name}
                       </h3>
-                      <p className="text-white/50 text-sm mb-4 line-clamp-2">{r.short_description}</p>
-                      <div className="flex items-center gap-2 text-gold text-[10px] font-bold tracking-[0.25em] uppercase">
+                      <p className="text-white/65 text-sm mb-4 line-clamp-2">{r.short_description}</p>
+                      <div className="flex items-center gap-2 text-gold text-[12px] font-bold tracking-[0.08em] uppercase">
                         View Recipe
                         <ArrowRight size={14} />
                       </div>
@@ -289,3 +289,4 @@ export default function RecipeDetailPage({ params }: { params: { slug: string } 
     </div>
   )
 }
+

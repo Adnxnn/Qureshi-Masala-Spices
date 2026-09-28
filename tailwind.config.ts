@@ -12,6 +12,7 @@ const config: Config = {
         black:    '#080705',
         charcoal: '#100d0a',
         dark:     '#17110e',
+        muted: '#c5baaa',
         gold:     '#c7a15a',
         'gold-light': '#e0c889',
         'gold-dark': '#8b6730',
@@ -21,9 +22,9 @@ const config: Config = {
         'orange-brand': '#E8730A',
       },
       fontFamily: {
-        display: ['Cormorant Garamond', 'Georgia', 'serif'],
-        serif:   ['Cormorant Garamond', 'Georgia', 'serif'],
-        sans:    ['Manrope', 'system-ui', 'sans-serif'],
+        display: ['var(--font-display)'],
+        serif:   ['var(--font-display)'],
+        sans:    ['var(--font-body)'],
       },
       animation: {
         marquee:     'marquee 22s linear infinite',
@@ -68,3 +69,4 @@ const config: Config = {
   plugins: [],
 }
 export default config
+

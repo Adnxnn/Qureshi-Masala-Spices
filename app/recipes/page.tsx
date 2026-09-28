@@ -66,7 +66,7 @@ export default function RecipesPage() {
   }, [searchQuery, allRecipes])
 
   return (
-    <div className="royal-page royal-grain min-h-screen w-full overflow-x-hidden pb-20 pt-24">
+    <div className="royal-page royal-grain min-h-screen w-full overflow-x-hidden pb-20 pt-8">
       <div className="mx-auto w-full max-w-6xl px-4 sm:px-6 lg:px-8">
         <header className="mb-10 text-center sm:mb-16">
           <div className="royal-eyebrow mb-4">
@@ -85,7 +85,7 @@ export default function RecipesPage() {
 
         <div className="relative mx-auto mb-12 w-full max-w-lg">
           <Search
-            className="absolute left-4 top-1/2 -translate-y-1/2 text-white/30"
+            className="absolute left-4 top-1/2 -translate-y-1/2 text-white/65"
             size={20}
             aria-hidden="true"
           />
@@ -98,19 +98,19 @@ export default function RecipesPage() {
             onChange={(event) =>
               setSearchQuery(event.target.value)
             }
-            className="royal-field py-3.5 pl-12 pr-5 text-base placeholder:text-white/20"
+            className="royal-field py-3.5 pl-12 pr-5 text-base placeholder:text-white/65"
           />
         </div>
 
         {loading ? (
           <div className="py-20 text-center">
-            <div className="text-lg text-white/30">
+            <div className="text-lg text-white/65">
               Loading recipes...
             </div>
           </div>
         ) : filteredRecipes.length === 0 ? (
           <div className="py-20 text-center">
-            <div className="text-lg text-white/30">
+            <div className="text-lg text-white/65">
               No recipes found
             </div>
           </div>
@@ -143,7 +143,7 @@ function RecipeCard({ recipe }: { recipe: any }) {
       href={`/recipes/${recipe.slug}`}
       className="group block h-full w-full min-w-0"
     >
-      <article className="royal-panel flex h-full w-full min-w-0 flex-col overflow-hidden rounded-[3px] transition-colors duration-300 hover:border-gold/30">
+      <article className="royal-panel flex h-full w-full min-w-0 flex-col overflow-hidden rounded-2xl transition-colors duration-300 hover:border-gold/30">
         <div className="relative h-56 w-full overflow-hidden">
           {imageUrl ? (
             <Image
@@ -157,7 +157,7 @@ function RecipeCard({ recipe }: { recipe: any }) {
             <div className="flex h-full w-full items-center justify-center bg-white/5">
               <ChefHat
                 size={48}
-                className="text-white/20"
+                className="text-white/65"
                 aria-hidden="true"
               />
             </div>
@@ -167,13 +167,13 @@ function RecipeCard({ recipe }: { recipe: any }) {
 
           <div className="absolute inset-x-4 bottom-4 flex flex-wrap gap-2">
             {recipe.cuisine_or_category && (
-              <span className="inline-block rounded-[2px] border border-gold/60 bg-gold/90 px-3 py-1 text-[10px] font-bold uppercase tracking-[0.2em] text-black">
+              <span className="inline-block rounded-xl border border-gold/60 bg-gold/90 px-3 py-1 text-[12px] font-bold uppercase tracking-[0.08em] text-black">
                 {recipe.cuisine_or_category}
               </span>
             )}
 
             {recipe.is_vegetarian && (
-              <span className="inline-block rounded-[2px] border border-green-500/30 bg-green-500/20 px-3 py-1 text-[10px] font-bold uppercase tracking-[0.2em] text-green-400">
+              <span className="inline-block rounded-xl border border-green-500/30 bg-green-500/20 px-3 py-1 text-[12px] font-bold uppercase tracking-[0.08em] text-green-400">
                 Vegetarian
               </span>
             )}
@@ -191,11 +191,11 @@ function RecipeCard({ recipe }: { recipe: any }) {
             </p>
           )}
 
-          <p className="mb-4 line-clamp-2 text-sm text-white/50">
+          <p className="mb-4 line-clamp-2 text-sm text-white/65">
             {recipe.short_description}
           </p>
 
-          <div className="mb-4 flex flex-wrap items-center gap-x-4 gap-y-2 text-xs text-white/40 sm:text-sm">
+          <div className="mb-4 flex flex-wrap items-center gap-x-4 gap-y-2 text-xs text-white/65 sm:text-sm">
             {preparationTime > 0 && (
               <div className="flex items-center gap-2">
                 <Clock size={14} aria-hidden="true" />
@@ -237,7 +237,7 @@ function RecipeCard({ recipe }: { recipe: any }) {
             </span>
           </div>
 
-          <div className="mt-auto flex items-center gap-2 text-[10px] font-bold uppercase tracking-[0.2em] text-gold sm:text-xs">
+          <div className="mt-auto flex items-center gap-2 text-[12px] font-bold uppercase tracking-[0.08em] text-gold sm:text-xs">
             <span>View Recipe</span>
             <ArrowRight
               size={14}
@@ -250,3 +250,4 @@ function RecipeCard({ recipe }: { recipe: any }) {
     </Link>
   )
 }
+

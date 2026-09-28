@@ -154,7 +154,7 @@ export default function AccountPage() {
           <h1 className="royal-title text-5xl sm:text-6xl">
             Your spice cabinet, remembered.
           </h1>
-          <p className="mx-auto mt-3 max-w-md text-sm leading-6 text-white/55 sm:text-base">
+          <p className="mx-auto mt-3 max-w-md text-sm leading-6 text-white/65 sm:text-base">
             Your profile, saved delivery address and order history are kept securely in your account.
           </p>
           <div className="mt-8 flex flex-col gap-3 sm:flex-row sm:justify-center">
@@ -184,13 +184,13 @@ export default function AccountPage() {
             Your Qureshi&apos;s account
           </p>
           <h1 className="royal-title text-5xl sm:text-6xl">My account.</h1>
-          <p className="mt-2 text-sm text-white/55 sm:text-base">Welcome back, {user.full_name}.</p>
+          <p className="mt-2 text-sm text-white/65 sm:text-base">Welcome back, {user.full_name}.</p>
         </div>
 
         <div
           role="tablist"
           aria-label="Account sections"
-          className="mb-6 grid grid-cols-2 gap-1 rounded-[3px] border border-gold/15 bg-black/30 p-1 sm:mb-8"
+          className="mb-6 grid grid-cols-2 gap-1 rounded-2xl border border-gold/15 bg-black/30 p-1 sm:mb-8"
         >
           <button
             type="button"
@@ -200,7 +200,7 @@ export default function AccountPage() {
             className={`flex min-h-12 items-center justify-center gap-2 rounded-lg px-3 text-sm font-semibold transition focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-gold sm:px-6 ${
               activeTab === 'profile'
                 ? 'bg-white/10 text-white'
-                : 'text-white/50 hover:text-white'
+                : 'text-white/65 hover:text-white'
             }`}
           >
             <UserRound size={18} aria-hidden="true" />
@@ -215,7 +215,7 @@ export default function AccountPage() {
             className={`flex min-h-12 items-center justify-center gap-2 rounded-lg px-3 text-sm font-semibold transition focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-gold sm:px-6 ${
               activeTab === 'orders'
                 ? 'bg-white/10 text-white'
-                : 'text-white/50 hover:text-white'
+                : 'text-white/65 hover:text-white'
             }`}
           >
             <PackageCheck size={18} aria-hidden="true" />
@@ -236,7 +236,7 @@ export default function AccountPage() {
                 <h2 className="font-display text-3xl text-cream sm:text-4xl">
                   Profile &amp; Saved Address
                 </h2>
-                <p className="mt-1 text-sm leading-6 text-white/50">
+                <p className="mt-1 text-sm leading-6 text-white/65">
                   These details automatically fill your next order.
                 </p>
               </div>
@@ -357,7 +357,7 @@ export default function AccountPage() {
               <div className="royal-panel p-8 text-center sm:p-12">
                 <PackageCheck className="mx-auto mb-4 text-gold" size={36} aria-hidden="true" />
                 <h2 className="royal-title text-4xl">No orders yet.</h2>
-                <p className="mt-2 text-sm text-white/50">Your confirmed website orders will appear here.</p>
+                <p className="mt-2 text-sm text-white/65">Your confirmed website orders will appear here.</p>
                 <Link
                   href="/shop"
                   className="royal-button mt-7"
@@ -371,15 +371,15 @@ export default function AccountPage() {
                   <article key={order.id} className="royal-panel p-5 sm:p-6">
                     <div className="grid grid-cols-2 gap-4 border-b border-white/10 pb-5 sm:grid-cols-4">
                       <div>
-                        <p className="text-xs uppercase tracking-wider text-white/40">Order ID</p>
+                        <p className="text-xs uppercase tracking-wider text-white/65">Order ID</p>
                         <p className="mt-1 font-mono text-sm text-white">{order.id.slice(0, 8).toUpperCase()}</p>
                       </div>
                       <div>
-                        <p className="text-xs uppercase tracking-wider text-white/40">Total</p>
+                        <p className="text-xs uppercase tracking-wider text-white/65">Total</p>
                         <p className="mt-1 font-semibold text-gold">{formatCurrency(Number(order.total_amount))}</p>
                       </div>
                       <div className="col-span-2 sm:col-span-1">
-                        <p className="text-xs uppercase tracking-wider text-white/40">Placed</p>
+                        <p className="text-xs uppercase tracking-wider text-white/65">Placed</p>
                         <p className="mt-1 text-sm text-white/75">{formatDate(order.created_at)}</p>
                       </div>
                       <div className="col-span-2 flex items-start sm:col-span-1 sm:justify-end">
@@ -390,7 +390,7 @@ export default function AccountPage() {
                     </div>
 
                     <div className="pt-5">
-                      <p className="mb-3 text-xs font-semibold uppercase tracking-wider text-white/40">Items</p>
+                      <p className="mb-3 text-xs font-semibold uppercase tracking-wider text-white/65">Items</p>
                       <div className="divide-y divide-white/10">
                         {order.order_items?.map((item) => (
                           <div key={item.id} className="flex gap-4 py-3 text-sm first:pt-0 last:pb-0">
@@ -414,3 +414,4 @@ export default function AccountPage() {
     </div>
   )
 }
+

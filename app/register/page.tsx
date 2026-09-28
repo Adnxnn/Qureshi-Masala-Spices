@@ -85,7 +85,7 @@ export default function RegisterPage() {
           <h1 className="royal-title text-5xl sm:text-6xl">
             Create your account.
           </h1>
-          <p className="mt-2 text-sm text-white/55 sm:text-base">
+          <p className="mt-2 text-sm text-white/65 sm:text-base">
             Save your delivery details and keep every order in one place.
           </p>
         </div>
@@ -95,7 +95,7 @@ export default function RegisterPage() {
             {formError ? (
               <div
                 role="alert"
-                className="rounded-[2px] border border-red-400/25 bg-red-500/10 px-4 py-3 text-sm leading-6 text-red-300"
+                className="rounded-xl border border-red-400/25 bg-red-500/10 px-4 py-3 text-sm leading-6 text-red-300"
               >
                 {formError}
               </div>
@@ -111,7 +111,7 @@ export default function RegisterPage() {
                 autoComplete="name"
                 aria-invalid={errors.full_name ? 'true' : 'false'}
                 {...register('full_name', { required: 'Full name is required.' })}
-                className="royal-field px-4 text-base placeholder:text-white/30"
+                className="royal-field px-4 text-base placeholder:text-white/65"
                 placeholder="Your full name"
               />
               {errors.full_name ? (
@@ -141,7 +141,7 @@ export default function RegisterPage() {
                       message: 'Enter a valid email address.',
                     },
                   })}
-                  className="royal-field px-4 text-base placeholder:text-white/30"
+                  className="royal-field px-4 text-base placeholder:text-white/65"
                   placeholder="name@example.com"
                 />
                 {errors.email ? (
@@ -165,7 +165,7 @@ export default function RegisterPage() {
                     required: 'Phone number is required.',
                     minLength: { value: 10, message: 'Enter a valid phone number.' },
                   })}
-                  className="royal-field px-4 text-base placeholder:text-white/30"
+                  className="royal-field px-4 text-base placeholder:text-white/65"
                   placeholder="+91 98765 43210"
                 />
                 {errors.phone ? (
@@ -194,13 +194,13 @@ export default function RegisterPage() {
                         message: 'Use at least 6 characters.',
                       },
                     })}
-                    className="royal-field px-4 pr-12 text-base placeholder:text-white/30"
+                    className="royal-field px-4 pr-12 text-base placeholder:text-white/65"
                     placeholder="At least 6 characters"
                   />
                   <button
                     type="button"
                     onClick={() => setShowPassword((visible) => !visible)}
-                    className="absolute inset-y-0 right-0 flex w-12 items-center justify-center text-white/50 transition hover:text-gold focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-gold"
+                    className="absolute inset-y-0 right-0 flex w-12 items-center justify-center text-white/65 transition hover:text-gold focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-gold"
                     aria-label={showPassword ? 'Hide passwords' : 'Show passwords'}
                   >
                     {showPassword ? <EyeOff size={20} /> : <Eye size={20} />}
@@ -226,7 +226,7 @@ export default function RegisterPage() {
                     required: 'Confirm your password.',
                     validate: (value) => value === getValues('password') || 'Passwords do not match.',
                   })}
-                  className="royal-field px-4 text-base placeholder:text-white/30"
+                  className="royal-field px-4 text-base placeholder:text-white/65"
                   placeholder="Enter it again"
                 />
                 {errors.confirm_password ? (
@@ -238,7 +238,7 @@ export default function RegisterPage() {
             </div>
 
             <div className="border-t border-white/10 pt-5">
-              <h2 className="mb-4 text-sm font-semibold text-white">Saved delivery address <span className="font-normal text-white/40">(optional)</span></h2>
+              <h2 className="mb-4 text-sm font-semibold text-white">Saved delivery address <span className="font-normal text-white/65">(optional)</span></h2>
               <div className="space-y-5">
                 <div>
                   <label htmlFor="address" className="mb-2 block text-sm text-white/70">
@@ -249,7 +249,7 @@ export default function RegisterPage() {
                     rows={3}
                     autoComplete="street-address"
                     {...register('address')}
-                    className="royal-field px-4 py-3 text-base placeholder:text-white/30"
+                    className="royal-field px-4 py-3 text-base placeholder:text-white/65"
                     placeholder="House, street and area"
                   />
                 </div>
@@ -262,7 +262,7 @@ export default function RegisterPage() {
                       type="text"
                       autoComplete="address-level2"
                       {...register('city')}
-                      className="royal-field px-4 text-base placeholder:text-white/30"
+                      className="royal-field px-4 text-base placeholder:text-white/65"
                       placeholder="City"
                     />
                   </div>
@@ -274,7 +274,7 @@ export default function RegisterPage() {
                       inputMode="numeric"
                       autoComplete="postal-code"
                       {...register('pincode')}
-                      className="royal-field px-4 text-base placeholder:text-white/30"
+                      className="royal-field px-4 text-base placeholder:text-white/65"
                       placeholder="571201"
                     />
                   </div>
@@ -293,7 +293,7 @@ export default function RegisterPage() {
           </form>
 
           <div className="mt-7 border-t border-white/10 pt-6 text-center">
-            <p className="text-sm text-white/55">
+            <p className="text-sm text-white/65">
               Already have an account?{' '}
               <Link
                 href="/login"
@@ -308,3 +308,4 @@ export default function RegisterPage() {
     </div>
   )
 }
+

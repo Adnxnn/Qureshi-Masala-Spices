@@ -1,6 +1,8 @@
 name: Storefront checks
 
 on:
+  push:
+    branches: [main]
   pull_request:
     branches: [main]
   workflow_dispatch:
@@ -20,3 +22,4 @@ jobs:
           cache: npm
       - run: npm ci --ignore-scripts
       - run: npx tsc --noEmit
+

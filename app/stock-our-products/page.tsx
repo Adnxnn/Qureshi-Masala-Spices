@@ -20,7 +20,7 @@ export default function DealershipPage() {
   };
 
   return (
-    <div className="royal-page royal-grain min-h-screen pb-20 pt-28">
+    <div className="royal-page royal-grain min-h-screen pb-20 pt-8 sm:pt-12">
       <div className="container mx-auto px-4 sm:px-6 lg:px-8">
         {/* Hero Section */}
         <motion.div
@@ -71,14 +71,14 @@ export default function DealershipPage() {
               <h3 className="mb-2 text-center font-display text-4xl font-bold text-cream sm:text-5xl">
                 WhatsApp <span className="text-gold">Enquiry</span>
               </h3>
-              <p className="mb-8 text-white/50 text-center text-sm">
+              <p className="mb-8 text-white/65 text-center text-sm">
                 Fill out this quick form, and we'll prepare a WhatsApp message for you
               </p>
 
               <form className="space-y-5">
                 {/* Name */}
                 <div className="space-y-2">
-                  <label htmlFor="name" className="text-xs tracking-[0.3em] uppercase text-white/50 font-semibold">
+                  <label htmlFor="name" className="text-xs tracking-[0.08em] uppercase text-white/65 font-semibold">
                     Your Name
                   </label>
                   <input
@@ -94,7 +94,7 @@ export default function DealershipPage() {
 
                 {/* Phone */}
                 <div className="space-y-2">
-                  <label htmlFor="phone" className="text-xs tracking-[0.3em] uppercase text-white/50 font-semibold">
+                  <label htmlFor="phone" className="text-xs tracking-[0.08em] uppercase text-white/65 font-semibold">
                     Contact Number
                   </label>
                   <input
@@ -110,7 +110,7 @@ export default function DealershipPage() {
 
                 {/* Email */}
                 <div className="space-y-2">
-                  <label htmlFor="email" className="text-xs tracking-[0.3em] uppercase text-white/50 font-semibold">
+                  <label htmlFor="email" className="text-xs tracking-[0.08em] uppercase text-white/65 font-semibold">
                     Email Address
                   </label>
                   <input
@@ -126,7 +126,7 @@ export default function DealershipPage() {
 
                 {/* Shop Type */}
                 <div className="space-y-2">
-                  <label htmlFor="shopType" className="text-xs tracking-[0.3em] uppercase text-white/50 font-semibold">
+                  <label htmlFor="shopType" className="text-xs tracking-[0.08em] uppercase text-white/65 font-semibold">
                     Select Business Type
                   </label>
                   <select
@@ -155,7 +155,7 @@ export default function DealershipPage() {
                   >
                     {/* Shop Address */}
                     <div className="space-y-2">
-                      <label htmlFor="shopAddress" className="text-xs tracking-[0.3em] uppercase text-white/50 font-semibold">
+                      <label htmlFor="shopAddress" className="text-xs tracking-[0.08em] uppercase text-white/65 font-semibold">
                         Shop Address
                       </label>
                       <textarea
@@ -171,7 +171,7 @@ export default function DealershipPage() {
 
                     {/* Additional Details */}
                     <div className="space-y-2">
-                      <label htmlFor="shopDetails" className="text-xs tracking-[0.3em] uppercase text-white/50 font-semibold">
+                      <label htmlFor="shopDetails" className="text-xs tracking-[0.08em] uppercase text-white/65 font-semibold">
                         Additional Details
                       </label>
                       <textarea
@@ -191,10 +191,10 @@ export default function DealershipPage() {
                 <button
                   type="button"
                   onClick={handleWhatsAppClick}
-                  className="mt-6 flex min-h-12 w-full items-center justify-center gap-3 rounded-[2px] border border-green-500/35 bg-green-700 px-6 py-4 font-bold text-white transition-colors duration-300 hover:bg-green-600"
+                  className="mt-6 flex min-h-12 w-full items-center justify-center gap-3 rounded-xl border border-green-500/35 bg-green-700 px-6 py-4 font-bold text-white transition-colors duration-300 hover:bg-green-600"
                 >
                   <MessageCircle aria-hidden="true" className="size-5" />
-                  <span className="text-sm tracking-[0.2em] uppercase">WhatsApp Us</span>
+                  <span className="text-sm tracking-[0.08em] uppercase">WhatsApp Us</span>
                 </button>
               </form>
             </div>
@@ -204,3 +204,4 @@ export default function DealershipPage() {
     </div>
   );
 }
+

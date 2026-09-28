@@ -32,7 +32,7 @@ export default function HeroProductCarousel({ products }: { products: Slide[] })
 
   useEffect(() => {
     if (!playing) return
-    const timer = window.setTimeout(() => setIndex(current => (current + 1) % slides.length), 4000)
+    const timer = window.setTimeout(() => setIndex(current => (current + 1) % slides.length), 1500)
     return () => window.clearTimeout(timer)
   }, [playing, index, slides.length])
 
@@ -59,7 +59,7 @@ export default function HeroProductCarousel({ products }: { products: Slide[] })
           initial={{ opacity: 0, x: reducedMotion ? 0 : 90 }}
           animate={{ opacity: 1, x: 0 }}
           exit={{ opacity: 0, x: reducedMotion ? 0 : -90 }}
-          transition={{ duration: reducedMotion ? 0 : 0.7, ease: 'easeInOut' }}
+          transition={{ duration: reducedMotion ? 0 : 0.45, ease: 'easeInOut' }}
         >
           <Image src={active.image} alt={`Qureshi's ${active.name} pack`} fill priority={activeIndex === 0} sizes="(max-width: 767px) 70vw, 38vw" />
         </motion.div>
@@ -83,3 +83,4 @@ export default function HeroProductCarousel({ products }: { products: Slide[] })
     </div>
   </div>
 }
+

@@ -128,7 +128,7 @@ export default function Header({ user }: { user: UserType | null }) {
                 >
                   <Link
                     href={link.href}
-                    className={`flex items-center gap-1 text-[11px] font-semibold tracking-[0.14em] uppercase transition-colors ${
+                    className={`flex items-center gap-1 text-[12px] font-semibold tracking-[0.14em] uppercase transition-colors ${
                       pathname.startsWith(link.href) 
                         ? 'text-gold'
                         : 'text-white/70 hover:text-gold'
@@ -154,12 +154,12 @@ export default function Header({ user }: { user: UserType | null }) {
                           animate={{ opacity: 1, y: 0 }}
                           exit={{ opacity: 0, y: 10 }}
                           transition={{ duration: 0.2 }}
-                          className="absolute left-1/2 top-full mt-4 w-[900px] -translate-x-1/2 overflow-hidden rounded-[3px] border border-gold/20 bg-[#100d0a]/98 shadow-[0_30px_90px_rgba(0,0,0,0.6)] backdrop-blur-xl"
+                          className="absolute left-1/2 top-full mt-4 w-[900px] -translate-x-1/2 overflow-hidden rounded-2xl border border-gold/20 bg-[#100d0a]/98 shadow-[0_30px_90px_rgba(0,0,0,0.6)] backdrop-blur-xl"
                         >
                           <div className="grid grid-cols-12 gap-6 p-8">
                             {/* Shop by Product */}
                             <div className="col-span-4">
-                              <h3 className="text-gold text-[11px] font-bold tracking-[0.3em] uppercase mb-4">Shop by Product</h3>
+                              <h3 className="text-gold text-[12px] font-bold tracking-[0.08em] uppercase mb-4">Shop by Product</h3>
                               <ul className="space-y-3">
                                 {products.map((product) => (
                                   <li key={product.href}>
@@ -185,7 +185,7 @@ export default function Header({ user }: { user: UserType | null }) {
 
                             {/* Recipes */}
                             <div className="col-span-4">
-                              <h3 className="text-gold text-[11px] font-bold tracking-[0.3em] uppercase mb-4">Recipes</h3>
+                              <h3 className="text-gold text-[12px] font-bold tracking-[0.08em] uppercase mb-4">Recipes</h3>
                               <ul className="space-y-3">
                                 {recipeLinks.map((recipe) => (
                                   <li key={recipe.href}>
@@ -202,7 +202,7 @@ export default function Header({ user }: { user: UserType | null }) {
 
                             {/* Featured & Image */}
                             <div className="col-span-4">
-                              <h3 className="text-gold text-[11px] font-bold tracking-[0.3em] uppercase mb-4">Featured</h3>
+                              <h3 className="text-gold text-[12px] font-bold tracking-[0.08em] uppercase mb-4">Featured</h3>
                               <ul className="space-y-3 mb-6">
                                 {featuredLinks.map((item) => (
                                   <li key={item.href}>
@@ -232,12 +232,13 @@ export default function Header({ user }: { user: UserType | null }) {
 
             {/* Right Icons */}
             <div className="flex items-center gap-1 sm:gap-3 lg:gap-5">
-              <button
-                aria-label="Search"
+              <Link
+                href="/shop"
+                aria-label="Search spices"
                 className="hidden size-10 items-center justify-center text-white/70 transition-colors hover:text-gold focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-gold sm:flex"
               >
                 <Search size={18} />
-              </button>
+              </Link>
               <Link
                 href={user ? '/account' : '/login?next=/account'}
                 aria-label={user ? 'Open my account' : 'Sign in'}
@@ -256,12 +257,12 @@ export default function Header({ user }: { user: UserType | null }) {
                     key={count}
                     initial={{ scale: 0 }}
                     animate={{ scale: 1 }}
-                    className="absolute -top-2 -right-2 w-5 h-5 rounded-full bg-gold text-black text-[10px] font-bold flex items-center justify-center"
+                    className="absolute -top-2 -right-2 w-5 h-5 rounded-full bg-gold text-black text-[12px] font-bold flex items-center justify-center"
                   >
                     {count}
                   </motion.span>
                 )}
-                <span className="text-xs tracking-[0.25em] uppercase text-white/60 group-hover:text-gold transition-colors hidden sm:block">
+                <span className="text-xs tracking-[0.08em] uppercase text-white/60 group-hover:text-gold transition-colors hidden sm:block">
                   Cart
                 </span>
               </Link>
@@ -269,7 +270,7 @@ export default function Header({ user }: { user: UserType | null }) {
               {/* Mobile Menu Toggle */}
               <button
                 onClick={() => setIsMobileMenuOpen(true)}
-                className="flex size-11 items-center justify-center rounded-[3px] border border-white/[0.09] bg-[#14110e] text-white shadow-[0_10px_30px_rgba(0,0,0,0.28)] transition-[background-color,border-color,color,transform] duration-200 hover:border-gold/35 hover:bg-[#1b1612] hover:text-gold active:scale-[0.97] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-gold lg:hidden"
+                className="flex size-11 items-center justify-center rounded-2xl border border-white/[0.09] bg-[#14110e] text-white shadow-[0_10px_30px_rgba(0,0,0,0.28)] transition-[background-color,border-color,color,transform] duration-200 hover:border-gold/35 hover:bg-[#1b1612] hover:text-gold active:scale-[0.97] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-gold lg:hidden"
                 aria-label="Open menu"
                 aria-expanded={isMobileMenuOpen}
                 aria-controls="mobile-site-menu"
@@ -304,6 +305,14 @@ export default function Header({ user }: { user: UserType | null }) {
               animate={{ x: 0 }}
               exit={{ x: prefersReducedMotion ? 0 : '100%' }}
               transition={{ duration: prefersReducedMotion ? 0 : 0.28, ease: [0.16, 1, 0.3, 1] }}
+              onKeyDown={event => {
+                if (event.key !== 'Tab') return
+                const controls = event.currentTarget.querySelectorAll<HTMLElement>('a[href], button:not([disabled])')
+                const first = controls[0]
+                const last = controls[controls.length - 1]
+                if (event.shiftKey && document.activeElement === first) { event.preventDefault(); last?.focus() }
+                else if (!event.shiftKey && document.activeElement === last) { event.preventDefault(); first?.focus() }
+              }}
               role="dialog"
               aria-modal="true"
               aria-label="Site navigation"
@@ -323,7 +332,7 @@ export default function Header({ user }: { user: UserType | null }) {
                 <button
                   onClick={() => setIsMobileMenuOpen(false)}
                   autoFocus
-                  className="flex size-11 items-center justify-center rounded-[2px] text-white/70 transition-colors hover:bg-white/5 hover:text-gold focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-gold"
+                  className="flex size-11 items-center justify-center rounded-xl text-white/70 transition-colors hover:bg-white/5 hover:text-gold focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-gold"
                   aria-label="Close menu"
                 >
                   <X size={24} />
@@ -337,7 +346,7 @@ export default function Header({ user }: { user: UserType | null }) {
                       key={link.href}
                       href={link.href}
                       onClick={() => setIsMobileMenuOpen(false)}
-                      className={`font-display text-[2rem] font-semibold leading-none tracking-[-0.02em] transition-colors ${
+                      className={`font-sans text-xl min-h-12 flex items-center font-medium leading-normal transition-colors ${
                         pathname.startsWith(link.href) 
                           ? 'text-gold'
                           : 'text-white hover:text-gold'
@@ -349,7 +358,7 @@ export default function Header({ user }: { user: UserType | null }) {
                 </nav>
 
                 <div className="mt-10 border-t border-white/[0.07] pt-8">
-                  <h3 className="mb-4 text-xs font-bold uppercase tracking-[0.3em] text-gold">
+                  <h3 className="mb-4 text-xs font-bold uppercase tracking-[0.08em] text-gold">
                     {user ? `Hello, ${user.full_name.split(' ')[0]}` : 'Your Account'}
                   </h3>
                   <div className="divide-y divide-white/[0.06] border-y border-white/[0.07] bg-white/[0.018]">
@@ -395,7 +404,7 @@ export default function Header({ user }: { user: UserType | null }) {
                 </div>
 
                 <div className="mt-10 border-t border-white/[0.07] pt-8">
-                  <h3 className="text-gold text-xs font-bold tracking-[0.3em] uppercase mb-4">Products</h3>
+                  <h3 className="text-gold text-xs font-bold tracking-[0.08em] uppercase mb-4">Products</h3>
                   <div className="grid grid-cols-2 gap-3">
                     {products.slice(0, 6).map((product) => (
                       <Link
@@ -431,3 +440,4 @@ export default function Header({ user }: { user: UserType | null }) {
     </>
   )
 }
+
