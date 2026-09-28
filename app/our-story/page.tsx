@@ -19,7 +19,7 @@ export default function OurStoryPage() {
   return <div className={styles.page}><div className={styles.container}>
     <header className={styles.hero}>
       <div><p className={styles.eyebrow}>Our story</p><h1>More than masala.<br /><em>A tradition shared.</em></h1><p>Familiar aromas. Recipes passed around the family. The joy of sitting down to a meal together. This is where our story begins.</p><div className={styles.actions}><Link href="/shop" className="royal-button">Explore our spices</Link><Link href="/our-heritage" className="royal-button-secondary">Our heritage</Link></div></div>
-      <div className={styles.image}><Image src="/images/Authentic.jpeg" alt="Spices and ingredients from Qureshi's kitchen" fill priority sizes="(max-width: 767px) 100vw, 50vw" /></div>
+      <div className={styles.image}><Image src="/images/Ourheritage1.jpg" alt="Spices and ingredients from Qureshi's kitchen" fill priority sizes="(max-width: 767px) 100vw, 50vw" /></div>
     </header>
     <section className={`${styles.section} ${styles.split}`}>
       <div className={styles.copy}><p className={styles.eyebrow}>Who we are</p><h2>The story behind every blend.</h2><p>At Qureshi&apos;s Masala &amp; Spices, every blend celebrates tradition, family and the rich culinary heritage passed down through generations.</p><p>Our journey began with a simple belief: great food deserves great spices. Inspired by traditional Indian kitchens, we create masalas that bring the taste of home to everyday meals.</p></div>
