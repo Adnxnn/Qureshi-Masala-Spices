@@ -1,10 +1,11 @@
 import Image from 'next/image'
 import Link from 'next/link'
-import { ArrowDown, ArrowUpRight, MessageCircle, Package, Utensils } from 'lucide-react'
-import { getProducts } from '@/lib/actions'
+import { ArrowDown, ArrowRight, ArrowUpRight, Clock3, Leaf, MessageCircle, Package, Utensils } from 'lucide-react'
+import { getProducts, getPublicRecipes } from '@/lib/actions'
 import HeroProductCarousel from '@/components/site/HeroProductCarousel'
 import ProductGrid from '@/components/site/ProductGrid'
 import SpiceFinder from '@/components/site/SpiceFinder'
+import HomeStoryFilm from '@/components/site/HomeStoryFilm'
 import styles from '@/components/site/Storefront.module.css'
 
 export const dynamic = 'force-dynamic'
@@ -17,10 +18,11 @@ const categories = [
 ]
 
 export default async function HomePage() {
-  const products = await getProducts()
+  const [products, recipes] = await Promise.all([getProducts(), getPublicRecipes().catch(() => [])])
   const selection = products.filter(product => product.is_active && product.stock_qty > 0 && product.variants.length > 0).slice(0, 4)
+  const recipeSelection = [...recipes].sort((a, b) => Number(b.is_featured) - Number(a.is_featured)).slice(0, 3)
 
-  return <div className={styles.storefront}>
+  return <div className={`${styles.storefront} ${styles.home}`}>
     <section className={styles.hero} aria-labelledby="home-title">
       <div className={styles.heroCopy}>
         <p className={styles.eyebrow}><span className={styles.smallRule} /> Qureshi&apos;s Masala & Spices</p>
@@ -37,10 +39,10 @@ export default async function HomePage() {
       }))} />
     </section>
 
-    <div className={styles.serviceBar}>
-      <div><Package size={19} /><span>Choose a pack that suits your kitchen</span></div>
-      <div><Utensils size={19} /><span>Find inspiration in our recipes</span></div>
-      <div><MessageCircle size={19} /><span>Order with a personal touch on WhatsApp</span></div>
+    <div className={styles.serviceBar} aria-label="The Qureshi’s experience">
+      <div><span className={styles.serviceNumber}>01</span><Package size={19} /><span>Pick the pack that suits your kitchen</span></div>
+      <div><span className={styles.serviceNumber}>02</span><Utensils size={19} /><span>Find a recipe for your next meal</span></div>
+      <div><span className={styles.serviceNumber}>03</span><MessageCircle size={19} /><span>Confirm personally on WhatsApp</span></div>
     </div>
 
     <SpiceFinder />
@@ -59,17 +61,22 @@ export default async function HomePage() {
     </section>}
 
     <section className={styles.storySection}>
-      <div className={styles.storyVisual}><Image src="/images/heritage crafted.jpeg" alt="Spice crafting, part of the Qureshi's story" fill sizes="(max-width: 767px) 100vw, 50vw" /><span>Food connects us.</span></div>
+      <div className={styles.storyVisual}><HomeStoryFilm /><span>Food connects us.</span><Link href="/our-story" className={styles.storyFilmLink}>Watch our story <ArrowUpRight size={16} /></Link></div>
       <div className={styles.storyCopy}><p className={styles.eyebrow}>More than a meal</p><h2>Some stories<br />are told<br /><em>through flavour.</em></h2><p>A familiar aroma. A recipe passed around the family. One more serving shared across the table. These are the moments that inspire Qureshi&apos;s Masala & Spices.</p><p>We believe the right blend is the beginning of a meal worth remembering.</p><Link href="/our-story" className={styles.outlineButton}>Meet Qureshi&apos;s <ArrowUpRight size={18} /></Link></div>
     </section>
+
+    {recipeSelection.length > 0 && <section className={styles.recipeSection} aria-labelledby="home-recipes-title"><div className={styles.container}>
+      <div className={styles.sectionHeading}><div><p className={styles.eyebrow}>From spice to supper</p><h2 id="home-recipes-title">The next thing<br /><em>worth making.</em></h2></div><Link href="/recipes" className={styles.textLink}>See every recipe <ArrowUpRight size={18} /></Link></div>
+      <div className={styles.recipeGrid}>{recipeSelection.map((recipe, index) => { const image = recipe.thumbnail_url || recipe.recipe_products?.[0]?.products?.image_url; return <Link href={`/recipes/${recipe.slug}`} key={recipe.id} className={styles.recipeCard}><div className={styles.recipeImage}>{image ? <Image src={image} alt="" fill sizes="(max-width: 767px) 82vw, 32vw" /> : <Leaf size={55} aria-hidden="true" />}<span>0{index + 1} / COOK WITH CHARACTER</span></div><div className={styles.recipeInfo}><p>{recipe.cuisine_or_category || (recipe.is_vegetarian ? 'Vegetarian' : 'From our kitchen')}{recipe.total_time ? <> <span aria-hidden="true">·</span> <Clock3 size={13} /> {recipe.total_time} min</> : null}</p><h3>{recipe.name}</h3><span>Explore recipe <ArrowUpRight size={18} /></span></div></Link> })}</div>
+    </div></section>}
 
     <section className={styles.section}>
       <div className={styles.container}>
         <div className={styles.editorialGrid}>
-          <Link href="/recipes" className={styles.editorialCard}><span className={styles.eyebrow}>From spice to supper</span><Utensils size={30} aria-hidden="true" /><h2>A little inspiration.<br /><em>A delicious result.</em></h2><p>Explore recipes and put your favourite blends to work.</p><span className={styles.textLink}>Find something to cook <ArrowUpRight size={18} /></span></Link>
+          <Link href="/our-heritage" className={styles.editorialCard}><span className={styles.eyebrow}>The heart behind the flavour</span><Leaf size={30} aria-hidden="true" /><h2>A heritage<br /><em>made to share.</em></h2><p>Recipes, memories and the meals that connect us. Discover the inspiration behind each blend.</p><span className={styles.textLink}>Explore our heritage <ArrowUpRight size={18} /></span></Link>
           <Link href="/stock-our-products" className={styles.editorialCard}><span className={styles.eyebrow}>For retailers</span><Package size={30} aria-hidden="true" /><h2>Make room<br /><em>for good flavour.</em></h2><p>Bring Qureshi&apos;s Masala & Spices to your shelves.</p><span className={styles.textLink}>Stock our products <ArrowUpRight size={18} /></span></Link>
         </div>
-        <div className={styles.howToOrder}><div><p className={styles.eyebrow}>Simple, personal ordering</p><h2>Your kitchen.<br /><em>Our next destination.</em></h2></div><ol><li><span>01</span><div><h3>Find your flavour</h3><p>Choose your spices, pack sizes and quantities.</p></div></li><li><span>02</span><div><h3>Share your details</h3><p>Review your cart and enter your delivery address.</p></div></li><li><span>03</span><div><h3>Connect on WhatsApp</h3><p>Submit your order and confirm delivery and payment with our team. No payment is collected on this website.</p></div></li></ol></div>
+        <div className={styles.howToOrder}><div><p className={styles.eyebrow}>Simple, personal ordering</p><h2>Your kitchen.<br /><em>Our next destination.</em></h2><Link href="/shop" className={styles.orderCta}>Find your flavour <ArrowRight size={18} /></Link></div><ol><li><span>01</span><div><h3>Find your flavour</h3><p>Choose your spices, pack sizes and quantities.</p></div></li><li><span>02</span><div><h3>Share your details</h3><p>Review your cart and enter your delivery address.</p></div></li><li><span>03</span><div><h3>Connect on WhatsApp</h3><p>Submit your order and confirm delivery and payment with our team. No payment is collected on this website.</p></div></li></ol></div>
       </div>
     </section>
   </div>

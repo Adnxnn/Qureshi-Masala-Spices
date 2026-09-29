@@ -11,7 +11,7 @@ import { ArrowLeft, ArrowRight, Check, CheckCircle2, Gift, MapPin, MessageCircle
 import { useCart } from "@/lib/cart";
 import { getCurrentUser, placeOrder, updateUserProfile, validateAndApplyPromoCode } from "@/lib/actions";
 import { calculateOrderTotal } from "@/lib/utils";
-import type { CartItem, PlaceOrderPayload, User } from "@/types";
+import type { CartItem, PlaceOrderPayload, PromoCode, User } from "@/types";
 import styles from "./OrderPage.module.css";
 
 const WHATSAPP_NUMBER = "918762117816";
@@ -110,6 +110,22 @@ export default function OrderPage() {
   const [applyingPromo, setApplyingPromo] = useState(false);
   const [includeGiftNote, setIncludeGiftNote] = useState(false);
   const [giftMessage, setGiftMessage] = useState("");
+  const [recentlyCleared, setRecentlyCleared] = useState<CartItem[]>([]);
+  const [clearedPromo, setClearedPromo] = useState<PromoCode | null>(null);
+
+  const clearAllItems = () => {
+    setRecentlyCleared([...items]);
+    setClearedPromo(appliedPromoCode);
+    clearCart();
+    setPromoInput("");
+    setPromoError("");
+  };
+
+  const undoClear = () => {
+    useCart.setState({ items: recentlyCleared, appliedPromoCode: clearedPromo });
+    setRecentlyCleared([]);
+    setClearedPromo(null);
+  };
 
   const subtotal = totalAmount();
 
@@ -344,14 +360,15 @@ Please confirm this order.`,
       </div>
       {items.length === 0 ? <div className={styles.empty}>
         <div className={styles.emptyIcon}><ShoppingBag size={36} /></div>
-        <p className={styles.kicker}>READY WHEN YOU ARE</p>
-        <h2>Your bag is waiting<br />for its first flavour.</h2>
-        <p>Explore the collection and add something delicious to get started.</p>
+        <p className={styles.kicker}>{recentlyCleared.length ? 'CART CLEARED' : 'READY WHEN YOU ARE'}</p>
+        <h2>{recentlyCleared.length ? <>Your bag is<br />freshly cleared.</> : <>Your bag is waiting<br />for its first flavour.</>}</h2>
+        <p>{recentlyCleared.length ? 'All items and the applied promo code were removed from this device.' : 'Explore the collection and add something delicious to get started.'}</p>
+        {recentlyCleared.length > 0 && <button type="button" className={styles.undoClear} onClick={undoClear}>Undo clear cart</button>}
         <Link href="/shop" className={styles.primaryLink}>Explore the spices <ArrowRight size={18} /></Link>
       </div> : <form id="delivery-checkout-form" onSubmit={handleSubmit(onSubmit)} className={styles.layout}>
         <div className={styles.mainColumn}>
           <section className={styles.section} aria-labelledby="cart-heading">
-            <div className={styles.sectionHead}><div><p className={styles.sectionIndex}>01 / YOUR SELECTION</p><h2 id="cart-heading">The good stuff</h2><p>{packCount} {packCount === 1 ? 'pack' : 'packs'} ready for your kitchen</p></div><ShoppingBag size={24} /></div>
+            <div className={styles.sectionHead}><div><p className={styles.sectionIndex}>01 / YOUR SELECTION</p><h2 id="cart-heading">The good stuff</h2><p>{packCount} {packCount === 1 ? 'pack' : 'packs'} ready for your kitchen</p></div><button type="button" className={styles.clearTrigger} onClick={clearAllItems}><Trash2 size={16} /> Clear cart</button></div>
             <div className={styles.productList}>{items.map(item => <CartProductRow key={`${item.product.id}-${item.variant.weight_grams}`} item={item} updateQuantity={updateQty} removeProduct={removeItem} />)}</div>
             <Link href="/shop" className={styles.addMore}><Plus size={17} /> Add another flavour <ArrowRight size={16} /></Link>
           </section>
