@@ -3,330 +3,85 @@
 import { useEffect, useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
-import {
-  useForm,
-  type FieldErrors,
-  type UseFormRegister,
-} from "react-hook-form";
+import { useForm, type FieldErrors, type UseFormRegister } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
 import toast from "react-hot-toast";
-import {
-  ArrowLeft,
-  CheckCircle2,
-  ChevronRight,
-  MapPin,
-  MessageCircle,
-  Minus,
-  Plus,
-  ShoppingBag,
-  Sparkles,
-  Trash2,
-} from "lucide-react";
+import { ArrowLeft, ArrowRight, Check, CheckCircle2, Gift, MapPin, MessageCircle, Minus, Plus, ShieldCheck, ShoppingBag, Sparkles, Trash2 } from "lucide-react";
 import { useCart } from "@/lib/cart";
-import {
-  getCurrentUser,
-  placeOrder,
-  updateUserProfile,
-  validateAndApplyPromoCode,
-} from "@/lib/actions";
+import { getCurrentUser, placeOrder, updateUserProfile, validateAndApplyPromoCode } from "@/lib/actions";
 import { calculateOrderTotal } from "@/lib/utils";
 import type { CartItem, PlaceOrderPayload, User } from "@/types";
+import styles from "./OrderPage.module.css";
 
 const WHATSAPP_NUMBER = "918762117816";
-
 const checkoutSchema = z.object({
   customer_name: z.string().trim().min(2, "Please enter your name"),
-
-  customer_phone: z
-    .string()
-    .trim()
-    .regex(/^\+?[0-9\s-]{10,16}$/, "Enter a valid phone number")
-    .refine(value => value.replace(/\D/g, "").length >= 10, "Enter a valid phone number"),
-
+  customer_phone: z.string().trim().regex(/^\+?[0-9\s-]{10,16}$/, "Enter a valid phone number").refine(value => value.replace(/\D/g, "").length >= 10, "Enter a valid phone number"),
   customer_email: z.string().trim().email("Enter a valid email address"),
-
-  customer_address: z
-    .string()
-    .trim()
-    .min(10, "Enter your complete delivery address"),
-
+  customer_address: z.string().trim().min(10, "Enter your complete delivery address"),
   customer_city: z.string().trim().min(2, "Enter your city"),
-
-  customer_pincode: z
-    .string()
-    .trim()
-    .regex(/^[0-9]{6}$/, "Enter a valid 6-digit pincode"),
-
+  customer_pincode: z.string().trim().regex(/^[0-9]{6}$/, "Enter a valid 6-digit pincode"),
   notes: z.string().optional(),
 });
-
 type CheckoutFormData = z.infer<typeof checkoutSchema>;
+type OrderTotals = { subtotal: number; deliveryCharge: number; discount: number; total: number };
+const money = (amount: number) => `₹${amount.toLocaleString("en-IN", { maximumFractionDigits: 2 })}`;
+const formatWeight = (grams: number) => grams >= 1000 ? `${grams / 1000}kg` : `${grams}g`;
 
-type OrderTotals = {
-  subtotal: number;
-  deliveryCharge: number;
-  discount: number;
-  total: number;
-};
-
-function formatWeight(grams: number) {
-  if (grams >= 1000) {
-    return `${grams / 1000}kg`;
-  }
-
-  return `${grams}g`;
-}
-
-function CheckoutInput({
-  id,
-  label,
-  placeholder,
-  type = "text",
-  autoComplete,
-  register,
-  errors,
-}: {
-  id: keyof CheckoutFormData;
-  label: string;
-  placeholder: string;
-  type?: string;
-  autoComplete?: string;
-  register: UseFormRegister<CheckoutFormData>;
-  errors: FieldErrors<CheckoutFormData>;
+function CheckoutInput({ id, label, placeholder, type = "text", autoComplete, register, errors }: {
+  id: keyof CheckoutFormData; label: string; placeholder: string; type?: string; autoComplete?: string;
+  register: UseFormRegister<CheckoutFormData>; errors: FieldErrors<CheckoutFormData>;
 }) {
   const error = errors[id];
-
-  return (
-    <div className="min-w-0 space-y-2">
-      <label
-        htmlFor={id}
-        className="block text-[12px] font-semibold uppercase tracking-[0.08em] text-[#d7c8b3]/55"
-      >
-        {label}
-      </label>
-
-      <input
-        id={id}
-        type={type}
-        autoComplete={autoComplete}
-        inputMode={id === "customer_pincode" ? "numeric" : type === "tel" ? "tel" : undefined}
-        aria-invalid={!!error}
-        aria-describedby={error ? id + "-error" : undefined}
-        placeholder={placeholder}
-        {...register(id)}
-        className={`min-h-12 w-full min-w-0 rounded-xl border bg-[#11100f] px-4 text-sm text-[#f5efe6] outline-none transition-colors placeholder:text-[#f5efe6]/20 ${
-          error
-            ? "border-red-400/50 focus:border-red-400"
-            : "border-white/10 focus:border-[#c9a45f]/70"
-        }`}
-      />
-
-      {error && <p id={id + "-error"} role="alert" className="text-[12px] text-red-300">{error.message}</p>}
-    </div>
-  );
+  return <div className={styles.field}>
+    <label htmlFor={id}>{label}</label>
+    <input id={id} type={type} autoComplete={autoComplete} inputMode={id === "customer_pincode" ? "numeric" : type === "tel" ? "tel" : undefined}
+      aria-invalid={!!error} aria-describedby={error ? `${id}-error` : undefined} placeholder={placeholder} {...register(id)} />
+    {error && <p id={`${id}-error`} role="alert" className={styles.error}>{error.message}</p>}
+  </div>;
 }
 
-function CartProductRow({
-  item,
-  updateQuantity,
-  removeProduct,
-}: {
-  item: CartItem;
-  updateQuantity: (productId: string, weight: number, quantity: number) => void;
+function CartProductRow({ item, updateQuantity, removeProduct }: {
+  item: CartItem; updateQuantity: (productId: string, weight: number, quantity: number) => void;
   removeProduct: (productId: string, weight: number) => void;
 }) {
   const { product, variant, quantity } = item;
   const allItems = useCart(state => state.items);
   const atLimit = allItems.filter(row => row.product.id === product.id).reduce((sum, row) => sum + row.quantity, 0) >= product.stock_qty;
-
-  return (
-    <article className="grid min-w-0 grid-cols-[64px_minmax(0,1fr)_auto] gap-x-3 gap-y-3 border-b border-white/[0.07] py-4 last:border-b-0 sm:grid-cols-[72px_minmax(0,1fr)_auto_auto] sm:items-center sm:gap-x-4">
-      <div className="relative flex h-16 w-16 shrink-0 items-center justify-center overflow-hidden rounded-xl border border-white/10 bg-gradient-to-br from-[#211611] to-[#0d0c0b] sm:h-[72px] sm:w-[72px]">
-        <div className="absolute inset-0 bg-[radial-gradient(circle_at_center,rgba(201,164,95,0.12),transparent_70%)]" />
-
-        <Image
-          src={product.image_url}
-          alt={product.name}
-          width={72}
-          height={72}
-          className="relative h-full w-full object-contain p-1.5"
-        />
+  return <article className={styles.productRow}>
+    <div className={styles.productImage}><Image src={product.image_url} alt={product.name} width={110} height={130} /></div>
+    <div className={styles.productInfo}>
+      <h3>{product.name}</h3>
+      <p>{formatWeight(variant.weight_grams)} pack <span aria-hidden="true">·</span> {money(variant.price)} each</p>
+      <button type="button" className={styles.remove} aria-label={`Remove ${product.name}`} onClick={() => removeProduct(product.id, variant.weight_grams)}><Trash2 size={14} /> Remove</button>
+    </div>
+    <div className={styles.productActions}>
+      <div className={styles.quantity} aria-label={`Quantity for ${product.name}`}>
+        <button type="button" aria-label={`Decrease ${product.name} quantity`} onClick={() => updateQuantity(product.id, variant.weight_grams, quantity - 1)}><Minus size={16} /></button>
+        <span aria-live="polite">{quantity}</span>
+        <button type="button" aria-label={`Increase ${product.name} quantity`} disabled={atLimit} onClick={() => updateQuantity(product.id, variant.weight_grams, quantity + 1)}><Plus size={16} /></button>
       </div>
-
-      <div className="min-w-0">
-        <h3 className="break-words text-sm font-semibold text-[#f5efe6] sm:text-base">
-          {product.name}
-        </h3>
-
-        <div className="mt-1 flex flex-wrap items-center gap-2">
-          <span className="rounded-full border border-white/10 bg-white/[0.04] px-2 py-1 text-[12px] font-medium uppercase tracking-[0.12em] text-[#f5efe6]/70">
-            {formatWeight(variant.weight_grams)}
-          </span>
-
-          <span className="text-[12px] text-[#f5efe6]/70">
-            ₹{variant.price} each
-          </span>
-        </div>
-      </div>
-
-      <p className="shrink-0 text-right font-display text-lg text-[#d9b56f] sm:order-4 sm:min-w-[75px]">
-        ₹{variant.price * quantity}
-      </p>
-
-      <div className="col-span-2 col-start-2 flex items-center justify-between gap-3 sm:col-span-1 sm:col-start-auto sm:order-3 sm:justify-start">
-        <div className="flex shrink-0 items-center rounded-lg border border-white/10 bg-black/30 p-1">
-          <button
-            type="button"
-            aria-label={`Decrease ${product.name} quantity`}
-            onClick={() =>
-              updateQuantity(product.id, variant.weight_grams, quantity - 1)
-            }
-            className="flex h-11 w-11 items-center justify-center rounded-md text-[#f5efe6]/70 transition-colors hover:bg-white/5 hover:text-[#d9b56f]"
-          >
-            <Minus size={12} />
-          </button>
-
-          <span className="w-7 text-center text-xs font-bold text-[#f5efe6]">
-            {quantity}
-          </span>
-
-          <button
-            type="button"
-            aria-label={`Increase ${product.name} quantity`}
-            disabled={atLimit}
-            onClick={() =>
-              updateQuantity(product.id, variant.weight_grams, quantity + 1)
-            }
-            className="flex h-11 w-11 items-center justify-center rounded-md text-[#f5efe6]/70 transition-colors hover:bg-white/5 hover:text-[#d9b56f]"
-          >
-            <Plus size={12} />
-          </button>
-        </div>
-
-        <button
-          type="button"
-          aria-label={`Remove ${product.name}`}
-          onClick={() => removeProduct(product.id, variant.weight_grams)}
-          className="flex h-11 w-11 items-center justify-center rounded-lg text-[#f5efe6]/25 transition-colors hover:bg-red-500/10 hover:text-red-300"
-        >
-          <Trash2 size={15} />
-        </button>
-      </div>
-    </article>
-  );
+      <strong>{money(variant.price * quantity)}</strong>
+    </div>
+  </article>;
 }
 
-function OrderSuccess({
-  orderId,
-  orderData,
-  orderItems,
-  orderTotals,
-  openWhatsApp,
-}: {
-  orderId: string;
-  orderData: CheckoutFormData;
-  orderItems: CartItem[];
-  orderTotals: OrderTotals | null;
-  openWhatsApp: () => void;
+function OrderSuccess({ orderId, orderItems, orderTotals, openWhatsApp }: {
+  orderId: string; orderItems: CartItem[]; orderTotals: OrderTotals | null; openWhatsApp: () => void;
 }) {
-  return (
-    <div className="royal-page royal-grain relative min-h-screen w-full overflow-x-hidden pb-16 pt-8">
-      <div className="pointer-events-none absolute inset-0 overflow-hidden">
-        <div className="absolute inset-x-[8%] top-0 h-px bg-gradient-to-r from-transparent via-gold/35 to-transparent" />
-      </div>
-
-      <div className="relative mx-auto w-full max-w-3xl px-4 sm:px-6">
-        <div className="royal-panel rounded-2xl p-5 sm:p-8">
-          <div className="text-center">
-            <div className="mx-auto mb-6 flex h-20 w-20 items-center justify-center rounded-full border border-green-400/20 bg-green-400/10 text-green-300">
-              <CheckCircle2 size={36} />
-            </div>
-
-            <p className="mb-3 text-sm font-semibold tracking-normal text-[#c9a45f]">
-              Order request received
-            </p>
-
-            <h1 className="royal-title text-5xl sm:text-6xl">
-              Thank you.
-            </h1>
-
-            <p className="mx-auto mt-4 max-w-md text-sm leading-6 text-[#f5efe6]/70">
-              Your order has been saved. Continue to WhatsApp so we can confirm
-              availability and delivery.
-            </p>
-
-            <div className="mx-auto mt-5 inline-flex rounded-full border border-[#c9a45f]/20 bg-[#c9a45f]/10 px-4 py-2 font-mono text-xs tracking-wider text-[#d9b56f]">
-              Order #{orderId}
-            </div>
-          </div>
-
-          <div className="my-8 border-t border-white/10" />
-
-          <div className="space-y-4">
-            {orderItems.map((item) => (
-              <div
-                key={`${item.product.id}-${item.variant.weight_grams}`}
-                className="flex min-w-0 items-center gap-3"
-              >
-                <div className="h-12 w-12 shrink-0 overflow-hidden rounded-xl border border-white/10 bg-black/30">
-                  <Image
-                    src={item.product.image_url}
-                    alt={item.product.name}
-                    width={48}
-                    height={48}
-                    className="h-full w-full object-contain p-1"
-                  />
-                </div>
-
-                <div className="min-w-0 flex-1">
-                  <p className="truncate text-sm font-medium text-[#f5efe6]">
-                    {item.product.name}
-                  </p>
-
-                  <p className="text-[12px] text-[#f5efe6]/70">
-                    {formatWeight(item.variant.weight_grams)} × {item.quantity}
-                  </p>
-                </div>
-
-                <p className="shrink-0 text-sm font-semibold text-[#d9b56f]">
-                  ₹{item.variant.price * item.quantity}
-                </p>
-              </div>
-            ))}
-          </div>
-
-          <div className="my-6 border-t border-white/10" />
-
-          <div className="flex items-center justify-between">
-            <span className="text-sm font-semibold tracking-normal text-[#f5efe6]/70">
-              Product total · delivery extra
-            </span>
-
-            <span className="font-display text-3xl text-[#d9b56f]">
-              ₹{orderTotals?.total.toFixed(0) || "0"}
-            </span>
-          </div>
-
-          <button
-            type="button"
-            onClick={openWhatsApp}
-            className="mt-8 flex min-h-14 w-full items-center justify-center gap-3 rounded-xl bg-[#278c4d] px-5 text-xs font-bold uppercase tracking-[0.16em] text-white transition-colors hover:bg-[#31a75c]"
-          >
-            <MessageCircle size={18} />
-            Confirm on WhatsApp
-          </button>
-
-          <Link
-            href="/shop"
-            className="mt-3 flex min-h-12 w-full items-center justify-center rounded-xl border border-white/10 text-xs font-bold uppercase tracking-[0.16em] text-[#f5efe6]/55 transition-colors hover:bg-white/5 hover:text-white"
-          >
-            Continue Shopping
-          </Link>
-        </div>
-      </div>
+  return <main className={styles.page}>
+    <div className={styles.success}>
+      <span className={styles.successIcon}><CheckCircle2 size={38} /></span>
+      <p className={styles.kicker}>ORDER REQUEST RECEIVED</p>
+      <h1>Thank you.<br /><em>Your table awaits.</em></h1>
+      <p className={styles.successLead}>Your request has been saved as <strong>#{orderId}</strong>. Continue to WhatsApp so our team can confirm availability, delivery charge and timing before you pay.</p>
+      <div className={styles.successItems}>{orderItems.map(item => <div key={`${item.product.id}-${item.variant.weight_grams}`}><span>{item.product.name} · {formatWeight(item.variant.weight_grams)} × {item.quantity}</span><strong>{money(item.variant.price * item.quantity)}</strong></div>)}</div>
+      <div className={styles.successTotal}><span>Product total · delivery extra</span><strong>{money(orderTotals?.total ?? 0)}</strong></div>
+      <button type="button" className={styles.submit} onClick={openWhatsApp}><MessageCircle size={19} /> Continue to WhatsApp <ArrowRight size={18} /></button>
+      <Link href="/shop" className={styles.successLink}>Continue exploring spices</Link>
     </div>
-  );
+  </main>;
 }
 
 export default function OrderPage() {
@@ -353,6 +108,8 @@ export default function OrderPage() {
   const [promoInput, setPromoInput] = useState("");
   const [promoError, setPromoError] = useState("");
   const [applyingPromo, setApplyingPromo] = useState(false);
+  const [includeGiftNote, setIncludeGiftNote] = useState(false);
+  const [giftMessage, setGiftMessage] = useState("");
 
   const subtotal = totalAmount();
 
@@ -490,6 +247,7 @@ Please confirm this order.`,
       return;
     }
 
+    const orderCustomer = { ...customer, notes: [customer.notes?.trim(), includeGiftNote && giftMessage.trim() ? `Gift note: ${giftMessage.trim()}` : ""].filter(Boolean).join("\n") };
     const currentItems = [...items];
 
     const currentSubtotal = currentItems.reduce(
@@ -519,7 +277,7 @@ Please confirm this order.`,
         customer_address: customer.customer_address,
         customer_city: customer.customer_city,
         customer_pincode: customer.customer_pincode,
-        notes: customer.notes,
+        notes: orderCustomer.notes,
         items: currentItems,
       };
 
@@ -540,14 +298,14 @@ Please confirm this order.`,
       };
 
       const message = createWhatsAppMessage(
-        customer,
+        orderCustomer,
         generatedOrderId,
         currentItems,
         confirmedTotals,
       );
 
       setOrderId(generatedOrderId);
-      setOrderData(customer);
+      setOrderData(orderCustomer);
       setLastOrderItems(currentItems);
       setLastOrderTotals(confirmedTotals);
       setWhatsappMessage(message);
@@ -564,88 +322,71 @@ Please confirm this order.`,
     }
   };
 
-  if (loading) {
-    return (
-      <div className="royal-page flex min-h-screen w-full items-center justify-center overflow-x-hidden px-4">
-        <div className="text-center">
-          <div className="mx-auto h-10 w-10 animate-spin rounded-full border-2 border-white/10 border-t-[#c9a45f]" />
+  if (loading) return <div className={styles.page}><div className={styles.loading} role="status">Preparing your cart…</div></div>;
+  if (submitted && orderData) return <OrderSuccess orderId={orderId} orderItems={lastOrderItems} orderTotals={lastOrderTotals} openWhatsApp={openWhatsApp} />;
 
-          <p className="mt-5 text-[12px] font-semibold uppercase tracking-[0.08em] text-white/65">
-            Preparing your cart
-          </p>
-        </div>
+  const packCount = items.reduce((count, item) => count + item.quantity, 0);
+  return <div className={styles.page}>
+    <div className={styles.hero}>
+      <div className={styles.heroInner}>
+        <Link href="/shop" className={styles.back}><ArrowLeft size={17} /> Back to spices</Link>
+        <p className={styles.kicker}><Sparkles size={16} /> THE GOOD PART BEGINS HERE</p>
+        <h1>Your bag, <em>beautifully seasoned.</em></h1>
+        <p>One easy place to review your blends and tell us where to send them. We’ll confirm your order personally on WhatsApp.</p>
       </div>
-    );
-  }
-
-  if (submitted && orderData) {
-    return (
-      <OrderSuccess
-        orderId={orderId}
-        orderData={orderData}
-        orderItems={lastOrderItems}
-        orderTotals={lastOrderTotals}
-        openWhatsApp={openWhatsApp}
-      />
-    );
-  }
-
-  return (
-    <div className="checkout-page royal-page relative min-h-screen w-full overflow-x-hidden pb-32 pt-6 sm:pt-10 lg:pb-16">
-      <div className="relative mx-auto w-full max-w-6xl px-4 sm:px-6 lg:px-8">
-        <header className="mb-5 sm:mb-7">
-          <p className="mb-2 flex items-center gap-2 text-sm font-semibold text-[#c9a45f]"><Sparkles size={15} /> From our shelves to your kitchen</p>
-          <h1 className="royal-title text-4xl sm:text-6xl">Your cart &amp; delivery</h1>
-          <p className="mt-2 max-w-2xl text-sm leading-6 text-[#f5efe6]/70">Review your spices, enter your address, and send your order request. We confirm delivery and payment on WhatsApp.</p>
-        </header>
-        <div className="checkout-guidance"><Link href="/shop"><ArrowLeft size={16} /> Keep exploring</Link><span>No payment is collected on this website.</span><Link href="/contact">Need a hand? <MessageCircle size={16} /></Link></div>
-        {items.length === 0 ? (
-          <div className="royal-panel mx-auto mt-6 flex max-w-xl flex-col items-center rounded-2xl px-5 py-12 text-center">
-            <ShoppingBag size={38} className="text-[#c9a45f]" />
-            <h2 className="royal-title mt-4 text-4xl">Your cart is empty.</h2>
-            <p className="mt-2 text-sm leading-6 text-[#f5efe6]/70">Find a blend for your next meal and it will appear here.</p>
-            <Link href="/shop" className="mt-6 inline-flex min-h-12 items-center gap-2 rounded-xl bg-[#c9a45f] px-6 font-semibold text-[#130d08]">Explore spices <ChevronRight size={16} /></Link>
-          </div>
-        ) : (
-          <form id="delivery-checkout-form" onSubmit={handleSubmit(onSubmit)} className="mt-5 grid min-w-0 grid-cols-1 gap-5 lg:grid-cols-12 lg:items-start lg:gap-7">
-            <div className="min-w-0 space-y-5 lg:col-span-7">
-              <section className="royal-panel overflow-hidden rounded-2xl" aria-labelledby="cart-heading">
-                <div className="flex items-center justify-between border-b border-white/10 px-4 py-4 sm:px-6">
-                  <div><h2 id="cart-heading" className="font-display text-2xl text-[#f5efe6]">Your spices</h2><p className="text-xs text-[#f5efe6]/65">{items.reduce((n, item) => n + item.quantity, 0)} packs · adjust your selection here</p></div>
-                  <ShoppingBag size={21} className="text-[#c9a45f]" />
-                </div>
-                <div className="px-4 sm:px-6">{items.map(item => <CartProductRow key={`${item.product.id}-${item.variant.weight_grams}`} item={item} updateQuantity={updateQty} removeProduct={removeItem} />)}</div>
-                <Link href="/shop" className="inline-flex min-h-11 items-center gap-2 px-4 pb-3 text-sm text-[#d9b56f] sm:px-6">+ Add more spices</Link>
-              </section>
-              <section className="royal-panel overflow-hidden rounded-2xl" aria-labelledby="details-heading">
-                <div className="border-b border-white/10 px-4 py-4 sm:px-6"><h2 id="details-heading" className="flex items-center gap-2 font-display text-2xl text-[#f5efe6]"><MapPin size={19} className="text-[#c9a45f]" /> Delivery details</h2><p className="mt-1 text-xs text-[#f5efe6]/65">We use these details to prepare your order request.</p></div>
-                <div className="grid gap-4 p-4 sm:grid-cols-2 sm:p-6">
-                  <CheckoutInput id="customer_name" label="Full name" placeholder="Your full name" autoComplete="name" register={register} errors={errors} />
-                  <CheckoutInput id="customer_phone" label="Phone / WhatsApp" type="tel" placeholder="+91 98765 43210" autoComplete="tel" register={register} errors={errors} />
-                  <div className="sm:col-span-2"><CheckoutInput id="customer_email" label="Email address" type="email" placeholder="you@email.com" autoComplete="email" register={register} errors={errors} /></div>
-                  <div className="min-w-0 space-y-2 sm:col-span-2"><label htmlFor="customer_address" className="block text-xs font-semibold uppercase tracking-wider text-[#d7c8b3]/70">Complete delivery address</label><textarea id="customer_address" rows={3} autoComplete="street-address" placeholder="House number, street, landmark and area" aria-invalid={!!errors.customer_address} aria-describedby={errors.customer_address ? 'customer_address-error' : undefined} {...register('customer_address')} className="w-full min-w-0 rounded-xl border border-white/10 bg-[#11100f] px-4 py-3 text-sm text-[#f5efe6] outline-none focus:border-[#c9a45f]" />{errors.customer_address && <p id="customer_address-error" role="alert" className="text-xs text-red-300">{errors.customer_address.message}</p>}</div>
-                  <CheckoutInput id="customer_city" label="City" placeholder="Your city" autoComplete="address-level2" register={register} errors={errors} />
-                  <CheckoutInput id="customer_pincode" label="Pincode" placeholder="6-digit pincode" autoComplete="postal-code" register={register} errors={errors} />
-                  <div className="min-w-0 space-y-2 sm:col-span-2"><label htmlFor="notes" className="block text-xs font-semibold uppercase tracking-wider text-[#d7c8b3]/70">Order notes <span className="normal-case tracking-normal">(optional)</span></label><textarea id="notes" rows={2} placeholder="Delivery instructions or anything we should know" {...register('notes')} className="w-full min-w-0 rounded-xl border border-white/10 bg-[#11100f] px-4 py-3 text-sm text-[#f5efe6] outline-none focus:border-[#c9a45f]" /></div>
-                </div>
-              </section>
-              {!user && <p className="px-1 text-sm text-[#f5efe6]/65">Returning customer? <Link href="/login" className="text-[#d9b56f] underline underline-offset-4">Sign in</Link> to fill saved details, or continue as a guest.</p>}
-            </div>
-            <aside className="min-w-0 lg:sticky lg:top-24 lg:col-span-5">
-              <div className="royal-panel overflow-hidden rounded-2xl" aria-labelledby="summary-heading">
-                <div className="border-b border-white/10 bg-[#c9a45f]/[0.07] px-5 py-4"><h2 id="summary-heading" className="font-display text-2xl text-[#f5efe6]">Order summary</h2><p className="mt-1 text-xs text-[#f5efe6]/65">Your product total before delivery.</p></div>
-                <div className="space-y-5 p-5">
-                  {appliedPromoCode ? <div className="flex items-center justify-between gap-3 rounded-xl border border-green-400/20 bg-green-400/[0.06] px-3 py-2 text-sm text-green-200"><span>Code {appliedPromoCode.code} applied</span><button type="button" onClick={handleRemovePromo} className="min-h-10 px-2 underline">Remove</button></div> : <div className="space-y-2"><label htmlFor="promo-code" className="block text-xs font-semibold text-[#f5efe6]/70">Have a promo code?</label><div className="flex gap-2"><input id="promo-code" value={promoInput} onKeyDown={event => { if (event.key === 'Enter') { event.preventDefault(); void handleApplyPromo() } }} onChange={event => { setPromoInput(event.target.value); setPromoError('') }} placeholder="Enter code" className="min-h-11 min-w-0 flex-1 rounded-xl border border-white/10 bg-black/25 px-3 text-sm text-white outline-none focus:border-[#c9a45f]" /><button type="button" disabled={applyingPromo} onClick={handleApplyPromo} className="min-h-11 rounded-xl border border-[#c9a45f]/40 px-4 text-sm text-[#d9b56f] disabled:opacity-40">{applyingPromo ? 'Checking' : 'Apply'}</button></div>{promoError && <p role="alert" className="text-xs text-red-300">{promoError}</p>}</div>}
-                  <div className="space-y-3 border-t border-white/10 pt-4 text-sm"><div className="flex justify-between text-[#f5efe6]/70"><span>Spices subtotal</span><span>₹{currentTotals.subtotal.toLocaleString('en-IN')}</span></div>{currentTotals.discount > 0 && <div className="flex justify-between text-green-300"><span>Discount</span><span>−₹{currentTotals.discount.toLocaleString('en-IN')}</span></div>}<div className="flex items-end justify-between gap-3 border-t border-white/10 pt-4"><strong className="text-[#f5efe6]">Product total</strong><strong className="font-display text-3xl text-[#e0bd77]">₹{currentTotals.total.toLocaleString('en-IN')}</strong></div><p className="text-xs leading-5 text-[#f5efe6]/65">Delivery availability, charge and timing are confirmed with you on WhatsApp before payment.</p></div>
-                  <button type="submit" disabled={isSubmitting} className="hidden min-h-14 w-full items-center justify-center gap-2 rounded-xl bg-[#278c4d] px-4 text-sm font-semibold text-white transition-colors hover:bg-[#31a75c] disabled:opacity-50 lg:flex"><MessageCircle size={18} />{isSubmitting ? 'Sending order request...' : 'Send order request'}</button>
-                  <p className="text-center text-xs leading-5 text-[#f5efe6]/60">No payment is collected here. Our team confirms the order on WhatsApp.</p>
-                </div>
-              </div>
-            </aside>
-          </form>
-        )}
-      </div>
-      {items.length > 0 && <div className="fixed inset-x-0 bottom-0 z-40 border-t border-white/10 bg-[#0b0a09]/95 px-4 pt-2 shadow-[0_-16px_40px_rgba(0,0,0,0.45)] backdrop-blur-xl lg:hidden" style={{paddingBottom:'calc(0.5rem + env(safe-area-inset-bottom))'}}><div className="mx-auto flex max-w-6xl items-center gap-3"><div className="min-w-0 flex-1"><p className="text-xs text-[#f5efe6]/70">Products · delivery extra</p><p className="font-display text-xl text-[#e0bd77]">₹{currentTotals.total.toLocaleString('en-IN')}</p></div><button type="submit" form="delivery-checkout-form" disabled={isSubmitting} className="min-h-12 rounded-xl bg-[#278c4d] px-4 text-sm font-semibold text-white disabled:opacity-50">{isSubmitting ? 'Sending...' : 'Send order request'}</button></div></div>}
+      <div className={styles.heroArt} aria-hidden="true"><span className={styles.orbitOne} /><span className={styles.orbitTwo} /><span className={styles.sparkOne}>✦</span><span className={styles.sparkTwo}>✳</span><span className={styles.heroWord}>Q</span></div>
     </div>
-  );
+    <div className={styles.container}>
+      <div className={styles.journey} aria-label="How ordering works">
+        <div><span>01</span><strong>Choose your spices</strong><Check size={15} /></div>
+        <div><span>02</span><strong>Share your details</strong><span className={styles.journeyDash} /></div>
+        <div><span>03</span><strong>Confirm on WhatsApp</strong><MessageCircle size={16} /></div>
+      </div>
+      {items.length === 0 ? <div className={styles.empty}>
+        <div className={styles.emptyIcon}><ShoppingBag size={36} /></div>
+        <p className={styles.kicker}>READY WHEN YOU ARE</p>
+        <h2>Your bag is waiting<br />for its first flavour.</h2>
+        <p>Explore the collection and add something delicious to get started.</p>
+        <Link href="/shop" className={styles.primaryLink}>Explore the spices <ArrowRight size={18} /></Link>
+      </div> : <form id="delivery-checkout-form" onSubmit={handleSubmit(onSubmit)} className={styles.layout}>
+        <div className={styles.mainColumn}>
+          <section className={styles.section} aria-labelledby="cart-heading">
+            <div className={styles.sectionHead}><div><p className={styles.sectionIndex}>01 / YOUR SELECTION</p><h2 id="cart-heading">The good stuff</h2><p>{packCount} {packCount === 1 ? 'pack' : 'packs'} ready for your kitchen</p></div><ShoppingBag size={24} /></div>
+            <div className={styles.productList}>{items.map(item => <CartProductRow key={`${item.product.id}-${item.variant.weight_grams}`} item={item} updateQuantity={updateQty} removeProduct={removeItem} />)}</div>
+            <Link href="/shop" className={styles.addMore}><Plus size={17} /> Add another flavour <ArrowRight size={16} /></Link>
+          </section>
+          <section className={styles.section} aria-labelledby="delivery-heading">
+            <div className={styles.sectionHead}><div><p className={styles.sectionIndex}>02 / DELIVERY DETAILS</p><h2 id="delivery-heading">Where should it go?</h2><p>Just the essentials to prepare your order.</p></div><MapPin size={24} /></div>
+            <div className={styles.formBody}>
+              {!user && <p className={styles.signIn}>Already ordered with us? <Link href="/login">Sign in to fill your details</Link>. Or carry on as a guest.</p>}
+              <div className={styles.fields}>
+                <CheckoutInput id="customer_name" label="Full name" placeholder="Your full name" autoComplete="name" register={register} errors={errors} />
+                <CheckoutInput id="customer_phone" label="Phone / WhatsApp" type="tel" placeholder="+91 98765 43210" autoComplete="tel" register={register} errors={errors} />
+                <CheckoutInput id="customer_email" label="Email address" type="email" placeholder="you@email.com" autoComplete="email" register={register} errors={errors} />
+                <div className={styles.field}><label htmlFor="customer_address">Complete delivery address</label><textarea id="customer_address" rows={3} autoComplete="street-address" placeholder="House number, street, landmark and area" aria-invalid={!!errors.customer_address} aria-describedby={errors.customer_address ? 'customer_address-error' : undefined} {...register('customer_address')} />{errors.customer_address && <p id="customer_address-error" role="alert" className={styles.error}>{errors.customer_address.message}</p>}</div>
+                <CheckoutInput id="customer_city" label="City" placeholder="Your city" autoComplete="address-level2" register={register} errors={errors} />
+                <CheckoutInput id="customer_pincode" label="Pincode" placeholder="6-digit pincode" autoComplete="postal-code" register={register} errors={errors} />
+                <div className={styles.field}><label htmlFor="notes">Order notes <span>(optional)</span></label><textarea id="notes" rows={2} placeholder="Delivery instructions or anything we should know" {...register('notes')} /></div>
+              </div>
+              <div className={styles.giftBlock}><label className={styles.giftToggle}><input type="checkbox" checked={includeGiftNote} onChange={event => setIncludeGiftNote(event.target.checked)} /><Gift size={19} /><span><strong>Sending this as a gift?</strong><small>Add a personal note for our team to include with your request.</small></span></label>{includeGiftNote && <div className={styles.field}><label htmlFor="gift-message">Your gift note</label><textarea id="gift-message" rows={2} maxLength={240} value={giftMessage} onChange={event => setGiftMessage(event.target.value)} placeholder="Write a little something…" /><small>{giftMessage.length}/240 characters · gift arrangements confirmed on WhatsApp</small></div>}</div>
+            </div>
+          </section>
+        </div>
+        <aside className={styles.sidebar} aria-labelledby="summary-heading">
+          <div className={styles.summary}>
+            <div className={styles.summaryHead}><p className={styles.sectionIndex}>03 / THE FINISHING TOUCH</p><h2 id="summary-heading">Your order</h2><p>Review the numbers before you send.</p></div>
+            <div className={styles.summaryBody}>
+              <div className={styles.miniItems}>{items.map(item => <div key={`${item.product.id}-${item.variant.weight_grams}`}><span>{item.product.name} <small>{formatWeight(item.variant.weight_grams)} × {item.quantity}</small></span><strong>{money(item.variant.price * item.quantity)}</strong></div>)}</div>
+              <div className={styles.promo}>{appliedPromoCode ? <div className={styles.applied}><span><Check size={16} /> {appliedPromoCode.code} applied</span><button type="button" onClick={handleRemovePromo}>Remove</button></div> : <><label htmlFor="promo-code">Have a promo code?</label><div className={styles.promoEntry}><input id="promo-code" value={promoInput} onKeyDown={event => { if (event.key === 'Enter') { event.preventDefault(); void handleApplyPromo() } }} onChange={event => { setPromoInput(event.target.value); setPromoError('') }} placeholder="Enter your code" /><button type="button" disabled={applyingPromo} onClick={handleApplyPromo}>{applyingPromo ? 'Checking…' : 'Apply'}</button></div>{promoError && <p role="alert" className={styles.error}>{promoError}</p>}</>}</div>
+              <div className={styles.totals}><div><span>Spices subtotal</span><strong>{money(currentTotals.subtotal)}</strong></div>{currentTotals.discount > 0 && <div className={styles.discount}><span>Discount</span><strong>−{money(currentTotals.discount)}</strong></div>}<div className={styles.totalLine}><span>Product total</span><strong>{money(currentTotals.total)}</strong></div><p>Delivery charge is quoted separately on WhatsApp before you confirm.</p></div>
+              <button type="submit" disabled={isSubmitting} className={styles.submit}><MessageCircle size={19} /> {isSubmitting ? 'Sending your request…' : 'Send order request'} <ArrowRight size={18} /></button>
+              <p className={styles.paymentNote}><ShieldCheck size={16} /> No payment is collected on this website.</p>
+            </div>
+          </div>
+          <div className={styles.help}><span>NEED A HAND?</span><p>Questions about a blend or your order?</p><Link href="/contact">Talk to us <ArrowRight size={16} /></Link></div>
+        </aside>
+      </form>}
+    </div>
+    {items.length > 0 && <div className={styles.mobileBar}><div><span>Product total <small>· delivery extra</small></span><strong>{money(currentTotals.total)}</strong></div><button type="submit" form="delivery-checkout-form" disabled={isSubmitting}>{isSubmitting ? 'Sending…' : 'Send request'} <ArrowRight size={17} /></button></div>}
+  </div>;
 }
