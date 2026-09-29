@@ -10,7 +10,7 @@ export default function RecipeAddToCart({ product, variant }: { product: Product
 
   const handleAdd = () => {
     addItem(product, variant)
-    addNotification(product.name, product.image_url)
+    addNotification(product.name, product.image_url, variant.weight_grams, 1)
   }
 
   return (

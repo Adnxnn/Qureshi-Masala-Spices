@@ -20,7 +20,7 @@ export default function PremiumCartNotification() {
         <div className={styles.top}><span className={styles.overline}>A LITTLE MORE FLAVOUR</span><button type="button" className={styles.close} aria-label="Dismiss added to cart message" onClick={() => removeNotification(notification.id)}><X size={18} /></button></div>
         <div className={styles.content}>
           <div className={styles.confirm} aria-hidden="true"><motion.div className={styles.seal} initial={reducedMotion ? false : { scale: .3, rotateY: 90 }} animate={{ scale: 1, rotateY: 0 }} transition={{ type: 'spring', stiffness: 280, damping: 17, delay: .08 }}><Check size={27} strokeWidth={3} /></motion.div></div>
-          <div className={styles.words}><strong>Added to your bag</strong><p>{notification.productName}</p></div>
+          <div className={styles.words}><strong>Added to your bag</strong><p>{notification.productName}</p><span className={styles.details}><span>{notification.weightGrams >= 1000 ? `${notification.weightGrams / 1000} kg` : `${notification.weightGrams} g`} pack</span><span aria-hidden="true">·</span><span>Qty {notification.quantity}</span></span></div>
           {notification.productImage && <Image className={styles.product} src={notification.productImage} alt="" width={55} height={70} />}
         </div>
         <div className={styles.foot}><Link href="/order" onClick={() => removeNotification(notification.id)}>View your bag <ArrowRight size={16} /></Link><button type="button" className={styles.sound} onClick={toggleSound} aria-label={soundEnabled ? 'Mute add-to-cart sound' : 'Turn on add-to-cart sound'} title={soundEnabled ? 'Mute sound' : 'Turn on sound'}>{soundEnabled ? <Volume2 size={18} /> : <VolumeX size={18} />}</button></div>

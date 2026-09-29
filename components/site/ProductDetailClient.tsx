@@ -40,7 +40,7 @@ export default function ProductDetailClient({ product, relatedRecipes = [] }: { 
     if (disabled || !variant || current + count > product.stock_qty) return
     for (let i = 0; i < count; i++) addItem(product, variant)
     setFeedback(`${count} × ${weight(variant.weight_grams)} added to your cart.`)
-    addNotification(product.name, product.image_url)
+    addNotification(product.name, product.image_url, variant.weight_grams, count)
     if (checkout) router.push('/order')
   }
 

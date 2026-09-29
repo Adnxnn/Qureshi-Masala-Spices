@@ -5,13 +5,15 @@ export type CartNotification = {
   id: string
   productName: string
   productImage?: string
+  weightGrams: number
+  quantity: number
 }
 
 type CartNotificationsContextType = {
   notifications: CartNotification[]
   soundEnabled: boolean
   toggleSound: () => void
-  addNotification: (productName: string, productImage?: string) => void
+  addNotification: (productName: string, productImage: string | undefined, weightGrams: number, quantity: number) => void
   removeNotification: (id: string) => void
 }
 
@@ -55,14 +57,14 @@ export function CartNotificationsProvider({ children }: { children: ReactNode })
     })
   }, [])
 
-  const addNotification = useCallback((productName: string, productImage?: string) => {
+  const addNotification = useCallback((productName: string, productImage: string | undefined, weightGrams: number, quantity: number) => {
     const id = crypto.randomUUID()
-    setNotifications((prev) => [...prev, { id, productName, productImage }])
+    setNotifications((prev) => [...prev, { id, productName, productImage, weightGrams, quantity }])
     if (soundEnabled) playCartChime()
     
     setTimeout(() => {
       removeNotification(id)
-    }, 2800) // Auto dismiss after ~2.8s
+    }, 3800)
   }, [soundEnabled])
 
   const removeNotification = useCallback((id: string) => {
