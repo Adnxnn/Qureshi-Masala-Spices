@@ -4,7 +4,8 @@ import './globals.css'
 import ClientLayout from './client-layout'
 
 export const metadata: Metadata = {
-  title: "Qureshi's Masala & Spices — Pure Flavour. Endless Taste.",
+  metadataBase: new URL('https://www.qureshismasalaspices.com'),
+  title: { default: "Qureshi's Masala & Spices — Pure Flavour. Endless Taste.", template: "%s | Qureshi's Masala & Spices" },
   description: 'Small-batch masalas crafted in Bangalore. 100% natural, zero preservatives, bold flavours.',
   keywords: ['masala', 'spices', 'biryani masala', 'kebab masala', 'fish fry masala', 'Bangalore'],
   openGraph: {

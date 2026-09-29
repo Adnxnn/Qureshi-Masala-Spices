@@ -575,7 +575,7 @@ ${customer.customer_city} - ${customer.customer_pincode}
 Products:
 ${products}
 
-${totals.discount > 0 ? `Discount: -₹${totals.discount}\n` : ""}Total Amount: ₹${totals.total}
+${totals.discount > 0 ? `Discount: -₹${totals.discount}\n` : ""}Product total (delivery extra): ₹${totals.total}
 
 ${customer.notes ? `Notes: ${customer.notes}` : ""}
 
@@ -895,7 +895,7 @@ Please confirm this order.`,
 
                       <div className="relative mt-2 flex items-end justify-between gap-4">
                         <span className="text-xs text-[#f5efe6]/70">
-                          Estimated amount
+                          Product total
                         </span>
 
                         <span className="font-display text-4xl leading-none text-[#e0bd77]">
@@ -999,7 +999,7 @@ Please confirm this order.`,
 
                         <div className="flex items-center justify-between gap-4 border-t border-white/10 pt-4">
                           <span className="text-sm font-semibold tracking-normal text-[#f5efe6]/70">
-                            Total
+                            Product total
                           </span>
 
                           <span className="font-display text-2xl text-[#e0bd77]">
@@ -1024,8 +1024,7 @@ Please confirm this order.`,
                         />
 
                         <p className="text-[12px] leading-5 text-[#f5efe6]/70">
-                          No payment is collected here. Your order will be
-                          confirmed directly on WhatsApp.
+                          Delivery availability, charge and timing are quoted on WhatsApp before you confirm. No payment is collected here.
                         </p>
                       </div>
                     </div>
@@ -1234,7 +1233,7 @@ Please confirm this order.`,
 
                       <div className="flex items-end justify-between gap-4">
                         <span className="text-sm font-semibold tracking-normal text-[#f5efe6]/70">
-                          Total
+                          Product total
                         </span>
 
                         <span className="font-display text-3xl leading-none text-[#e0bd77]">
@@ -1260,7 +1259,7 @@ Please confirm this order.`,
                         <Truck size={15} className="shrink-0 text-[#c9a45f]" />
 
                         <p className="text-[12px] leading-5 text-[#f5efe6]/70">
-                          Delivery details are confirmed directly with our team.
+                          Delivery charge and timing are confirmed with our team before you pay.
                         </p>
                       </div>
 
@@ -1293,7 +1292,7 @@ Please confirm this order.`,
           <div className="mx-auto flex w-full max-w-7xl items-center gap-3">
             <div className="min-w-0 flex-1">
               <p className="text-sm font-semibold tracking-normal text-[#f5efe6]/70">
-                Order total
+                Products · delivery extra
               </p>
 
               <p className="mt-0.5 font-display text-2xl leading-none text-[#e0bd77]">

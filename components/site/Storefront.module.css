@@ -311,3 +311,19 @@
  .addButton { flex:1; min-width:70px; }
  .shopIntro { padding-block:24px; }
 }
+
+/* Keep dish filters usable without turning the mobile toolbar into a tall block. */
+@media (max-width: 767px) {
+ .filterRow { gap: 8px; padding-bottom: 14px; }
+ .categoryPills { width: 100%; flex-wrap: nowrap; overflow-x: auto; overscroll-behavior-x: contain; scrollbar-width: thin; padding-bottom: 8px; }
+ .categoryPills button { flex: 0 0 auto; white-space: nowrap; }
+ .quickSearch { flex-wrap: nowrap; overflow-x: auto; scrollbar-width: none; }
+ .quickSearch button { flex: 0 0 auto; }
+ .shopIntro .breadcrumb { margin-bottom: 16px; }
+ .shopIntro .introBottom { margin-top: 12px; }
+ .shopIntro .introBottom > p { line-height: 1.55; }
+ .productGrid { gap: 14px 10px; }
+ .productBody { padding: 12px 10px; }
+ .productDescription { min-height: 0; margin-bottom: 10px; }
+ .weights { margin-bottom: 10px; }
+}

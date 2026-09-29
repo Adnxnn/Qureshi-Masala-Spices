@@ -9,6 +9,9 @@
 .eyebrow { font-size: 12px; text-transform: uppercase; letter-spacing: .1em; color: #d9ba79; margin-bottom: 12px; }
 .details h1 { font-family: var(--font-display); font-size: clamp(30px, 3.2vw, 46px); line-height: 1.18; letter-spacing: -.03em; margin-bottom: 20px; overflow-wrap: anywhere; }
 .description { font-size: 16px; line-height: 1.75; color: #c9bfae; margin-bottom: 22px; }
+.atGlance { display: flex; flex-wrap: wrap; gap: 8px; margin: -4px 0 20px; }
+.atGlance span { display: grid; gap: 4px; flex: 1 1 170px; padding: 12px 14px; background: #e8e7d8; border: 1px solid #d2d5c2; border-radius: 10px; color: #66705b; font-size: 12px; }
+.atGlance strong { color: #33482c; font-size: 14px; font-weight: 600; }
 .price { display: flex; align-items: baseline; gap: 12px; }
 .price strong { font-size: 28px; font-weight: 600; font-variant-numeric: tabular-nums; }
 .price del { color: #b7ad9e; font-size: 16px; }
@@ -31,6 +34,16 @@
 .orderNote { display: flex; gap: 12px; padding: 16px; background: #d9ba7909; border: 1px solid #d9ba7926; border-radius: 12px; }
 .orderNote svg { flex-shrink: 0; color: #d9ba79; margin-top: 3px; }
 .orderNote p { color: #c9bfae; font-size: 13px; line-height: 1.7; }
+.orderNote strong { color: #314b2b; }
+.recipeSection { margin-top: 42px; }
+.recipeSection h2 { font-family: var(--font-display); font-size: clamp(27px, 3vw, 40px); line-height: 1.2; margin-bottom: 18px; }
+.recipeGrid { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 14px; }
+.recipeCard { display: flex; min-width: 0; flex-direction: column; background: #fffbf3; border: 1px solid #d6d5c1; border-radius: 14px; overflow: hidden; }
+.recipeImage { position: relative; display: block; aspect-ratio: 16 / 9; }
+.recipeImage img { object-fit: cover; }
+.recipeText { display: grid; gap: 5px; padding: 14px; }
+.recipeText strong { font-family: var(--font-display); font-size: 20px; line-height: 1.25; }
+.recipeText small { color: #536a43; font-size: 13px; }
 .accordions { margin-top: 20px; }
 .accordions details { border-bottom: 1px solid #ffffff21; padding-block: 16px; }
 .accordions summary { cursor: pointer; font-size: 15px; font-weight: 500; min-height: 32px; }
@@ -53,6 +66,10 @@
  .sticky strong { font-size: 22px; }
  .sticky > button { flex: 1; }
  .more { align-items: start; flex-direction: column; }
+ .recipeGrid { grid-template-columns: 1fr; }
+ .recipeCard { flex-direction: row; align-items: center; }
+ .recipeImage { width: 32%; min-height: 100px; align-self: stretch; flex: none; }
+ .recipeText strong { font-size: 18px; }
 }
 @media(max-width: 359px) { .purchase { flex-wrap: wrap; } .purchase > button { flex-basis: 100%; } }
 .page { background:#f4ecdd; color:#293421; }
@@ -70,3 +87,19 @@
 .page :focus-visible { outline-color:#445f35; }
 .sticky { background:#f4ecddf5; border-color:#c9cebb; }
 @media(max-width:767px) { .gallery { border-radius:90px 90px 18px 18px; } }
+@media(max-width:767px) {
+ .layout { gap: 18px; }
+ .gallery { max-height: 310px; }
+ .details h1 { margin-bottom: 10px; line-height: 1.12; }
+ .description { margin-bottom: 14px; line-height: 1.55; }
+ .atGlance { margin-bottom: 14px; }
+ .atGlance span { padding: 10px 12px; }
+ .availability { margin-bottom: 16px; }
+ .sizes { margin-bottom: 16px; }
+ .orderNote { padding: 12px; }
+ .orderNote p { line-height: 1.5; }
+ .accordions { margin-top: 12px; }
+ .accordions details { padding-block: 10px; }
+ .recipeSection { margin-top: 30px; }
+ .more { margin-top: 30px; }
+}

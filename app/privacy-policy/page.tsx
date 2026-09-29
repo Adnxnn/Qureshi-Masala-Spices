@@ -1,7 +1,9 @@
 import Link from 'next/link'
 import { SITE } from '@/lib/site-config'
+import type { Metadata } from 'next'
+export const metadata: Metadata = { title: 'Privacy Policy', alternates: { canonical: '/privacy-policy' } }
 
-const LAST_UPDATED = 'July 15, 2026'
+const LAST_UPDATED = 'September 29, 2026'
 
 export default function PrivacyPolicyPage() {
   return (
@@ -19,9 +21,6 @@ export default function PrivacyPolicyPage() {
           <section>
             <p className="mb-4">
               This Privacy Policy describes how Qureshi&apos;s Masala &amp; Spices (&quot;we&quot;, &quot;us&quot;, or &quot;our&quot;) collects, uses, and shares your information when you visit our website and use our services.
-            </p>
-            <p className="mb-4 text-sm italic text-gold/70">
-              Please note that this Privacy Policy is a template and should be reviewed and updated by a legal professional before public launch.
             </p>
           </section>
 
@@ -58,14 +57,13 @@ export default function PrivacyPolicyPage() {
               <li>To communicate with you about your order</li>
               <li>To respond to your questions and inquiries</li>
               <li>To improve our website and services</li>
-              <li>To send you updates about our products and offers (with your consent)</li>
             </ul>
           </section>
 
           <section>
             <h2 className="font-display text-2xl sm:text-3xl uppercase mb-4 text-white">WhatsApp Communication</h2>
             <p>
-              We use WhatsApp for order processing and customer communication. When you place an order, your order details and contact information will be shared via WhatsApp for order confirmation and fulfillment.
+              Your order request is saved on this website. We then open a prepared WhatsApp message for you to review and send. Your order details are shared in that chat only when you choose to send the message. Our team uses WhatsApp to confirm delivery and payment arrangements.
             </p>
           </section>
 
@@ -149,4 +147,3 @@ export default function PrivacyPolicyPage() {
     </div>
   )
 }
-

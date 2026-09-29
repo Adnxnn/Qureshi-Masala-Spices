@@ -7,6 +7,7 @@ import { Plus, ShoppingBag } from 'lucide-react'
 import { useCart } from '@/lib/cart'
 import { useCartNotifications } from '@/lib/cart-notifications'
 import type { Product } from '@/types'
+import { productUseLabel } from '@/lib/shop-discovery'
 import styles from './Storefront.module.css'
 
 const weight = (grams: number) => grams >= 1000 ? `${grams / 1000} kg` : `${grams} g`
@@ -43,7 +44,7 @@ function ProductCard({ product }: { product: Product }) {
         <span className={styles.imageHint}>Explore blend ↗</span>
       </Link>
       <div className={styles.productBody}>
-        <p className={styles.eyebrow}>{product.category === 'spice' ? 'Spices & blends' : product.category}</p>
+        <p className={styles.eyebrow}>{productUseLabel(product)}</p>
         <h3><Link href={href}>{product.name}</Link></h3>
         <p className={styles.productDescription}>{product.short_description || 'Find your next favourite flavour.'}</p>
         {variant && <fieldset className={styles.weights}>

@@ -3,6 +3,9 @@ import HeritageGraphic from '@/components/site/HeritageGraphic'
 import Link from 'next/link'
 import { Heart, Leaf, Shield, Sparkles } from 'lucide-react'
 import styles from '@/components/site/Editorial.module.css'
+import type { Metadata } from 'next'
+
+export const metadata: Metadata = { title: 'Our Story', description: "Meet Qureshi's Masala & Spices and discover the family cooking and careful blending behind our masalas.", alternates: { canonical: '/our-story' } }
 
 const values = [
   { icon: Sparkles, title: 'Authenticity', text: 'Traditional recipes, shared across generations.' },

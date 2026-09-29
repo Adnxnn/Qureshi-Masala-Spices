@@ -1,7 +1,9 @@
 import Link from 'next/link'
 import { SITE } from '@/lib/site-config'
+import type { Metadata } from 'next'
+export const metadata: Metadata = { title: 'Terms, Delivery & Returns', alternates: { canonical: '/terms' } }
 
-const LAST_UPDATED = 'July 15, 2026'
+const LAST_UPDATED = 'September 29, 2026'
 
 export default function TermsAndConditionsPage() {
   return (
@@ -19,9 +21,6 @@ export default function TermsAndConditionsPage() {
           <section>
             <p className="mb-4">
               Welcome to Qureshi&apos;s Masala &amp; Spices. Please read these Terms and Conditions carefully before using our website or services.
-            </p>
-            <p className="mb-4 text-sm italic text-gold/70">
-              Please note that these Terms and Conditions are a template and should be reviewed and updated by a legal professional before public launch.
             </p>
           </section>
 
@@ -46,7 +45,7 @@ export default function TermsAndConditionsPage() {
             <h2 className="font-display text-2xl sm:text-3xl uppercase mb-4 text-white">Orders and Payment</h2>
             <h3 className="font-display text-lg sm:text-xl uppercase mb-2 text-gold">Order Process</h3>
             <p className="mb-4">
-              When you place an order through our website, you will be redirected to WhatsApp to complete your order. Order confirmation will be provided via WhatsApp.
+              Submitting the delivery form records an order request on our website and opens a prepared WhatsApp message. Please review and send that message to speak with our team. No payment is collected by this website; delivery and payment arrangements are confirmed with you separately.
             </p>
 
             <h3 className="font-display text-lg sm:text-xl uppercase mb-2 text-gold">Pricing</h3>
@@ -60,7 +59,7 @@ export default function TermsAndConditionsPage() {
             </p>
           </section>
 
-          <section>
+          <section id="delivery" className="scroll-mt-28">
             <h2 className="font-display text-2xl sm:text-3xl uppercase mb-4 text-white">Delivery</h2>
             <p className="mb-4">
               Delivery times and charges will be confirmed when we process your order via WhatsApp. We are not responsible for delays caused by third-party delivery services or factors beyond our control.
@@ -70,13 +69,13 @@ export default function TermsAndConditionsPage() {
             </p>
           </section>
 
-          <section>
+          <section id="returns" className="scroll-mt-28">
             <h2 className="font-display text-2xl sm:text-3xl uppercase mb-4 text-white">Returns and Refunds</h2>
             <p className="mb-4">
-              Please inspect your order upon delivery. If you receive a damaged or incorrect product, please contact us immediately via WhatsApp to discuss a possible return or replacement.
+              Please inspect your order upon delivery. If a pack is damaged or an item is incorrect, contact us through WhatsApp or the contact page with your order details and a photo of the issue so our team can review it.
             </p>
             <p>
-              Return and refund policies will be confirmed on a case-by-case basis via WhatsApp.
+              The available return, replacement or refund options will be confirmed with you after the review. Please contact us before sending any product back.
             </p>
           </section>
 
@@ -154,4 +153,3 @@ export default function TermsAndConditionsPage() {
     </div>
   )
 }
-

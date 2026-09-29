@@ -555,4 +555,10 @@ a {
  .footer-links>div:last-child h2 { grid-column: 1 / -1; }
  .footer-bottom { gap: 8px; padding-top: 18px; font-size: 12px; line-height: 1.4; }
  .footer-bottom>div { gap: 12px; }
+ .checkout-page { padding-top: 16px; }
+ .checkout-page>div>header { margin-bottom: 14px; }
+ .checkout-page>div>header p { line-height: 1.5; }
+ .checkout-guidance { margin-block: 8px 14px; }
+ .recipe-topics { margin-top: -8px; margin-bottom: 20px; justify-content: flex-start; flex-wrap: nowrap; overflow-x: auto; scrollbar-width: none; }
+ .recipe-topics button { flex: none; white-space: nowrap; }
 }

@@ -2,6 +2,9 @@ import EditorialFilm from '@/components/site/EditorialFilm'
 import HeritageGraphic from '@/components/site/HeritageGraphic'
 import Link from 'next/link'
 import styles from '@/components/site/Editorial.module.css'
+import type { Metadata } from 'next'
+
+export const metadata: Metadata = { title: 'Our Heritage', description: "Explore the recipes, ingredients and craft that inspire Qureshi's Masala & Spices.", alternates: { canonical: '/our-heritage' } }
 
 const CHAPTERS = [
   { title: 'The recipes', description: 'Family cooking and familiar flavours inspire the blends we make.' },

@@ -13,7 +13,7 @@ const categories = [
   { name: 'Chicken favourites', category: 'chicken', note: 'For grills, curries & gatherings', image: '/images/Chicken Masala.png' },
   { name: 'Coastal flavours', category: 'seafood', note: 'Make the catch of the day count', image: '/images/Fish Curry Masala.png' },
   { name: 'Vegetarian kitchen', category: 'vegetarian', note: 'Everyday dishes, full of character', image: '/images/Sambar Masala.png' },
-  { name: 'The spice cupboard', category: 'spice', note: 'The beginning of something delicious', image: '/images/Garam Masala.png' },
+  { name: 'The spice cupboard', category: 'pantry', note: 'The beginning of something delicious', image: '/images/Garam Masala.png' },
 ]
 
 export default async function HomePage() {
