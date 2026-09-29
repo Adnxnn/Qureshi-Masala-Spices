@@ -13,22 +13,15 @@ import { z } from "zod";
 import toast from "react-hot-toast";
 import {
   ArrowLeft,
-  ArrowRight,
-  Check,
   CheckCircle2,
   ChevronRight,
-  Gift,
-  Leaf,
   MapPin,
   MessageCircle,
   Minus,
   Plus,
-  ShieldCheck,
   ShoppingBag,
   Sparkles,
   Trash2,
-  Truck,
-  X,
 } from "lucide-react";
 import { useCart } from "@/lib/cart";
 import {
@@ -130,134 +123,6 @@ function CheckoutInput({
       />
 
       {error && <p id={id + "-error"} role="alert" className="text-[12px] text-red-300">{error.message}</p>}
-    </div>
-  );
-}
-
-function CheckoutProgress({
-  currentStep,
-  itemCount,
-  onStepChange,
-}: {
-  currentStep: "cart" | "delivery";
-  itemCount: number;
-  onStepChange: (step: "cart" | "delivery") => void;
-}) {
-  const deliveryActive = currentStep === "delivery";
-  const hasItems = itemCount > 0;
-
-  return (
-    <div
-      role="tablist"
-      aria-label="Checkout steps"
-      className="grid w-full grid-cols-2 gap-1 rounded-2xl border border-gold/15 bg-black/25 p-1.5 shadow-lg shadow-black/10 sm:w-auto sm:min-w-[310px]"
-    >
-      <button
-        type="button"
-        role="tab"
-        aria-selected={!deliveryActive}
-        aria-controls="cart-step-panel"
-        onClick={() => onStepChange("cart")}
-        className={`flex min-h-11 min-w-0 items-center justify-center gap-2 rounded-xl px-3 text-[12px] font-bold uppercase tracking-[0.14em] transition-colors sm:px-5 ${
-          !deliveryActive
-            ? "bg-[#c9a45f] text-[#130d08] shadow-md shadow-black/20"
-            : "text-[#f5efe6]/55 hover:bg-white/5 hover:text-[#f5efe6]"
-        }`}
-      >
-        <span
-          className={`flex h-6 w-6 shrink-0 items-center justify-center rounded-full text-[12px] ${
-            deliveryActive ? "bg-green-500/15 text-green-300" : "bg-black/15"
-          }`}
-        >
-          {deliveryActive ? <Check size={12} /> : "1"}
-        </span>
-
-        <span className="truncate">Cart</span>
-
-        {hasItems && (
-          <span
-            className={`flex h-5 min-w-5 shrink-0 items-center justify-center rounded-full px-1.5 text-[12px] ${
-              !deliveryActive
-                ? "bg-black/15 text-[#130d08]"
-                : "bg-[#c9a45f]/10 text-[#d9b56f]"
-            }`}
-          >
-            {itemCount}
-          </span>
-        )}
-      </button>
-
-      <button
-        id="delivery-step"
-        type="button"
-        role="tab"
-        aria-selected={deliveryActive}
-        aria-controls="delivery-step-panel"
-        aria-disabled={!hasItems}
-        disabled={!hasItems}
-        onClick={() => onStepChange("delivery")}
-        className={`flex min-h-11 min-w-0 items-center justify-center gap-2 rounded-xl px-3 text-[12px] font-bold uppercase tracking-[0.14em] transition-colors sm:px-5 ${
-          deliveryActive
-            ? "bg-[#c9a45f] text-[#130d08] shadow-md shadow-black/20"
-            : "text-[#f5efe6]/55 hover:bg-white/5 hover:text-[#f5efe6] disabled:cursor-not-allowed disabled:opacity-30 disabled:hover:bg-transparent"
-        }`}
-      >
-        <span
-          className={`flex h-6 w-6 shrink-0 items-center justify-center rounded-full text-[12px] ${
-            deliveryActive ? "bg-black/15" : "bg-white/5"
-          }`}
-        >
-          2
-        </span>
-
-        <span className="truncate">Delivery</span>
-      </button>
-    </div>
-  );
-}
-
-function TrustStrip() {
-  const items = [
-    {
-      icon: MessageCircle,
-      title: "WhatsApp confirmation",
-      description: "Confirm directly with us",
-    },
-    {
-      icon: ShieldCheck,
-      title: "No online payment",
-      description: "Pay only after confirmation",
-    },
-    {
-      icon: Leaf,
-      title: "Freshly packed",
-      description: "Prepared with care",
-    },
-  ];
-
-  return (
-    <div className="grid grid-cols-1 divide-y divide-white/10 rounded-2xl border border-gold/10 bg-white/[0.025] sm:grid-cols-3 sm:divide-x sm:divide-y-0">
-      {items.map((item) => {
-        const Icon = item.icon;
-
-        return (
-          <div key={item.title} className="flex items-center gap-3 px-4 py-4">
-            <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-[#c9a45f]/10 text-[#c9a45f]">
-              <Icon size={17} />
-            </span>
-
-            <div className="min-w-0">
-              <p className="text-xs font-semibold text-[#f5efe6]">
-                {item.title}
-              </p>
-
-              <p className="mt-0.5 text-[12px] text-[#f5efe6]/70">
-                {item.description}
-              </p>
-            </div>
-          </div>
-        );
-      })}
     </div>
   );
 }
@@ -435,7 +300,7 @@ function OrderSuccess({
 
           <div className="flex items-center justify-between">
             <span className="text-sm font-semibold tracking-normal text-[#f5efe6]/70">
-              Order total
+              Product total · delivery extra
             </span>
 
             <span className="font-display text-3xl text-[#d9b56f]">
@@ -474,8 +339,6 @@ export default function OrderPage() {
     appliedPromoCode,
     applyPromoCode,
   } = useCart();
-
-  const [checkoutStep, setCheckoutStep] = useState<"cart" | "delivery">("cart");
 
   const [user, setUser] = useState<User | null>(null);
   const [loading, setLoading] = useState(true);
@@ -621,26 +484,9 @@ Please confirm this order.`,
     toast.success("Promo code removed");
   };
 
-  const changeCheckoutStep = (step: "cart" | "delivery") => {
-    if (step === "delivery" && items.length === 0) {
-      toast.error("Add an item before entering delivery details");
-      return;
-    }
-
-    setCheckoutStep(step);
-
-    window.requestAnimationFrame(() => {
-      window.scrollTo({
-        top: 0,
-        behavior: "smooth",
-      });
-    });
-  };
-
   const onSubmit = async (customer: CheckoutFormData) => {
     if (items.length === 0) {
       toast.error("Your cart is empty");
-      setCheckoutStep("cart");
       return;
     }
 
@@ -745,585 +591,61 @@ Please confirm this order.`,
   }
 
   return (
-    <div className="checkout-page royal-page relative min-h-screen w-full overflow-x-hidden pb-32 pt-8 sm:pt-12 lg:pb-20">
-      <div className="pointer-events-none absolute inset-0 overflow-hidden">
-        <div className="absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-[#c9a45f]/30 to-transparent" />
-      </div>
-
-      <div className="relative mx-auto w-full max-w-7xl px-4 sm:px-6 lg:px-8">
-        <header className="mb-8 sm:mb-10">
-          <div className="flex flex-col gap-6 lg:flex-row lg:items-end lg:justify-between">
-            <div className="min-w-0">
-              <div className="mb-3 flex items-center gap-2 text-[#c9a45f]">
-                <Sparkles size={14} />
-
-                <span className="text-sm font-semibold tracking-normal">
-                  From our shelves to your kitchen
-                </span>
-              </div>
-
-              <h1 className="royal-title break-words text-5xl sm:text-6xl md:text-7xl">
-                {checkoutStep === "cart" ? "A bag full of flavour." : "Where shall we send it?"}
-              </h1>
-
-              <p className="mt-4 max-w-xl text-sm leading-6 text-[#f5efe6]/70 sm:text-base">
-                {checkoutStep === "cart"
-                  ? "Review your masalas, adjust quantities and continue when everything looks right."
-                  : "Add your delivery details. We will save the order and confirm everything with you on WhatsApp."}
-              </p>
-            </div>
-
-            <CheckoutProgress
-              currentStep={checkoutStep}
-              itemCount={items.reduce(
-                (count, item) => count + item.quantity,
-                0,
-              )}
-              onStepChange={changeCheckoutStep}
-            />
-          </div>
+    <div className="checkout-page royal-page relative min-h-screen w-full overflow-x-hidden pb-32 pt-6 sm:pt-10 lg:pb-16">
+      <div className="relative mx-auto w-full max-w-6xl px-4 sm:px-6 lg:px-8">
+        <header className="mb-5 sm:mb-7">
+          <p className="mb-2 flex items-center gap-2 text-sm font-semibold text-[#c9a45f]"><Sparkles size={15} /> From our shelves to your kitchen</p>
+          <h1 className="royal-title text-4xl sm:text-6xl">Your cart &amp; delivery</h1>
+          <p className="mt-2 max-w-2xl text-sm leading-6 text-[#f5efe6]/70">Review your spices, enter your address, and send your order request. We confirm delivery and payment on WhatsApp.</p>
         </header>
-
-        <TrustStrip />
         <div className="checkout-guidance"><Link href="/shop"><ArrowLeft size={16} /> Keep exploring</Link><span>No payment is collected on this website.</span><Link href="/contact">Need a hand? <MessageCircle size={16} /></Link></div>
-
-        {checkoutStep === "cart" ? (
-          <div
-            id="cart-step-panel"
-            role="tabpanel"
-            className="mt-6 grid min-w-0 grid-cols-1 gap-6 lg:grid-cols-12 lg:gap-8"
-          >
-            <section className="min-w-0 lg:col-span-8">
-              {!user && (
-                <div className="mb-5 overflow-hidden rounded-2xl border border-[#c9a45f]/15 bg-gradient-to-r from-[#6b1a1a]/15 to-[#c9a45f]/5 p-4 sm:p-5">
-                  <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
-                    <div className="min-w-0">
-                      <p className="text-sm font-semibold text-[#f5efe6]">
-                        Returning customer?
-                      </p>
-
-                      <p className="mt-1 text-xs leading-5 text-[#f5efe6]/70">
-                        Sign in to automatically fill your saved delivery
-                        details.
-                      </p>
-                    </div>
-
-                    <div className="flex w-full gap-2 sm:w-auto">
-                      <Link
-                        href="/login"
-                        className="flex min-h-11 flex-1 items-center justify-center rounded-xl border border-white/10 px-5 text-[12px] font-bold uppercase tracking-[0.16em] text-[#f5efe6]/65 transition-colors hover:bg-white/5 hover:text-white sm:flex-none"
-                      >
-                        Login
-                      </Link>
-
-                      <Link
-                        href="/register"
-                        className="flex min-h-11 flex-1 items-center justify-center rounded-xl bg-[#c9a45f] px-5 text-[12px] font-bold uppercase tracking-[0.16em] text-[#130d08] transition-colors hover:bg-[#e0bd77] sm:flex-none"
-                      >
-                        Create Account
-                      </Link>
-                    </div>
-                  </div>
-                </div>
-              )}
-
-              {items.length === 0 ? (
-                <div className="royal-panel flex min-h-[300px] flex-col items-center justify-center rounded-2xl px-5 text-center">
-                  <div className="mb-6 flex h-20 w-20 items-center justify-center rounded-full border border-[#c9a45f]/20 bg-[#c9a45f]/10 text-[#c9a45f]">
-                    <ShoppingBag size={32} />
-                  </div>
-
-                  <h2 className="royal-title text-4xl">
-                    Your cart is empty.
-                  </h2>
-
-                  <p className="mt-3 max-w-sm text-sm leading-6 text-[#f5efe6]/70">
-                    Explore our handcrafted masalas and add your favourites to
-                    begin an order.
-                  </p>
-
-                  <Link
-                    href="/shop"
-                    className="mt-7 inline-flex min-h-12 items-center justify-center gap-2 rounded-xl bg-[#c9a45f] px-7 text-sm font-semibold tracking-normal text-[#130d08] transition-colors hover:bg-[#e0bd77]"
-                  >
-                    Explore Products
-                    <ChevronRight size={14} />
-                  </Link>
-                </div>
-              ) : (
-                <div className="royal-panel w-full min-w-0 overflow-hidden rounded-2xl">
-                  <div className="flex items-center justify-between gap-4 border-b border-white/10 px-4 py-4 sm:px-6 sm:py-5">
-                    <div>
-                      <p className="text-sm font-semibold tracking-normal text-[#c9a45f]">
-                        Selected products
-                      </p>
-
-                      <p className="mt-1 text-xs text-[#f5efe6]/70">
-                        {items.length}{" "}
-                        {items.length === 1 ? "product" : "products"} in your
-                        cart
-                      </p>
-                    </div>
-
-                    <ShoppingBag size={20} className="text-[#c9a45f]/60" />
-                  </div>
-
-                  <div className="min-w-0 px-4 sm:px-6">
-                    {items.map((item) => (
-                      <CartProductRow
-                        key={`${item.product.id}-${item.variant.weight_grams}`}
-                        item={item}
-                        updateQuantity={updateQty}
-                        removeProduct={removeItem}
-                      />
-                    ))}
-                  </div>
-                </div>
-              )}
-            </section>
-
-            {items.length > 0 && (
-              <aside className="min-w-0 lg:col-span-4">
-                <div className="lg:sticky lg:top-24">
-                  <div className="royal-panel overflow-hidden rounded-2xl">
-                    <div className="relative overflow-hidden border-b border-white/10 bg-gradient-to-br from-[#6b1a1a]/30 to-[#c9a45f]/10 px-5 py-6">
-                      <div className="absolute -right-10 -top-10 h-32 w-32 rounded-full border border-[#c9a45f]/10" />
-
-                      <p className="relative text-sm font-semibold tracking-normal text-[#c9a45f]">
-                        Order total
-                      </p>
-
-                      <div className="relative mt-2 flex items-end justify-between gap-4">
-                        <span className="text-xs text-[#f5efe6]/70">
-                          Product total
-                        </span>
-
-                        <span className="font-display text-4xl leading-none text-[#e0bd77]">
-                          ₹{currentTotals.total.toFixed(0)}
-                        </span>
-                      </div>
-                    </div>
-
-                    <div className="space-y-5 p-5">
-                      {appliedPromoCode ? (
-                        <div className="flex min-w-0 items-center justify-between gap-3 rounded-xl border border-green-400/15 bg-green-400/[0.06] p-3">
-                          <div className="flex min-w-0 items-center gap-3">
-                            <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-green-400/10 text-green-300">
-                              <Gift size={15} />
-                            </span>
-
-                            <div className="min-w-0">
-                              <p className="truncate font-mono text-xs font-bold text-green-300">
-                                {appliedPromoCode.code}
-                              </p>
-
-                              <p className="mt-0.5 text-[12px] text-green-200/45">
-                                Promo code applied
-                              </p>
-                            </div>
-                          </div>
-
-                          <button
-                            type="button"
-                            aria-label="Remove promo code"
-                            onClick={handleRemovePromo}
-                            className="flex h-9 w-9 shrink-0 items-center justify-center rounded-lg text-white/65 hover:bg-white/5 hover:text-white"
-                          >
-                            <X size={13} />
-                          </button>
-                        </div>
-                      ) : (
-                        <div className="space-y-2">
-                          <label
-                            htmlFor="promo-code"
-                            className="flex items-center gap-2 text-[12px] font-semibold uppercase tracking-[0.08em] text-[#f5efe6]/70"
-                          >
-                            <Gift size={13} />
-                            Have a promo code?
-                          </label>
-
-                          <div className="flex min-w-0 flex-col gap-2 sm:flex-row lg:flex-col xl:flex-row">
-                            <input
-                              id="promo-code"
-                              type="text"
-                              value={promoInput}
-                              onChange={(event) => {
-                                setPromoInput(event.target.value);
-                                setPromoError("");
-                              }}
-                              placeholder="ENTER CODE"
-                              className="min-h-11 w-full min-w-0 flex-1 rounded-xl border border-white/10 bg-black/25 px-3 text-xs uppercase tracking-[0.12em] text-[#f5efe6] outline-none placeholder:text-white/15 focus:border-[#c9a45f]/60"
-                            />
-
-                            <button
-                              type="button"
-                              onClick={handleApplyPromo}
-                              disabled={applyingPromo}
-                              className="min-h-11 shrink-0 rounded-xl border border-[#c9a45f]/20 bg-[#c9a45f]/10 px-5 text-[12px] font-bold uppercase tracking-[0.16em] text-[#d9b56f] transition-colors hover:bg-[#c9a45f]/15 disabled:opacity-40"
-                            >
-                              {applyingPromo ? "Checking..." : "Apply"}
-                            </button>
-                          </div>
-
-                          {promoError && (
-                            <p className="text-[12px] text-red-300">
-                              {promoError}
-                            </p>
-                          )}
-                        </div>
-                      )}
-
-                      <div className="space-y-3 border-t border-white/10 pt-5">
-                        <div className="flex items-center justify-between gap-4">
-                          <span className="text-xs text-[#f5efe6]/70">
-                            Subtotal
-                          </span>
-
-                          <span className="text-sm font-semibold text-[#f5efe6]/75">
-                            ₹{currentTotals.subtotal.toFixed(0)}
-                          </span>
-                        </div>
-
-                        {currentTotals.discount > 0 && (
-                          <div className="flex items-center justify-between gap-4">
-                            <span className="text-xs text-green-300/60">
-                              Discount
-                            </span>
-
-                            <span className="text-sm font-semibold text-green-300/70">
-                              -₹
-                              {currentTotals.discount.toFixed(0)}
-                            </span>
-                          </div>
-                        )}
-
-                        <div className="flex items-center justify-between gap-4 border-t border-white/10 pt-4">
-                          <span className="text-sm font-semibold tracking-normal text-[#f5efe6]/70">
-                            Product total
-                          </span>
-
-                          <span className="font-display text-2xl text-[#e0bd77]">
-                            ₹{currentTotals.total.toFixed(0)}
-                          </span>
-                        </div>
-                      </div>
-
-                      <button
-                        type="button"
-                        onClick={() => changeCheckoutStep("delivery")}
-                        className="flex min-h-14 w-full items-center justify-center gap-3 rounded-xl bg-[#c9a45f] px-5 text-sm font-semibold tracking-normal text-[#130d08] transition-colors hover:bg-[#e0bd77]"
-                      >
-                        Continue to Delivery
-                        <ArrowRight size={15} />
-                      </button>
-
-                      <div className="flex items-start gap-3 rounded-xl border border-white/[0.07] bg-white/[0.025] p-3">
-                        <MessageCircle
-                          size={15}
-                          className="mt-0.5 shrink-0 text-[#278c4d]"
-                        />
-
-                        <p className="text-[12px] leading-5 text-[#f5efe6]/70">
-                          Delivery availability, charge and timing are quoted on WhatsApp before you confirm. No payment is collected here.
-                        </p>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              </aside>
-            )}
+        {items.length === 0 ? (
+          <div className="royal-panel mx-auto mt-6 flex max-w-xl flex-col items-center rounded-2xl px-5 py-12 text-center">
+            <ShoppingBag size={38} className="text-[#c9a45f]" />
+            <h2 className="royal-title mt-4 text-4xl">Your cart is empty.</h2>
+            <p className="mt-2 text-sm leading-6 text-[#f5efe6]/70">Find a blend for your next meal and it will appear here.</p>
+            <Link href="/shop" className="mt-6 inline-flex min-h-12 items-center gap-2 rounded-xl bg-[#c9a45f] px-6 font-semibold text-[#130d08]">Explore spices <ChevronRight size={16} /></Link>
           </div>
         ) : (
-          <form
-            id="delivery-checkout-form"
-            role="tabpanel"
-            aria-labelledby="delivery-step"
-            onSubmit={handleSubmit(onSubmit)}
-            className="mt-6 grid min-w-0 grid-cols-1 gap-6 lg:grid-cols-12 lg:gap-8"
-          >
-            <section className="min-w-0 lg:col-span-8">
-              <button
-                type="button"
-                onClick={() => changeCheckoutStep("cart")}
-                className="mb-5 inline-flex min-h-11 items-center gap-2 rounded-xl border border-white/10 px-4 text-[12px] font-bold uppercase tracking-[0.16em] text-[#f5efe6]/70 transition-colors hover:bg-white/5 hover:text-white"
-              >
-                <ArrowLeft size={14} />
-                Back to Cart
-              </button>
-
-              <div className="royal-panel overflow-hidden rounded-2xl">
-                <div className="border-b border-white/10 bg-gradient-to-r from-[#6b1a1a]/15 to-transparent px-5 py-5 sm:px-7">
-                  <div className="flex items-center gap-3">
-                    <span className="flex h-10 w-10 items-center justify-center rounded-full bg-[#c9a45f]/10 text-[#c9a45f]">
-                      <MapPin size={17} />
-                    </span>
-
-                    <div>
-                      <h2 className="font-display text-3xl text-[#f5efe6] sm:text-4xl">
-                        Delivery Details
-                      </h2>
-
-                      <p className="mt-1 text-[12px] text-[#f5efe6]/70">
-                        Where should we deliver your order?
-                      </p>
-                    </div>
-                  </div>
+          <form id="delivery-checkout-form" onSubmit={handleSubmit(onSubmit)} className="mt-5 grid min-w-0 grid-cols-1 gap-5 lg:grid-cols-12 lg:items-start lg:gap-7">
+            <div className="min-w-0 space-y-5 lg:col-span-7">
+              <section className="royal-panel overflow-hidden rounded-2xl" aria-labelledby="cart-heading">
+                <div className="flex items-center justify-between border-b border-white/10 px-4 py-4 sm:px-6">
+                  <div><h2 id="cart-heading" className="font-display text-2xl text-[#f5efe6]">Your spices</h2><p className="text-xs text-[#f5efe6]/65">{items.reduce((n, item) => n + item.quantity, 0)} packs · adjust your selection here</p></div>
+                  <ShoppingBag size={21} className="text-[#c9a45f]" />
                 </div>
-
-                <div className="min-w-0 space-y-5 p-5 sm:p-7">
-                  <div className="grid min-w-0 grid-cols-1 gap-5 md:grid-cols-2">
-                    <CheckoutInput
-                      id="customer_name"
-                      label="Full name"
-                      placeholder="Your full name"
-                      autoComplete="name"
-                      register={register}
-                      errors={errors}
-                    />
-
-                    <CheckoutInput
-                      id="customer_phone"
-                      label="Phone / WhatsApp"
-                      type="tel"
-                      placeholder="+91 98765 43210"
-                      autoComplete="tel"
-                      register={register}
-                      errors={errors}
-                    />
-                  </div>
-
-                  <CheckoutInput
-                    id="customer_email"
-                    label="Email address"
-                    type="email"
-                    placeholder="you@email.com"
-                    autoComplete="email"
-                    register={register}
-                    errors={errors}
-                  />
-
-                  <div className="min-w-0 space-y-2">
-                    <label
-                      htmlFor="customer_address"
-                      className="block text-[12px] font-semibold uppercase tracking-[0.08em] text-[#d7c8b3]/55"
-                    >
-                      Complete delivery address
-                    </label>
-
-                    <textarea
-                      id="customer_address"
-                      rows={4}
-                      autoComplete="street-address"
-                      placeholder="House number, street, landmark and area"
-                      {...register("customer_address")}
-                      className={`w-full min-w-0 resize-none rounded-xl border bg-[#11100f] px-4 py-3 text-sm leading-6 text-[#f5efe6] outline-none placeholder:text-[#f5efe6]/20 ${
-                        errors.customer_address
-                          ? "border-red-400/50 focus:border-red-400"
-                          : "border-white/10 focus:border-[#c9a45f]/70"
-                      }`}
-                    />
-
-                    {errors.customer_address && (
-                      <p className="text-[12px] text-red-300">
-                        {errors.customer_address.message}
-                      </p>
-                    )}
-                  </div>
-
-                  <div className="grid min-w-0 grid-cols-1 gap-5 md:grid-cols-2">
-                    <CheckoutInput
-                      id="customer_city"
-                      label="City"
-                      placeholder="Your city"
-                      autoComplete="address-level2"
-                      register={register}
-                      errors={errors}
-                    />
-
-                    <CheckoutInput
-                      id="customer_pincode"
-                      label="Pincode"
-                      placeholder="571201"
-                      autoComplete="postal-code"
-                      register={register}
-                      errors={errors}
-                    />
-                  </div>
-
-                  <div className="min-w-0 space-y-2">
-                    <label
-                      htmlFor="notes"
-                      className="block text-[12px] font-semibold uppercase tracking-[0.08em] text-[#d7c8b3]/55"
-                    >
-                      Order notes{" "}
-                      <span className="normal-case tracking-normal text-white/65">
-                        (optional)
-                      </span>
-                    </label>
-
-                    <textarea
-                      id="notes"
-                      rows={3}
-                      placeholder="Delivery instructions or anything we should know"
-                      {...register("notes")}
-                      className="w-full min-w-0 resize-none rounded-xl border border-white/10 bg-[#11100f] px-4 py-3 text-sm leading-6 text-[#f5efe6] outline-none placeholder:text-[#f5efe6]/20 focus:border-[#c9a45f]/70"
-                    />
-                  </div>
+                <div className="px-4 sm:px-6">{items.map(item => <CartProductRow key={`${item.product.id}-${item.variant.weight_grams}`} item={item} updateQuantity={updateQty} removeProduct={removeItem} />)}</div>
+                <Link href="/shop" className="inline-flex min-h-11 items-center gap-2 px-4 pb-3 text-sm text-[#d9b56f] sm:px-6">+ Add more spices</Link>
+              </section>
+              <section className="royal-panel overflow-hidden rounded-2xl" aria-labelledby="details-heading">
+                <div className="border-b border-white/10 px-4 py-4 sm:px-6"><h2 id="details-heading" className="flex items-center gap-2 font-display text-2xl text-[#f5efe6]"><MapPin size={19} className="text-[#c9a45f]" /> Delivery details</h2><p className="mt-1 text-xs text-[#f5efe6]/65">We use these details to prepare your order request.</p></div>
+                <div className="grid gap-4 p-4 sm:grid-cols-2 sm:p-6">
+                  <CheckoutInput id="customer_name" label="Full name" placeholder="Your full name" autoComplete="name" register={register} errors={errors} />
+                  <CheckoutInput id="customer_phone" label="Phone / WhatsApp" type="tel" placeholder="+91 98765 43210" autoComplete="tel" register={register} errors={errors} />
+                  <div className="sm:col-span-2"><CheckoutInput id="customer_email" label="Email address" type="email" placeholder="you@email.com" autoComplete="email" register={register} errors={errors} /></div>
+                  <div className="min-w-0 space-y-2 sm:col-span-2"><label htmlFor="customer_address" className="block text-xs font-semibold uppercase tracking-wider text-[#d7c8b3]/70">Complete delivery address</label><textarea id="customer_address" rows={3} autoComplete="street-address" placeholder="House number, street, landmark and area" aria-invalid={!!errors.customer_address} aria-describedby={errors.customer_address ? 'customer_address-error' : undefined} {...register('customer_address')} className="w-full min-w-0 rounded-xl border border-white/10 bg-[#11100f] px-4 py-3 text-sm text-[#f5efe6] outline-none focus:border-[#c9a45f]" />{errors.customer_address && <p id="customer_address-error" role="alert" className="text-xs text-red-300">{errors.customer_address.message}</p>}</div>
+                  <CheckoutInput id="customer_city" label="City" placeholder="Your city" autoComplete="address-level2" register={register} errors={errors} />
+                  <CheckoutInput id="customer_pincode" label="Pincode" placeholder="6-digit pincode" autoComplete="postal-code" register={register} errors={errors} />
+                  <div className="min-w-0 space-y-2 sm:col-span-2"><label htmlFor="notes" className="block text-xs font-semibold uppercase tracking-wider text-[#d7c8b3]/70">Order notes <span className="normal-case tracking-normal">(optional)</span></label><textarea id="notes" rows={2} placeholder="Delivery instructions or anything we should know" {...register('notes')} className="w-full min-w-0 rounded-xl border border-white/10 bg-[#11100f] px-4 py-3 text-sm text-[#f5efe6] outline-none focus:border-[#c9a45f]" /></div>
                 </div>
-              </div>
-            </section>
-
-            <aside className="min-w-0 lg:col-span-4">
-              <div className="lg:sticky lg:top-24">
-                <div className="royal-panel overflow-hidden rounded-2xl">
-                  <div className="border-b border-white/10 px-5 py-5">
-                    <p className="text-sm font-semibold tracking-normal text-[#c9a45f]">
-                      Final Summary
-                    </p>
-                  </div>
-
-                  <div className="space-y-4 p-5">
-                    <div className="max-h-60 space-y-3 overflow-y-auto pr-1">
-                      {items.map((item) => (
-                        <div
-                          key={`${item.product.id}-${item.variant.weight_grams}`}
-                          className="flex min-w-0 items-center gap-3"
-                        >
-                          <div className="h-11 w-11 shrink-0 overflow-hidden rounded-lg border border-white/10 bg-black/30">
-                            <Image
-                              src={item.product.image_url}
-                              alt={item.product.name}
-                              width={44}
-                              height={44}
-                              className="h-full w-full object-contain p-1"
-                            />
-                          </div>
-
-                          <div className="min-w-0 flex-1">
-                            <p className="truncate text-xs font-medium text-[#f5efe6]/80">
-                              {item.product.name}
-                            </p>
-
-                            <p className="mt-0.5 text-[12px] text-[#f5efe6]/70">
-                              {formatWeight(item.variant.weight_grams)} ×{" "}
-                              {item.quantity}
-                            </p>
-                          </div>
-
-                          <span className="shrink-0 text-xs font-semibold text-[#d9b56f]">
-                            ₹{item.variant.price * item.quantity}
-                          </span>
-                        </div>
-                      ))}
-                    </div>
-
-                    <div className="space-y-3 border-t border-white/10 pt-4">
-                      {currentTotals.discount > 0 && (
-                        <div className="flex items-center justify-between gap-4">
-                          <span className="text-xs text-green-300/60">
-                            Discount
-                          </span>
-
-                          <span className="text-xs font-semibold text-green-300/70">
-                            -₹
-                            {currentTotals.discount.toFixed(0)}
-                          </span>
-                        </div>
-                      )}
-
-                      <div className="flex items-end justify-between gap-4">
-                        <span className="text-sm font-semibold tracking-normal text-[#f5efe6]/70">
-                          Product total
-                        </span>
-
-                        <span className="font-display text-3xl leading-none text-[#e0bd77]">
-                          ₹{currentTotals.total.toFixed(0)}
-                        </span>
-                      </div>
-                    </div>
-
-                    <button
-                      type="submit"
-                      disabled={isSubmitting}
-                      className="flex min-h-14 w-full items-center justify-center gap-3 rounded-xl bg-[#278c4d] px-4 text-center text-[12px] font-bold uppercase tracking-[0.16em] text-white transition-colors hover:bg-[#31a75c] disabled:cursor-not-allowed disabled:opacity-50"
-                    >
-                      <MessageCircle size={17} />
-
-                      {isSubmitting
-                        ? "Placing Order..."
-                        : "Place Order on WhatsApp"}
-                    </button>
-
-                    <div className="space-y-3 border-t border-white/10 pt-4">
-                      <div className="flex items-center gap-3">
-                        <Truck size={15} className="shrink-0 text-[#c9a45f]" />
-
-                        <p className="text-[12px] leading-5 text-[#f5efe6]/70">
-                          Delivery charge and timing are confirmed with our team before you pay.
-                        </p>
-                      </div>
-
-                      <div className="flex items-center gap-3">
-                        <ShieldCheck
-                          size={15}
-                          className="shrink-0 text-[#c9a45f]"
-                        />
-
-                        <p className="text-[12px] leading-5 text-[#f5efe6]/70">
-                          No payment information is collected on this website.
-                        </p>
-                      </div>
-                    </div>
-                  </div>
+              </section>
+              {!user && <p className="px-1 text-sm text-[#f5efe6]/65">Returning customer? <Link href="/login" className="text-[#d9b56f] underline underline-offset-4">Sign in</Link> to fill saved details, or continue as a guest.</p>}
+            </div>
+            <aside className="min-w-0 lg:sticky lg:top-24 lg:col-span-5">
+              <div className="royal-panel overflow-hidden rounded-2xl" aria-labelledby="summary-heading">
+                <div className="border-b border-white/10 bg-[#c9a45f]/[0.07] px-5 py-4"><h2 id="summary-heading" className="font-display text-2xl text-[#f5efe6]">Order summary</h2><p className="mt-1 text-xs text-[#f5efe6]/65">Your product total before delivery.</p></div>
+                <div className="space-y-5 p-5">
+                  {appliedPromoCode ? <div className="flex items-center justify-between gap-3 rounded-xl border border-green-400/20 bg-green-400/[0.06] px-3 py-2 text-sm text-green-200"><span>Code {appliedPromoCode.code} applied</span><button type="button" onClick={handleRemovePromo} className="min-h-10 px-2 underline">Remove</button></div> : <div className="space-y-2"><label htmlFor="promo-code" className="block text-xs font-semibold text-[#f5efe6]/70">Have a promo code?</label><div className="flex gap-2"><input id="promo-code" value={promoInput} onKeyDown={event => { if (event.key === 'Enter') { event.preventDefault(); void handleApplyPromo() } }} onChange={event => { setPromoInput(event.target.value); setPromoError('') }} placeholder="Enter code" className="min-h-11 min-w-0 flex-1 rounded-xl border border-white/10 bg-black/25 px-3 text-sm text-white outline-none focus:border-[#c9a45f]" /><button type="button" disabled={applyingPromo} onClick={handleApplyPromo} className="min-h-11 rounded-xl border border-[#c9a45f]/40 px-4 text-sm text-[#d9b56f] disabled:opacity-40">{applyingPromo ? 'Checking' : 'Apply'}</button></div>{promoError && <p role="alert" className="text-xs text-red-300">{promoError}</p>}</div>}
+                  <div className="space-y-3 border-t border-white/10 pt-4 text-sm"><div className="flex justify-between text-[#f5efe6]/70"><span>Spices subtotal</span><span>₹{currentTotals.subtotal.toLocaleString('en-IN')}</span></div>{currentTotals.discount > 0 && <div className="flex justify-between text-green-300"><span>Discount</span><span>−₹{currentTotals.discount.toLocaleString('en-IN')}</span></div>}<div className="flex items-end justify-between gap-3 border-t border-white/10 pt-4"><strong className="text-[#f5efe6]">Product total</strong><strong className="font-display text-3xl text-[#e0bd77]">₹{currentTotals.total.toLocaleString('en-IN')}</strong></div><p className="text-xs leading-5 text-[#f5efe6]/65">Delivery availability, charge and timing are confirmed with you on WhatsApp before payment.</p></div>
+                  <button type="submit" disabled={isSubmitting} className="hidden min-h-14 w-full items-center justify-center gap-2 rounded-xl bg-[#278c4d] px-4 text-sm font-semibold text-white transition-colors hover:bg-[#31a75c] disabled:opacity-50 lg:flex"><MessageCircle size={18} />{isSubmitting ? 'Sending order request...' : 'Send order request'}</button>
+                  <p className="text-center text-xs leading-5 text-[#f5efe6]/60">No payment is collected here. Our team confirms the order on WhatsApp.</p>
                 </div>
               </div>
             </aside>
           </form>
         )}
       </div>
-
-      {items.length > 0 && (
-        <div
-          className="fixed inset-x-0 bottom-0 z-40 border-t border-white/10 bg-[#0b0a09]/95 px-4 pt-3 shadow-[0_-16px_40px_rgba(0,0,0,0.45)] backdrop-blur-xl lg:hidden"
-          style={{
-            paddingBottom: "calc(0.75rem + env(safe-area-inset-bottom))",
-          }}
-        >
-          <div className="mx-auto flex w-full max-w-7xl items-center gap-3">
-            <div className="min-w-0 flex-1">
-              <p className="text-sm font-semibold tracking-normal text-[#f5efe6]/70">
-                Products · delivery extra
-              </p>
-
-              <p className="mt-0.5 font-display text-2xl leading-none text-[#e0bd77]">
-                ₹{currentTotals.total.toFixed(0)}
-              </p>
-            </div>
-
-            {checkoutStep === "cart" ? (
-              <button
-                type="button"
-                onClick={() => changeCheckoutStep("delivery")}
-                className="flex min-h-12 flex-[1.6] items-center justify-center gap-2 rounded-xl bg-[#c9a45f] px-4 text-center text-[12px] font-bold uppercase tracking-[0.14em] text-[#130d08]"
-              >
-                Delivery
-                <ArrowRight size={15} />
-              </button>
-            ) : (
-              <button
-                type="submit"
-                form="delivery-checkout-form"
-                disabled={isSubmitting}
-                className="flex min-h-12 flex-[1.8] items-center justify-center gap-2 rounded-xl bg-[#278c4d] px-3 text-center text-[12px] font-bold uppercase tracking-[0.12em] text-white disabled:cursor-not-allowed disabled:opacity-50"
-              >
-                <MessageCircle size={16} />
-
-                {isSubmitting ? "Placing..." : "Place Order"}
-              </button>
-            )}
-          </div>
-        </div>
-      )}
+      {items.length > 0 && <div className="fixed inset-x-0 bottom-0 z-40 border-t border-white/10 bg-[#0b0a09]/95 px-4 pt-2 shadow-[0_-16px_40px_rgba(0,0,0,0.45)] backdrop-blur-xl lg:hidden" style={{paddingBottom:'calc(0.5rem + env(safe-area-inset-bottom))'}}><div className="mx-auto flex max-w-6xl items-center gap-3"><div className="min-w-0 flex-1"><p className="text-xs text-[#f5efe6]/70">Products · delivery extra</p><p className="font-display text-xl text-[#e0bd77]">₹{currentTotals.total.toLocaleString('en-IN')}</p></div><button type="submit" form="delivery-checkout-form" disabled={isSubmitting} className="min-h-12 rounded-xl bg-[#278c4d] px-4 text-sm font-semibold text-white disabled:opacity-50">{isSubmitting ? 'Sending...' : 'Send order request'}</button></div></div>}
     </div>
   );
 }
