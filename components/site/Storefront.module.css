@@ -382,9 +382,7 @@
 .home .editorialGrid { gap:16px; }
 .home .editorialCard { min-height:365px; display:flex; flex-direction:column; justify-content:end; padding:35px; overflow:hidden; background:radial-gradient(circle at 90% 10%,#abb89159,transparent 40%),#d9e1ca; }
 .home .editorialCard:nth-child(2) { background:radial-gradient(circle at 90% 10%,#cda97970,transparent 40%),#eadfca; }
-.home .editorialCard:before { content:"✳"; position:absolute; top:-53px; right:24px; font:190px/1 var(--font-display); color:#5472491b; transition:transform .4s; }
-.home .editorialCard:nth-child(2):before { content:"✦"; color:#8e654020; }
-.home .editorialCard:hover:before { transform:rotate(16deg) scale(1.06); }
+.home .editorialCard:before { content:none; }
 .home .editorialCard>svg { top:27px; left:35px; right:auto; }
 .home .editorialCard>.eyebrow { margin:0; }
 .home .editorialCard h2 { margin:16px 0 12px; }
@@ -397,5 +395,49 @@
 @media(max-width:1023px){.home .serviceBar>div{padding-inline:12px}.home .hero h1{font-size:clamp(40px,5.5vw,58px)}.home .categoryCard{min-height:310px}.home .howToOrder{padding:44px 32px}}
 @media(max-width:767px){.home .hero{grid-template-columns:1fr;min-height:0}.home .heroCopy{padding:26px 20px 28px}.home .hero h1{font-size:clamp(37px,8.7vw,50px);line-height:1.1;margin:16px 0}.home .heroDescription{font-size:15px;line-height:1.55}.home .heroActions{margin-top:20px}.home .heroArt{min-height:390px}.home .serviceBar{grid-template-columns:1fr;padding:6px 20px}.home .serviceBar>div{min-height:49px;padding:6px 0;border-right:0;border-bottom:1px solid #e2c89330;font-size:12px}.home .serviceBar>div:last-child{border:0}.home .serviceNumber{min-width:24px}.home .section,.home .selectionSection,.recipeSection{padding-block:43px}.home .categoryGrid{gap:10px}.home .categoryCard{min-height:0;padding:15px 12px;border-radius:55px 55px 12px 12px}.home .categoryImage{height:125px;margin-bottom:8px}.home .categoryCard h3{font-size:18px}.home .categoryCard p{font-size:11px}.home .selectionSection .productCard:hover,.home .categoryCard:hover,.recipeCard:hover{transform:none}.home .storySection{grid-template-columns:1fr}.home .storyVisual{min-height:300px}.home .storyVisual>span{font-size:32px;bottom:24px;left:20px}.home .storyFilmLink{bottom:18px;right:17px;padding:7px 10px;font-size:11px}.home .storyCopy{padding:42px 24px}.home .storyCopy h2{font-size:38px}.recipeGrid{display:flex;overflow-x:auto;gap:12px;scroll-snap-type:x mandatory;padding:0 1px 12px}.recipeCard{min-width:min(78vw,330px);scroll-snap-align:start}.recipeInfo{min-height:160px;padding:17px}.home .editorialGrid{gap:12px}.home .editorialCard{min-height:305px;padding:24px}.home .editorialCard>svg{left:24px;top:20px}.home .howToOrder{grid-template-columns:1fr;gap:30px;margin-top:14px;padding:30px 24px}.home .howToOrder ol{gap:17px}.home .howToOrder li{padding-bottom:17px}}
 @media(max-width:639px){.home .editorialGrid{grid-template-columns:1fr}.home .editorialCard{min-height:285px}.home .categoryImage{height:120px}.home .categoryCard h3{font-size:17px}}
-@media(prefers-reduced-motion:reduce){.home .editorialCard:before{transition:none}.home .recipeCard,.home .categoryCard,.home .selectionSection .productCard{transition:none}}
+@media(prefers-reduced-motion:reduce){.home .recipeCard,.home .categoryCard,.home .selectionSection .productCard{transition:none}}
 .home .storyFilmControl{position:absolute;z-index:2;right:6%;top:22px;display:grid;place-items:center;width:42px;height:42px;border:1px solid #f4e5bf88;border-radius:50%;background:#17281ca8;color:#fff3d9;backdrop-filter:blur(10px)}.home .storyFilmControl:hover{background:#294a34}@media(max-width:767px){.home .storyFilmControl{right:17px;top:17px}}
+
+/* A quieter editorial finish: warm paper, dark spice, and no emoji ornaments. */
+.home .storyVisual video { object-position:center 50%; transform:scale(1.18); }
+.home .storyCopy { background:#28231e; }
+.home .storyCopy .eyebrow { color:#ddb97d; }
+.home .storyCopy h2 em { color:#edca91; }
+.home .storyCopy > p:not(.eyebrow) { color:#e0d6c8; }
+.home .closingSection { background:#f7f2e8; }
+.closingIntro { display:grid; grid-template-columns:minmax(0,1fr) minmax(0,1.15fr); align-items:end; gap:6px 40px; margin-bottom:26px; padding-bottom:24px; border-bottom:1px solid #d4cabb; }
+.closingIntro .eyebrow { grid-column:1/-1; margin:0 0 3px; }
+.closingIntro h2 { font:500 clamp(34px,3.7vw,52px)/1.08 var(--font-display); letter-spacing:-.03em; }
+.closingIntro h2 em { color:#a05e3b; }
+.closingIntro > p:last-child { max-width:380px; color:#716958; font-size:14px; line-height:1.65; justify-self:end; }
+.home .editorialGrid { gap:14px; }
+.home .editorialCard,.home .editorialCard:nth-child(2) { min-height:320px; justify-content:flex-start; background:#e9dfcf; border:1px solid #d6c5ac; border-radius:5px; padding:32px; box-shadow:none; }
+.home .editorialCard:nth-child(2) { background:#e6d9c6; }
+.home .editorialCard:hover { border-color:#a05e3b; background:#eee3d4; }
+.home .editorialTop { display:flex; align-items:center; gap:14px; width:100%; padding-bottom:16px; border-bottom:1px solid #cbbba5; color:#7b4b32; font-size:11px; letter-spacing:.14em; font-weight:700; text-transform:uppercase; }
+.home .editorialCard h2 { margin:24px 0 11px; color:#30291f; font-size:clamp(31px,3vw,43px); line-height:1.08; }
+.home .editorialCard h2 em { color:#9b5f3f; }
+.home .editorialCard > p:not(.eyebrow) { color:#685f52; font-size:14px; line-height:1.6; }
+.home .editorialCard .textLink { margin-top:auto; padding-top:22px; color:#5d3b2a; font-weight:700; }
+.home .howToOrder { margin-top:22px; background:#f1e9dc; border-color:#d8cbbb; border-radius:5px; }
+.home .howToOrder h2 em { color:#a05e3b; }
+.home .howToOrder li { border-color:#d5c7b5; }
+.home .howToOrder .orderCta { background:#443326; }
+.home .howToOrder .orderCta:hover { background:#65452f; }
+@media(max-width:767px) {
+  .home .storyVisual { min-height:340px; }
+  .home .storyVisual video { object-position:center 46%; transform:scale(1.22); }
+  .home .storyCopy { padding:36px 22px; }
+  .home .storyCopy h2 { font-size:35px; line-height:1.08; margin-bottom:17px; }
+  .home .storyCopy > p:not(.eyebrow) { line-height:1.65; margin-bottom:12px; }
+  .home .closingSection { padding-block:46px; }
+  .closingIntro { display:block; margin-bottom:17px; padding-bottom:19px; }
+  .closingIntro h2 { font-size:36px; }
+  .closingIntro > p:last-child { margin-top:12px; font-size:13px; }
+  .home .editorialGrid { gap:10px; }
+  .home .editorialCard,.home .editorialCard:nth-child(2) { min-height:235px; padding:20px; }
+  .home .editorialTop { padding-bottom:11px; }
+  .home .editorialCard h2 { margin:17px 0 8px; font-size:32px; }
+  .home .editorialCard .textLink { padding-top:10px; }
+  .home .howToOrder { margin-top:12px; padding:25px 20px; gap:24px; }
+}
