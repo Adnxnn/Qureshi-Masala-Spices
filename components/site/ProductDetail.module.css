@@ -103,3 +103,4 @@
  .recipeSection { margin-top: 30px; }
  .more { margin-top: 30px; }
 }
+.recipePrompt{display:flex;align-items:center;justify-content:space-between;gap:14px;margin-top:12px;padding:16px 18px;background:#e7ddcc;border:1px solid #cabba5;color:#332d25}.recipePrompt span{display:grid;gap:4px}.recipePrompt small{color:#8c5e3d;font-size:10px;font-weight:800;letter-spacing:.14em}.recipePrompt strong{font:500 23px/1.12 var(--font-display)}.recipePrompt em{color:#746d5d;font-size:12px;font-style:normal}.recipePrompt>svg{flex:none;color:#895a3c}.recipePrompt:hover{background:#eee4d4}.pack{transition:transform .35s}.gallery:hover .pack{transform:translateY(-5px) rotate(-2deg) scale(1.02)}@media(prefers-reduced-motion:reduce){.pack{transition:none}.gallery:hover .pack{transform:none}}@media(max-width:767px){.recipePrompt{padding:14px}.recipePrompt strong{font-size:21px}}

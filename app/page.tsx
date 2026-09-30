@@ -6,6 +6,7 @@ import HeroProductCarousel from '@/components/site/HeroProductCarousel'
 import ProductGrid from '@/components/site/ProductGrid'
 import SpiceFinder from '@/components/site/SpiceFinder'
 import HomeStoryFilm from '@/components/site/HomeStoryFilm'
+import SpiceToSupper, { type SupperPair } from '@/components/site/SpiceToSupper'
 import styles from '@/components/site/Storefront.module.css'
 
 export const dynamic = 'force-dynamic'
@@ -21,6 +22,11 @@ export default async function HomePage() {
   const [products, recipes] = await Promise.all([getProducts(), getPublicRecipes().catch(() => [])])
   const selection = products.filter(product => product.is_active && product.stock_qty > 0 && product.variants.length > 0).slice(0, 4)
   const recipeSelection = [...recipes].sort((a, b) => Number(b.is_featured) - Number(a.is_featured)).slice(0, 3)
+  const supperPairs: SupperPair[] = [...recipes].sort((a, b) => Number(b.is_featured) - Number(a.is_featured)).flatMap(recipe => {
+    const product = recipe.recipe_products?.map(item => item.products).find(item => item?.is_active && item.image_url && item.variants?.length)
+    if (!product || !recipe.thumbnail_url) return []
+    return [{ recipeId: recipe.id, recipeName: recipe.name, recipeSlug: recipe.slug, recipeImage: recipe.thumbnail_url, recipeTime: recipe.total_time, productName: product.name, productSlug: product.slug, productImage: product.image_url, packSize: product.variants[0].weight_grams }]
+  }).slice(0, 3)
 
   return <div className={`${styles.storefront} ${styles.home}`}>
     <section className={styles.hero} aria-labelledby="home-title">
@@ -59,6 +65,8 @@ export default async function HomePage() {
         <ProductGrid products={selection} />
       </div>
     </section>}
+
+    <SpiceToSupper pairs={supperPairs} />
 
     <section className={styles.storySection}>
       <div className={styles.storyVisual}><HomeStoryFilm /><span>Food connects us.</span><Link href="/our-story" className={styles.storyFilmLink}>Watch our story <ArrowUpRight size={16} /></Link></div>
