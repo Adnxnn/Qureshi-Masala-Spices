@@ -45,6 +45,7 @@
  .cta { padding: 28px 22px; }
 }
 @media(max-width: 359px) { .cards { grid-template-columns: 1fr; } }
+@media(max-width:767px){.hero{gap:22px;padding-block:24px 30px}.hero h1{line-height:1.12;margin-bottom:16px}.hero p:not(.eyebrow),.copy p{line-height:1.6;margin-bottom:14px}.actions{margin-top:20px}.section{padding-block:30px}.section h2{margin-bottom:16px}.split{gap:22px}.card{padding:16px}.card svg{margin-bottom:12px}.card h3{margin-bottom:7px}.step{gap:13px}.step p,.event p{line-height:1.6}.timeline{gap:14px}.event{padding:19px}.cta{padding:24px 20px}}
 .page { background:#f3ecdf; color:#303628; }
 .eyebrow { color:#8c4f31; }
 .hero em { color:#536743; }
