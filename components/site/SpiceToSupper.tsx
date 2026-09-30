@@ -49,18 +49,19 @@ export default function SpiceToSupper({ pairs }: { pairs: SupperPair[] }) {
       </div>
       <div className={styles.stage}>
         <div className={styles.scene}>
+          {pairs.length > 1 && <span className={styles.preloadImages} aria-hidden="true"><Image src={pairs[(activeIndex + 1) % pairs.length].productImage} alt="" fill sizes="(max-width: 700px) 45vw, 22vw" loading="eager" /><Image src={pairs[(activeIndex + 1) % pairs.length].recipeImage} alt="" fill sizes="(max-width: 700px) 55vw, 33vw" loading="eager" /></span>}
           <div className={styles.spiceSide}>
             <span className={styles.sceneLabel}>01 / THE BLEND</span>
             <span className={styles.orbit} aria-hidden="true" />
-            <AnimatePresence mode="wait" initial={false}>
-              <motion.div key={pair.productSlug} className={styles.pack} initial={{ opacity: 0, y: reducedMotion ? 0 : 22, rotate: reducedMotion ? 0 : -8 }} animate={{ opacity: 1, y: 0, rotate: -5 }} exit={{ opacity: 0, y: reducedMotion ? 0 : -15 }} transition={{ duration: reducedMotion ? 0 : .4 }}><Image src={pair.productImage} alt={`${pair.productName} pack`} fill sizes="(max-width: 700px) 45vw, 22vw" /></motion.div>
+            <AnimatePresence mode="sync" initial={false}>
+              <motion.div key={pair.productSlug} className={styles.pack} initial={{ opacity: 0, y: reducedMotion ? 0 : 12, rotate: reducedMotion ? 0 : -8 }} animate={{ opacity: 1, y: 0, rotate: -5 }} exit={{ opacity: 0 }} transition={{ duration: reducedMotion ? 0 : .25 }}><Image src={pair.productImage} alt={`${pair.productName} pack`} fill sizes="(max-width: 700px) 45vw, 22vw" /></motion.div>
             </AnimatePresence>
             <span className={styles.packName}>{pair.productName}</span>
           </div>
           <div className={styles.dishSide}>
             <span className={styles.sceneLabel}>02 / YOUR TABLE</span>
-            <AnimatePresence mode="wait" initial={false}>
-              <motion.div key={pair.recipeId} className={styles.dishImage} initial={{ opacity: 0, scale: reducedMotion ? 1 : 1.06 }} animate={{ opacity: 1, scale: 1 }} exit={{ opacity: 0 }} transition={{ duration: reducedMotion ? 0 : .45 }}><Image src={pair.recipeImage} alt={pair.recipeName} fill sizes="(max-width: 700px) 55vw, 33vw" /></motion.div>
+            <AnimatePresence mode="sync" initial={false}>
+              <motion.div key={pair.recipeId} className={styles.dishImage} initial={{ opacity: 0, scale: reducedMotion ? 1 : 1.03 }} animate={{ opacity: 1, scale: 1 }} exit={{ opacity: 0 }} transition={{ duration: reducedMotion ? 0 : .25 }}><Image src={pair.recipeImage} alt={pair.recipeName} fill sizes="(max-width: 700px) 55vw, 33vw" /></motion.div>
             </AnimatePresence>
             <span className={styles.dishName}>{pair.recipeName}</span>
           </div>
