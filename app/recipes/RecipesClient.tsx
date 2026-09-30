@@ -14,8 +14,9 @@ export default function RecipesClient({ allRecipes }: { allRecipes: RecipeWithPr
   const [topic, setTopic] = useState<(typeof topics)[number]>('All recipes')
   const filtered = useMemo(() => allRecipes.filter(recipe => {
     const haystack = [recipe.name, recipe.short_description, recipe.cuisine_or_category, ...recipe.recipe_products.map(item => item.products?.name || '')].join(' ').toLowerCase()
+    const dish = `${recipe.name} ${recipe.short_description}`.toLowerCase()
     const matchesQuery = haystack.includes(query.trim().toLowerCase())
-    const matchesTopic = topic === 'All recipes' || (topic === 'Vegetarian' ? recipe.is_vegetarian : topic === 'Seafood' ? /fish|prawn|seafood|coastal/.test(haystack) : haystack.includes(topic.toLowerCase()))
+    const matchesTopic = topic === 'All recipes' || (topic === 'Vegetarian' ? recipe.is_vegetarian : topic === 'Seafood' ? /fish|prawn|seafood|coastal/.test(dish) : dish.includes(topic.toLowerCase()))
     return matchesQuery && matchesTopic
   }), [allRecipes, query, topic])
 
@@ -30,7 +31,7 @@ export default function RecipesClient({ allRecipes }: { allRecipes: RecipeWithPr
       {filtered.length ? <div className={styles.grid}>{filtered.map((recipe, index) => {
         const product = recipe.recipe_products.find(item => item.products?.is_active)?.products
         return <Link href={`/recipes/${recipe.slug}`} key={recipe.id} className={styles.card}>
-          <div className={styles.cardImage}>{recipe.thumbnail_url ? <Image src={recipe.thumbnail_url} alt="" fill sizes="(max-width: 640px) 100vw, (max-width: 1023px) 50vw, 33vw" /> : <Utensils size={44} aria-hidden="true" />}<span>0{index + 1} / THE KITCHEN EDIT</span></div>
+          <div className={styles.cardImage}>{recipe.thumbnail_url ? <Image src={recipe.thumbnail_url} alt="" fill sizes="(max-width: 640px) 100vw, (max-width: 1023px) 50vw, 33vw" /> : <Utensils size={44} aria-hidden="true" />}<span>{String(index + 1).padStart(2, '0')} / THE KITCHEN EDIT</span></div>
           <div className={styles.cardBody}><div className={styles.cardMeta}><span>{recipe.cuisine_or_category || (recipe.is_vegetarian ? 'Vegetarian' : 'From our kitchen')}</span>{recipe.total_time && <span><Clock3 size={13} /> {recipe.total_time} min</span>}</div><h2>{recipe.name}</h2><p>{recipe.short_description}</p>{product && <small>Made with {product.name}</small>}<span className={styles.cardLink}>Cook this recipe <ArrowUpRight size={17} /></span></div>
         </Link>
       })}</div> : <div className={styles.empty}><Utensils size={30} /><h2>No recipes found.</h2><p>Try a different dish or explore the whole kitchen.</p><button type="button" onClick={() => { setQuery(''); setTopic('All recipes') }}>Show all recipes</button></div>}
