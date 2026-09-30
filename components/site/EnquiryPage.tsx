@@ -11,7 +11,7 @@ export default function EnquiryPage({ retail = false }: { retail?: boolean }) {
   function submit(event: React.FormEvent<HTMLFormElement>) {
     event.preventDefault()
     const data = new FormData(event.currentTarget)
-    const message = 'Hello Qureshi’s Masala & Spices,\n\n' + Array.from(data.entries()).map(([key, value]) => key + ': ' + value).join('\n')
+    const message = 'Hello QMS,\n\n' + Array.from(data.entries()).map(([key, value]) => key + ': ' + value).join('\n')
     const url = 'https://wa.me/' + SITE.whatsappNumber + '?text=' + encodeURIComponent(message)
     setReadyMessage(url)
     window.open(url, '_blank', 'noopener,noreferrer')
@@ -19,10 +19,10 @@ export default function EnquiryPage({ retail = false }: { retail?: boolean }) {
   return <div className={styles.page}>
     <div className={styles.container}>
       <nav aria-label="Breadcrumb" className={styles.breadcrumb}><Link href="/">Home</Link><span>/</span><span>{retail ? 'Retail partnerships' : 'Contact'}</span></nav>
-      <header className={styles.intro}><p className={styles.eyebrow}>{retail ? 'Good flavour. Great partnerships.' : 'A real conversation, always.'}</p><h1>{retail ? <>A place on your shelf.<br /><em>A flavour they’ll remember.</em></> : <>A little help.<br /><em>A lot of heart.</em></>}</h1><p>{retail ? 'Bring Qureshi’s to your customers. Tell us about your business and let’s explore the right collection for your shelves.' : 'Choosing a masala, planning a meal, or checking an order? We’re here to help you take the next step.'}</p></header>
+      <header className={styles.intro}><p className={styles.eyebrow}>{retail ? 'Good flavour. Great partnerships.' : 'A real conversation, always.'}</p><h1>{retail ? <>A place on your shelf.<br /><em>A flavour they’ll remember.</em></> : <>A little help.<br /><em>A lot of heart.</em></>}</h1><p>{retail ? 'Bring QMS to your customers. Tell us about your business and let’s explore the right collection for your shelves.' : 'Choosing a masala, planning a meal, or checking an order? We’re here to help you take the next step.'}</p></header>
       <div className={styles.grid}>
         <aside className={styles.aside}>
-          <div className={styles.photo}><Image src="/images/Ourheritage1.jpg" alt="Colourful spices in wooden bowls" fill sizes="(max-width: 760px) 100vw, 40vw" /><div><p>{retail ? 'Let’s grow together.' : 'From our kitchen to yours.'}</p><span>Qureshi’s Masala & Spices</span></div></div>
+          <div className={styles.photo}><Image src="/images/Ourheritage1.jpg" alt="Colourful spices in wooden bowls" fill sizes="(max-width: 760px) 100vw, 40vw" /><div><p>{retail ? 'Let’s grow together.' : 'From our kitchen to yours.'}</p><span>QMS</span></div></div>
           <div className={styles.channels}><a href={'https://wa.me/' + SITE.whatsappNumber} target="_blank" rel="noopener noreferrer"><MessageCircle /><div><strong>Chat on WhatsApp</strong><span>Products, orders & delivery</span></div><ArrowUpRight /></a><a href={'mailto:' + SITE.email}><Mail /><div><strong>Email our team</strong><span>{SITE.email}</span></div><ArrowUpRight /></a><a href={'tel:+' + SITE.whatsappNumber}><Phone /><div><strong>Give us a call</strong><span>+91 {SITE.whatsappNumber.slice(2)}</span></div><ArrowUpRight /></a></div>
           <Link href={retail ? '/shop' : '/faq'} className={styles.help}>{retail ? 'Explore the spice collection' : 'Looking for a quick answer? Read our FAQs'}<ArrowUpRight size={18} /></Link>
         </aside>
@@ -39,7 +39,7 @@ export default function EnquiryPage({ retail = false }: { retail?: boolean }) {
           </form>
         </section>
       </div>
-      <section className={styles.next}><div><p className={styles.eyebrow}>While you’re here</p><h2>{retail ? 'See what’s cooking.' : 'Something delicious awaits.'}</h2></div><Link href={retail ? '/our-story' : '/recipes'}>{retail ? 'Get to know Qureshi’s' : 'Explore our recipes'}<ArrowUpRight size={20} /></Link></section>
+      <section className={styles.next}><div><p className={styles.eyebrow}>While you’re here</p><h2>{retail ? 'See what’s cooking.' : 'Something delicious awaits.'}</h2></div><Link href={retail ? '/our-story' : '/recipes'}>{retail ? 'Get to know QMS' : 'Explore our recipes'}<ArrowUpRight size={20} /></Link></section>
     </div>
   </div>
 }

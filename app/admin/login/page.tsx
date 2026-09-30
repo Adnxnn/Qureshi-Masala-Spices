@@ -1,7 +1,7 @@
 'use client'
 
 import { useState } from 'react'
-import Image from 'next/image'
+import BrandMark from '@/components/site/BrandMark'
 import Link from 'next/link'
 import { useRouter } from 'next/navigation'
 import { Eye, EyeOff, LockKeyhole } from 'lucide-react'
@@ -40,14 +40,7 @@ export default function AdminLogin() {
       <AuthBackdrop />
       <div className="relative z-10 w-full max-w-sm">
         <div className="mb-7 text-center sm:mb-9">
-          <Image
-            src="/images/Qureshi's Nav.png"
-            alt="Qureshi's Masala & Spices"
-            width={190}
-            height={48}
-            priority
-            className="mx-auto h-auto w-[170px] object-contain sm:w-[190px]"
-          />
+          <BrandMark className="mx-auto" />
           <div className="mt-5 inline-flex items-center gap-2 text-[11px] font-bold uppercase tracking-[0.28em] text-gold">
             <LockKeyhole size={15} aria-hidden="true" />
             Admin access

@@ -5,7 +5,7 @@ import { Heart, Leaf, Shield, Sparkles } from 'lucide-react'
 import styles from '@/components/site/Editorial.module.css'
 import type { Metadata } from 'next'
 
-export const metadata: Metadata = { title: 'Our Story', description: "Meet Qureshi's Masala & Spices and discover the family cooking and careful blending behind our masalas.", alternates: { canonical: '/our-story' } }
+export const metadata: Metadata = { title: 'Our Story', description: "Meet QMS and discover the family cooking and careful blending behind our masalas.", alternates: { canonical: '/our-story' } }
 
 const values = [
   { icon: Sparkles, title: 'Authenticity', text: 'Traditional recipes, shared across generations.' },
@@ -20,12 +20,12 @@ const steps = [
   ['Packaging', 'Our blends are packed to protect their freshness and aroma on the way to your kitchen.'],
 ]
 export default function OurStoryPage() {
-  return <div className={`${styles.page} ${styles.filmPage}`}><EditorialFilm src="/images/Qureshi_s_Masala_Spices_Ou.mp4" label="Qureshi’s story film" /><div className={styles.container}>
+  return <div className={`${styles.page} ${styles.filmPage}`}><EditorialFilm src="/images/Qureshi_s_Masala_Spices_Ou.mp4" label="QMS story film" /><div className={styles.container}>
     <header className={styles.hero}>
       <div><p className={styles.eyebrow}>Our story</p><h1>More than masala.<br /><em>A tradition shared.</em></h1><p>Familiar aromas. Recipes passed around the family. The joy of sitting down to a meal together. This is where our story begins.</p><div className={styles.actions}><Link href="/shop" className="royal-button">Explore our spices</Link><Link href="/our-heritage" className="royal-button-secondary">Our heritage</Link></div></div>
     </header>
     <section className={`${styles.section} ${styles.split}`}>
-      <div className={styles.copy}><p className={styles.eyebrow}>Who we are</p><h2>The story behind every blend.</h2><p>At Qureshi&apos;s Masala &amp; Spices, every blend celebrates tradition, family and the rich culinary heritage passed down through generations.</p><p>Our journey began with a simple belief: great food deserves great spices. Inspired by traditional Indian kitchens, we create masalas that bring the taste of home to everyday meals.</p></div>
+      <div className={styles.copy}><p className={styles.eyebrow}>Who we are</p><h2>The story behind every blend.</h2><p>At QMS, every blend celebrates tradition, family and the rich culinary heritage passed down through generations.</p><p>Our journey began with a simple belief: great food deserves great spices. Inspired by traditional Indian kitchens, we create masalas that bring the taste of home to everyday meals.</p></div>
       <HeritageGraphic />
     </section>
     <section className={styles.section}><p className={styles.eyebrow}>What matters to us</p><h2>Good food starts with care.</h2><div className={styles.cards}>{values.map(({ icon: Icon, title, text }) => <article key={title} className={styles.card}><Icon size={26} aria-hidden="true" /><h3>{title}</h3><p>{text}</p></article>)}</div></section>

@@ -20,7 +20,7 @@ export default function PrivacyPolicyPage() {
         <div className="royal-prose space-y-8">
           <section>
             <p className="mb-4">
-              This Privacy Policy describes how Qureshi&apos;s Masala &amp; Spices (&quot;we&quot;, &quot;us&quot;, or &quot;our&quot;) collects, uses, and shares your information when you visit our website and use our services.
+              This Privacy Policy describes how QMS (&quot;we&quot;, &quot;us&quot;, or &quot;our&quot;) collects, uses, and shares your information when you visit our website and use our services.
             </p>
           </section>
 

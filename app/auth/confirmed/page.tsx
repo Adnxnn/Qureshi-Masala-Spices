@@ -87,7 +87,7 @@ export default function EmailConfirmedPage() {
           {isChecking
             ? 'Please wait while we securely complete your account verification.'
             : confirmationState === 'confirmed'
-            ? "Your Qureshi's account is ready. Sign in to view your profile, saved address and order history."
+            ? "Your QMS account is ready. Sign in to view your profile, saved address and order history."
             : 'This confirmation link may have expired or already been used. Try signing in first—if your email was already confirmed, your account will open normally.'}
         </p>
 

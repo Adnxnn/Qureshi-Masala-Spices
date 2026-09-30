@@ -51,7 +51,7 @@ export default function ProductDetailClient({ product, relatedRecipes = [] }: { 
         <div className={styles.gallery}>
           <div className={styles.halo} aria-hidden="true" />
           {product.image_url ? <Image src={product.image_url} alt={`${product.name} pack`} fill priority sizes="(max-width: 767px) 90vw, 45vw" className={styles.pack} /> : <ShoppingBag size={72} aria-label="Product image unavailable" />}
-          <span className={styles.galleryLabel}>Qureshi&apos;s Masala &amp; Spices</span>
+          <span className={styles.galleryLabel}>QMS</span>
         </div>
         <div className={styles.details}>
           <p className={styles.eyebrow}>{productUseLabel(product)}</p>

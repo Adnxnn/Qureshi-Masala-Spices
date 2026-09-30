@@ -1,6 +1,6 @@
 'use client'
 import Link from 'next/link'
-import Image from 'next/image'
+import BrandMark from '@/components/site/BrandMark'
 import { useEffect, useState } from 'react'
 import { usePathname } from 'next/navigation'
 import { motion, AnimatePresence } from 'framer-motion'
@@ -51,14 +51,7 @@ export default function SiteLayout({ children }: { children: React.ReactNode }) 
         }}
       >
         <Link href="/" className="flex items-center">
-          <Image
-            src="/images/qureshis-navbar-logo.png"
-            alt="Qureshi's Masala"
-            width={160}
-            height={40}
-            className="object-contain"
-            priority
-          />
+          <BrandMark />
         </Link>
 
         {/* Desktop Links */}
@@ -152,7 +145,7 @@ export default function SiteLayout({ children }: { children: React.ReactNode }) 
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-10 mb-12">
             {/* Brand */}
             <div className="lg:col-span-2">
-              <div className="font-display text-3xl tracking-widest mb-2">QURESHI'S <span className="text-gradient-gold">MASALA</span></div>
+              <div className="font-display text-3xl tracking-widest mb-2">QMS</div>
               <div className="font-serif italic text-white/40 text-sm mb-4">Pure Flavour. Endless Taste.</div>
               <p className="text-white/35 text-sm leading-relaxed max-w-sm mb-6">
                 Small-batch masalas crafted with passion, shipped all over India. 100% natural, zero preservatives.
@@ -192,7 +185,7 @@ export default function SiteLayout({ children }: { children: React.ReactNode }) 
           </div>
 
           <div className="border-t border-white/5 pt-8 flex flex-col sm:flex-row justify-between items-center gap-4">
-            <span className="text-white/25 text-[11px] tracking-wider">© 2026 Qureshi's Masala & Spices. All rights reserved.</span>
+            <span className="text-white/25 text-[11px] tracking-wider">© 2026 QMS. All rights reserved.</span>
             <div className="flex gap-3">
               {['100% Natural', 'No Preservatives', 'Made in India', 'Small Batch'].map((b, i) => (
                 <span key={i} className="px-3 py-1.5 border border-gold/20 text-[10px] tracking-[0.2em] uppercase text-gold/50">{b}</span>

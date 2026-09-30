@@ -22,16 +22,16 @@ export default async function HomePage() {
   const [products, recipes] = await Promise.all([getProducts(), getPublicRecipes().catch(() => [])])
   const selection = products.filter(product => product.is_active && product.stock_qty > 0 && product.variants.length > 0).slice(0, 4)
   const recipeSelection = [...recipes].sort((a, b) => Number(b.is_featured) - Number(a.is_featured)).slice(0, 3)
-  const supperPairs: SupperPair[] = [...recipes].sort((a, b) => Number(b.is_featured) - Number(a.is_featured)).flatMap(recipe => {
-    const product = recipe.recipe_products?.map(item => item.products).find(item => item?.is_active && item.image_url && item.variants?.length)
-    if (!product || !recipe.thumbnail_url) return []
-    return [{ recipeId: recipe.id, recipeName: recipe.name, recipeSlug: recipe.slug, recipeImage: recipe.thumbnail_url, recipeTime: recipe.total_time, productName: product.name, productSlug: product.slug, productImage: product.image_url, packSize: product.variants[0].weight_grams }]
-  }).slice(0, 3)
+  const sortedRecipes = [...recipes].sort((a, b) => Number(b.is_featured) - Number(a.is_featured))
+  const supperPairs: SupperPair[] = products.filter(product => product.is_active && product.image_url).map(product => {
+    const recipe = sortedRecipes.find(item => item.thumbnail_url && item.recipe_products?.some(link => link.product_id === product.id || link.products?.slug === product.slug))
+    return { productName: product.name, productSlug: product.slug, productImage: product.image_url, productDescription: product.short_description || product.description, packSize: product.variants?.[0]?.weight_grams ?? null, recipeId: recipe?.id, recipeName: recipe?.name, recipeSlug: recipe?.slug, recipeImage: recipe?.thumbnail_url ?? null, recipeTime: recipe?.total_time ?? null }
+  })
 
   return <div className={`${styles.storefront} ${styles.home}`}>
     <section className={styles.hero} aria-labelledby="home-title">
       <div className={styles.heroCopy}>
-        <p className={styles.eyebrow}><span className={styles.smallRule} /> Qureshi&apos;s Masala & Spices</p>
+        <p className={styles.eyebrow}><span className={styles.smallRule} /> QMS</p>
         <h1 id="home-title">Good food.<br />Great company.<br /><em>Unforgettable flavour.</em></h1>
         <p className={styles.heroDescription}>For the recipes you grew up with.<br />And the ones you&apos;ll make your own.</p>
         <div className={styles.heroActions}><Link href="/shop" className={styles.primaryButton}>Explore the spices <ArrowUpRight size={19} /></Link><Link href="/our-story" className={styles.textLink}>Our story <ArrowUpRight size={17} /></Link></div>
@@ -45,7 +45,7 @@ export default async function HomePage() {
       }))} />
     </section>
 
-    <div className={styles.serviceBar} aria-label="The Qureshi’s experience">
+    <div className={styles.serviceBar} aria-label="The QMS experience">
       <div><span className={styles.serviceNumber}>01</span><Package size={19} /><span>Pick the pack that suits your kitchen</span></div>
       <div><span className={styles.serviceNumber}>02</span><Utensils size={19} /><span>Find a recipe for your next meal</span></div>
       <div><span className={styles.serviceNumber}>03</span><MessageCircle size={19} /><span>Confirm personally on WhatsApp</span></div>
@@ -70,7 +70,7 @@ export default async function HomePage() {
 
     <section className={styles.storySection}>
       <div className={styles.storyVisual}><HomeStoryFilm /><span>Food connects us.</span><Link href="/our-story" className={styles.storyFilmLink}>Watch our story <ArrowUpRight size={16} /></Link></div>
-      <div className={styles.storyCopy}><p className={styles.eyebrow}>More than a meal</p><h2>Some stories<br />are told<br /><em>through flavour.</em></h2><p>A familiar aroma. A recipe passed around the family. One more serving shared across the table. These are the moments that inspire Qureshi&apos;s Masala & Spices.</p><p>We believe the right blend is the beginning of a meal worth remembering.</p><Link href="/our-story" className={styles.outlineButton}>Meet Qureshi&apos;s <ArrowUpRight size={18} /></Link></div>
+      <div className={styles.storyCopy}><p className={styles.eyebrow}>More than a meal</p><h2>Some stories<br />are told<br /><em>through flavour.</em></h2><p>A familiar aroma. A recipe passed around the family. One more serving shared across the table. These are the moments that inspire QMS.</p><p>We believe the right blend is the beginning of a meal worth remembering.</p><Link href="/our-story" className={styles.outlineButton}>Meet QMS <ArrowUpRight size={18} /></Link></div>
     </section>
 
     {recipeSelection.length > 0 && <section className={styles.recipeSection} aria-labelledby="home-recipes-title"><div className={styles.container}>
@@ -83,7 +83,7 @@ export default async function HomePage() {
         <div className={styles.closingIntro}><p className={styles.eyebrow}>Beyond the spice jar</p><h2>There&apos;s more to <em>the story.</em></h2><p>From the recipes we share to the shelves we join, discover the world behind the flavour.</p></div>
         <div className={styles.editorialGrid}>
           <Link href="/our-heritage" className={styles.editorialCard}><span className={styles.editorialTop}><Leaf size={23} aria-hidden="true" /><span>01 / Our heritage</span></span><h2>Recipes worth<br /><em>passing on.</em></h2><p>Meet the traditions and moments that inspire every blend.</p><span className={styles.textLink}>Explore our heritage <ArrowUpRight size={18} /></span></Link>
-          <Link href="/stock-our-products" className={styles.editorialCard}><span className={styles.editorialTop}><Package size={23} aria-hidden="true" /><span>02 / For retailers</span></span><h2>Good flavour<br /><em>belongs everywhere.</em></h2><p>Bring Qureshi&apos;s Masala & Spices to your shelves.</p><span className={styles.textLink}>Stock our products <ArrowUpRight size={18} /></span></Link>
+          <Link href="/stock-our-products" className={styles.editorialCard}><span className={styles.editorialTop}><Package size={23} aria-hidden="true" /><span>02 / For retailers</span></span><h2>Good flavour<br /><em>belongs everywhere.</em></h2><p>Bring QMS to your shelves.</p><span className={styles.textLink}>Stock our products <ArrowUpRight size={18} /></span></Link>
         </div>
         <div className={styles.howToOrder}><div><p className={styles.eyebrow}>Simple, personal ordering</p><h2>Your kitchen.<br /><em>Our next destination.</em></h2><Link href="/shop" className={styles.orderCta}>Find your flavour <ArrowRight size={18} /></Link></div><ol><li><span>01</span><div><h3>Find your flavour</h3><p>Choose your spices, pack sizes and quantities.</p></div></li><li><span>02</span><div><h3>Share your details</h3><p>Review your cart and enter your delivery address.</p></div></li><li><span>03</span><div><h3>Connect on WhatsApp</h3><p>Submit your order and confirm delivery and payment with our team. No payment is collected on this website.</p></div></li></ol></div>
       </div>

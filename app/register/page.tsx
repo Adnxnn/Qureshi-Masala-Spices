@@ -80,7 +80,7 @@ export default function RegisterPage() {
       <div className="relative z-10 mx-auto w-full max-w-lg">
         <div className="mb-7 text-center sm:mb-9">
           <p className="royal-eyebrow mb-3">
-            Join Qureshi&apos;s
+            Join QMS
           </p>
           <h1 className="royal-title text-5xl sm:text-6xl">
             Create your account.

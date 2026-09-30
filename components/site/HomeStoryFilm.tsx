@@ -32,5 +32,5 @@ export default function HomeStoryFilm() {
     if (element.paused) { userPaused.current = false; void element.play().catch(() => setPlaying(false)) }
     else { userPaused.current = true; element.pause() }
   }
-  return <><video ref={video} src="/images/Qureshi_s_Masala_Spices_Ou.mp4" autoPlay muted loop playsInline preload="metadata" aria-label="A glimpse of Qureshi’s story" onPlay={() => setPlaying(true)} onPause={() => setPlaying(false)} /><button type="button" className={styles.storyFilmControl} onClick={toggle} aria-label={playing ? 'Pause story film' : 'Play story film'}>{playing ? <Pause size={15} /> : <Play size={15} />}</button></>
+  return <><video ref={video} src="/images/Qureshi_s_Masala_Spices_Ou.mp4" autoPlay muted loop playsInline preload="metadata" aria-label="A glimpse of QMS story" onPlay={() => setPlaying(true)} onPause={() => setPlaying(false)} /><button type="button" className={styles.storyFilmControl} onClick={toggle} aria-label={playing ? 'Pause story film' : 'Play story film'}>{playing ? <Pause size={15} /> : <Play size={15} />}</button></>
 }

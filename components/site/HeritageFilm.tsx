@@ -40,7 +40,7 @@ export default function HeritageFilm() {
   }
 
   return <>
-    <video ref={video} className={styles.video} src="/images/Background01.MP4" autoPlay muted loop playsInline preload="auto" disablePictureInPicture aria-label="Qureshi’s heritage film" onPlay={() => setPlaying(true)} onPause={() => setPlaying(false)} />
+    <video ref={video} className={styles.video} src="/images/Background01.MP4" autoPlay muted loop playsInline preload="auto" disablePictureInPicture aria-label="QMS heritage film" onPlay={() => setPlaying(true)} onPause={() => setPlaying(false)} />
     <div className={styles.filmShade} aria-hidden="true" />
     <div className={styles.filmControls}>
       <button type="button" onClick={toggle} aria-label={playing ? 'Pause heritage film' : 'Play heritage film'}>{playing ? <Pause size={16} /> : <Play size={16} />}<span>{playing ? 'Pause film' : 'Play film'}</span></button>

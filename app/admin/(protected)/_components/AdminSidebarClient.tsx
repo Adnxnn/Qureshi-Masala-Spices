@@ -182,7 +182,7 @@ export default function AdminSidebarClient({
 
         <div className="ml-3 min-w-0">
           <div className="truncate text-[9px] font-semibold uppercase tracking-[0.22em] text-gold">
-            Qureshi&apos;s Admin
+            QMS Admin
           </div>
           <div className="truncate text-sm font-semibold text-white">
             {activeItem.label}

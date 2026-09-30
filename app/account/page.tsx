@@ -181,7 +181,7 @@ export default function AccountPage() {
       <div className="mx-auto max-w-4xl">
         <div className="mb-7 sm:mb-9">
           <p className="royal-eyebrow mb-2">
-            Your Qureshi&apos;s account
+            Your QMS account
           </p>
           <h1 className="royal-title text-5xl sm:text-6xl">My account.</h1>
           <p className="mt-2 text-sm text-white/65 sm:text-base">Welcome back, {user.full_name}.</p>

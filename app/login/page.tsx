@@ -49,7 +49,7 @@ export default function LoginPage() {
       <div className="relative z-10 mx-auto w-full max-w-md">
         <div className="mb-7 text-center sm:mb-9">
           <p className="royal-eyebrow mb-3">
-            Your Qureshi&apos;s account
+            Your QMS account
           </p>
           <h1 className="royal-title text-5xl sm:text-6xl">
             Welcome back.
@@ -143,7 +143,7 @@ export default function LoginPage() {
 
           <div className="mt-7 border-t border-white/10 pt-6 text-center">
             <p className="text-sm text-white/65">
-              New to Qureshi&apos;s?{' '}
+              New to QMS?{' '}
               <Link
                 href="/register"
                 className="font-semibold text-gold underline-offset-4 hover:underline focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-gold"

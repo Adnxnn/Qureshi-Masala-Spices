@@ -562,3 +562,4 @@ a {
  .recipe-topics { margin-top: -8px; margin-bottom: 20px; justify-content: flex-start; flex-wrap: nowrap; overflow-x: auto; scrollbar-width: none; }
  .recipe-topics button { flex: none; white-space: nowrap; }
 }
+.qms-wordmark{display:inline-flex;align-items:baseline;color:#f9f1de;font:600 37px/1 var(--font-display),Georgia,serif;letter-spacing:-.075em;white-space:nowrap;text-shadow:0 1px 12px #0004}.qms-wordmark>span{color:#dbb886}.site-footer .qms-wordmark{font-size:47px}@media(max-width:600px){.qms-wordmark{font-size:32px}.site-footer .qms-wordmark{font-size:41px}}

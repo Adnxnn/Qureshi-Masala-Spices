@@ -126,7 +126,7 @@ export default function CinematicShopCTA({ products }: { products: Product[] }) 
         <div
           ref={stageRef}
           className="relative mx-auto h-[330px] w-full max-w-[560px] [perspective:1100px] sm:h-[430px] lg:h-[500px] lg:max-w-[650px]"
-          aria-label="Selected Qureshi's masala pouches"
+          aria-label="Selected QMS masala pouches"
         >
           <div
             ref={glowRef}

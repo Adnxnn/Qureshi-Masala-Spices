@@ -143,7 +143,7 @@ export default function HeroSection() {
         style={{ WebkitTextStroke: '1px rgba(224,200,137,0.09)' }}
         aria-hidden="true"
       >
-        Qureshi&apos;s
+        QMS
       </div>
 
       <div className="mx-auto grid min-h-[calc(100svh-72px)] max-w-[1480px] grid-cols-1 items-center gap-4 px-5 py-12 sm:min-h-[calc(100svh-88px)] sm:px-8 lg:grid-cols-12 lg:gap-0 lg:px-12 xl:px-16">
@@ -242,7 +242,7 @@ export default function HeroSection() {
               <div className="relative h-full w-full [transform:translateZ(-28px)_rotate(-7deg)]">
                 <Image
                   src="/images/Biryani Masala.png"
-                  alt="Qureshi's Biryani Masala pouch"
+                  alt="QMS Biryani Masala pouch"
                   fill
                   sizes="(max-width: 900px) 42vw, 28vw"
                   className="object-contain drop-shadow-[0_34px_36px_rgba(0,0,0,0.62)]"
@@ -259,7 +259,7 @@ export default function HeroSection() {
               <div className="relative h-full w-full [transform:translateZ(-24px)_rotate(7deg)]">
                 <Image
                   src="/images/Green Chicken Masala.png"
-                  alt="Qureshi's Green Chicken Kebab Masala pouch"
+                  alt="QMS Green Chicken Kebab Masala pouch"
                   fill
                   sizes="(max-width: 900px) 42vw, 28vw"
                   className="object-contain drop-shadow-[0_34px_36px_rgba(0,0,0,0.62)]"
@@ -276,7 +276,7 @@ export default function HeroSection() {
                 <div className="relative h-full w-full [transform:translateZ(52px)]">
                   <Image
                     src="/images/Kebab Masala.png"
-                    alt="Qureshi's Chicken Kebab Masala pouch"
+                    alt="QMS Chicken Kebab Masala pouch"
                     fill
                     sizes="(max-width: 900px) 52vw, 34vw"
                     className="object-contain drop-shadow-[0_42px_44px_rgba(0,0,0,0.74)]"
@@ -288,7 +288,7 @@ export default function HeroSection() {
           </div>
 
           <div className="absolute bottom-[5%] right-0 z-30 hidden max-w-[13rem] border-l border-gold/35 pl-4 text-[10px] uppercase leading-5 tracking-[0.16em] text-cream/42 xl:block">
-            Real Qureshi&apos;s pouches
+            Real QMS pouches
             <span className="block text-gold-light/80">No decorative mockups</span>
           </div>
         </div>

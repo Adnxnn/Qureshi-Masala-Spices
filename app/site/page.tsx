@@ -128,7 +128,7 @@ export default function HomePage() {
               transition={{ delay: 0.1 }}
               className="font-display text-4xl sm:text-6xl uppercase leading-none"
             >
-              The <span className="text-gradient-gold">Qureshi's Difference</span>
+              The <span className="text-gradient-gold">QMS Difference</span>
             </motion.h2>
           </div>
 
@@ -173,7 +173,7 @@ export default function HomePage() {
               Spice is our <span className="text-gradient-gold">Heritage</span>
             </h2>
             <p className="text-white/45 leading-relaxed mb-8">
-              At Qureshi's, we believe a great masala isn't made in a factory — it's crafted with intent and generations of knowledge. Each blend in our range is small-batch ground to preserve the volatile oils that mass production destroys. What you smell when you open a packet is real, authentic aroma.
+              At QMS, we believe a great masala isn't made in a factory — it's crafted with intent and generations of knowledge. Each blend in our range is small-batch ground to preserve the volatile oils that mass production destroys. What you smell when you open a packet is real, authentic aroma.
             </p>
             <Link href="/our-heritage" className="inline-flex items-center gap-3 text-gold text-xs font-bold tracking-[0.3em] uppercase group">
               Read Our Story
@@ -215,7 +215,7 @@ export default function HomePage() {
             Bring the Flavour<br />Home Today
           </h2>
           <p className="mx-auto mb-10 max-w-xl font-serif italic text-cream/60">
-            Experience the authentic taste of Qureshi's Masala in your kitchen.
+            Experience the authentic taste of QMS Masala in your kitchen.
           </p>
           <Link href="/shop" className="royal-button px-10 py-4 sm:px-16 sm:py-5">
             Shop Now

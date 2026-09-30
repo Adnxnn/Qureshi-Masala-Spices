@@ -28,7 +28,7 @@ export function buildWhatsAppOrderMessage(
   })
 
   const parts = [
-    "Hello Qureshi's Masala & Spices,",
+    "Hello QMS,",
     '',
     'I would like to place an order.',
     '',

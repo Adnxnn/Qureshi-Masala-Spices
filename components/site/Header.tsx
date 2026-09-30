@@ -1,7 +1,7 @@
 'use client'
 import { useEffect, useRef, useState } from 'react'
 import Link from 'next/link'
-import Image from 'next/image'
+import BrandMark from './BrandMark'
 import { usePathname } from 'next/navigation'
 import { ArrowUpRight, Menu, Search, ShoppingBag, User, X } from 'lucide-react'
 import { useCart } from '@/lib/cart'
@@ -35,7 +35,7 @@ export default function Header({ user }: { user: UserType | null }) {
   return <>
     <a className={styles.skip} href="#main-content">Skip to content</a>
     <header className={styles.header}><div className={styles.bar}>
-      <Link href="/" aria-label="Qureshi's home" className={styles.logo}><Image src="/images/qureshis-navbar-logo.png" alt="Qureshi’s Masala & Spices" width={542} height={192} priority /></Link>
+      <Link href="/" aria-label="QMS home" className={styles.logo}><BrandMark /></Link>
       <nav aria-label="Main navigation" className={styles.desktop}>{links.map(([href, label]) => <Link key={href} href={href} aria-current={pathname.startsWith(href) ? 'page' : undefined}>{label}</Link>)}</nav>
       <div className={styles.actions}>
         <button aria-label="Search spices" onClick={e => openPanel('search', e.currentTarget)}><Search size={21} /></button>
@@ -46,7 +46,7 @@ export default function Header({ user }: { user: UserType | null }) {
     </div></header>
     <dialog ref={dialog} className={styles.dialog} aria-labelledby="navigation-panel-title" onClick={e => { if (e.target === e.currentTarget) close() }}>
       <div className={styles.panel}>
-        <div className={styles.panelHeader}><h2 id="navigation-panel-title">{panel === 'search' ? 'Find your flavour' : 'Explore Qureshi’s'}</h2><button onClick={close} aria-label="Close panel"><X /></button></div>
+        <div className={styles.panelHeader}><h2 id="navigation-panel-title">{panel === 'search' ? 'Find your flavour' : 'Explore QMS'}</h2><button onClick={close} aria-label="Close panel"><X /></button></div>
         {panel === 'menu' && <><nav className={styles.mobile} aria-label="Mobile navigation">{links.map(([href, label], i) => <Link onClick={close} href={href} key={href} aria-current={pathname.startsWith(href) ? 'page' : undefined}><span>0{i + 1}</span>{label}<ArrowUpRight size={20} /></Link>)}</nav><div className={styles.menuFoot}><Link onClick={close} href={user ? '/account' : '/login'}><User size={19} />{user ? 'Your account & orders' : 'Sign in / create account'}</Link><Link onClick={close} href="/faq">Questions? Visit our help centre</Link></div></>}
         {panel === 'search' && <div className={styles.search}><p>Search for a spice or the dish you want to cook.</p><form action="/shop" onSubmit={close}><label htmlFor="global-search">Spice or dish name</label><div><input id="global-search" name="q" type="search" placeholder="Try biryani, kebab or turmeric" required /><button type="submit" aria-label="Search"><Search size={20} /></button></div></form><h3>A good place to start</h3><div className={styles.suggestions}>{['Biryani', 'Kebab', 'Chicken', 'Garam'].map(q => <Link onClick={close} key={q} href={'/shop?q=' + q}>{q}<ArrowUpRight size={16} /></Link>)}</div><Link onClick={close} href="/shop" className={styles.primary}>Explore all spices <ArrowUpRight size={18} /></Link></div>}
       </div>

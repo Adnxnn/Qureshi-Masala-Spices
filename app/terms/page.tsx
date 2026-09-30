@@ -20,7 +20,7 @@ export default function TermsAndConditionsPage() {
         <div className="royal-prose space-y-8">
           <section>
             <p className="mb-4">
-              Welcome to Qureshi&apos;s Masala &amp; Spices. Please read these Terms and Conditions carefully before using our website or services.
+              Welcome to QMS. Please read these Terms and Conditions carefully before using our website or services.
             </p>
           </section>
 
@@ -82,7 +82,7 @@ export default function TermsAndConditionsPage() {
           <section>
             <h2 className="font-display text-2xl sm:text-3xl uppercase mb-4 text-white">Intellectual Property</h2>
             <p>
-              All content on our website, including text, images, logos, and product designs, is the property of Qureshi&apos;s Masala &amp; Spices and is protected by copyright and other intellectual property laws. You may not use our content without our explicit written permission.
+              All content on our website, including text, images, logos, and product designs, is the property of QMS and is protected by copyright and other intellectual property laws. You may not use our content without our explicit written permission.
             </p>
           </section>
 
@@ -101,14 +101,14 @@ export default function TermsAndConditionsPage() {
           <section>
             <h2 className="font-display text-2xl sm:text-3xl uppercase mb-4 text-white">Limitation of Liability</h2>
             <p>
-              To the fullest extent permitted by law, Qureshi&apos;s Masala &amp; Spices shall not be liable for any indirect, incidental, special, consequential, or punitive damages arising from your use of our website or products.
+              To the fullest extent permitted by law, QMS shall not be liable for any indirect, incidental, special, consequential, or punitive damages arising from your use of our website or products.
             </p>
           </section>
 
           <section>
             <h2 className="font-display text-2xl sm:text-3xl uppercase mb-4 text-white">Indemnification</h2>
             <p>
-              You agree to indemnify and hold harmless Qureshi&apos;s Masala &amp; Spices from any claims, damages, or expenses arising from your use of our website or violation of these Terms and Conditions.
+              You agree to indemnify and hold harmless QMS from any claims, damages, or expenses arising from your use of our website or violation of these Terms and Conditions.
             </p>
           </section>
 

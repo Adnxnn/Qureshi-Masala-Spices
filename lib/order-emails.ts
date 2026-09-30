@@ -82,17 +82,17 @@ function emailShell(content: string) {
   return `<!doctype html>
 <html lang="en">
   <body style="margin:0;background:#f5f0e8;font-family:Arial,Helvetica,sans-serif;color:#2b2118;">
-    <div style="display:none;max-height:0;overflow:hidden;opacity:0;">Qureshi's Masala &amp; Spices order update</div>
+    <div style="display:none;max-height:0;overflow:hidden;opacity:0;">QMS order update</div>
     <table role="presentation" width="100%" cellspacing="0" cellpadding="0" style="background:#f5f0e8;padding:28px 12px;">
       <tr><td align="center">
         <table role="presentation" width="100%" cellspacing="0" cellpadding="0" style="max-width:640px;background:#ffffff;border:1px solid #e7dccb;border-radius:16px;overflow:hidden;">
           <tr><td style="background:#6b1a1a;padding:24px 28px;text-align:center;">
             <div style="color:#c9a84c;font-size:12px;letter-spacing:2px;text-transform:uppercase;">Authentic • Freshly Ground • Premium Quality</div>
-            <div style="color:#ffffff;font-family:Georgia,'Times New Roman',serif;font-size:25px;margin-top:8px;">Qureshi's Masala &amp; Spices</div>
+            <div style="color:#ffffff;font-family:Georgia,'Times New Roman',serif;font-size:25px;margin-top:8px;">QMS</div>
           </td></tr>
           <tr><td style="padding:30px 28px;">${content}</td></tr>
           <tr><td style="background:#faf7f2;border-top:1px solid #eee5d8;padding:20px 28px;text-align:center;color:#76695d;font-size:12px;line-height:1.6;">
-            Qureshi's Masala &amp; Spices<br>
+            QMS<br>
             Kodagu, Karnataka • connect@qureshismasalaspices.com
           </td></tr>
         </table>
@@ -121,9 +121,9 @@ function customerEmail({ order, formData }: OrderEmailInput, siteUrl: string) {
     <a href="${escapeHtml(siteUrl)}" style="display:inline-block;background:#6b1a1a;color:#ffffff;text-decoration:none;border-radius:8px;padding:12px 18px;font-weight:bold;">Visit our website</a>`
 
   return {
-    subject: `We received your Qureshi's order #${orderLabel}`,
+    subject: `We received your QMS order #${orderLabel}`,
     html: emailShell(content),
-    text: `Qureshi's Masala & Spices\n\nThank you, ${formData.customer_name}.\n\nWe received order #${orderLabel}. We will contact you to confirm it and arrange delivery.\n\n${itemText(formData)}\n\nOrder total: ${formatCurrency(order.total_amount)}\nDelivery: ${address}\nPhone: ${formData.customer_phone}\n\n${siteUrl}`,
+    text: `QMS\n\nThank you, ${formData.customer_name}.\n\nWe received order #${orderLabel}. We will contact you to confirm it and arrange delivery.\n\n${itemText(formData)}\n\nOrder total: ${formatCurrency(order.total_amount)}\nDelivery: ${address}\nPhone: ${formData.customer_phone}\n\n${siteUrl}`,
   }
 }
 
@@ -158,7 +158,7 @@ function adminEmail({ order, formData }: OrderEmailInput, siteUrl: string) {
   return {
     subject: `New order #${orderLabel} — ${formData.customer_name}`,
     html: emailShell(content),
-    text: `New Qureshi's Masala & Spices order\n\nOrder #${orderLabel}\nCustomer: ${formData.customer_name}\nPhone: ${formData.customer_phone}\nEmail: ${formData.customer_email}\nDelivery: ${address}\nNotes: ${notes}\n\n${itemText(formData)}\n\nOrder total: ${formatCurrency(order.total_amount)}\n\n${adminUrl}`,
+    text: `New QMS order\n\nOrder #${orderLabel}\nCustomer: ${formData.customer_name}\nPhone: ${formData.customer_phone}\nEmail: ${formData.customer_email}\nDelivery: ${address}\nNotes: ${notes}\n\n${itemText(formData)}\n\nOrder total: ${formatCurrency(order.total_amount)}\n\n${adminUrl}`,
   }
 }
 

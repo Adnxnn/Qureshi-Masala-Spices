@@ -61,7 +61,7 @@ export default function HeroProductCarousel({ products }: { products: Slide[] })
           exit={{ opacity: 0, x: reducedMotion ? 0 : -90 }}
           transition={{ duration: reducedMotion ? 0 : 0.45, ease: 'easeInOut' }}
         >
-          <Image src={active.image} alt={`Qureshi's ${active.name} pack`} fill priority={activeIndex === 0} sizes="(max-width: 767px) 70vw, 38vw" />
+          <Image src={active.image} alt={`QMS ${active.name} pack`} fill priority={activeIndex === 0} sizes="(max-width: 767px) 70vw, 38vw" />
         </motion.div>
       </AnimatePresence>
       {slides.length > 1 && <div className={carousel.preload} aria-hidden="true"><Image src={slides[(activeIndex + 1) % slides.length].image} alt="" fill sizes="(max-width: 767px) 70vw, 38vw" loading="eager" /></div>}
