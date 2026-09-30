@@ -4,6 +4,7 @@ import { useEffect, useState } from 'react'
 import { usePathname } from 'next/navigation'
 import { CartNotificationsProvider } from '@/lib/cart-notifications'
 import PremiumCartNotification from '@/components/site/PremiumCartNotification'
+import { FavoritesFeedbackProvider } from '@/lib/favorites-feedback'
 import { getCurrentUser } from '@/lib/actions'
 import type { User as UserType } from '@/types'
 import Header from '@/components/site/Header'
@@ -36,6 +37,7 @@ export default function ClientLayout({
 
   return (
     <CartNotificationsProvider>
+      <FavoritesFeedbackProvider>
       <Header user={user} />
 
       <main id="main-content" tabIndex={-1} className="customer-site min-h-screen w-full">
@@ -44,7 +46,7 @@ export default function ClientLayout({
 
       <PremiumCartNotification />
       <Footer />
+      </FavoritesFeedbackProvider>
     </CartNotificationsProvider>
   )
 }
-
