@@ -442,6 +442,12 @@
   .home .editorialCard,.home .editorialCard:nth-child(2) { min-height:235px; padding:20px; }
   .home .editorialTop { padding-bottom:11px; }
   .home .editorialCard h2 { margin:17px 0 8px; font-size:32px; }
-  .home .editorialCard .textLink { padding-top:10px; }
+.home .editorialCard .textLink { padding-top:10px; }
   .home .howToOrder { margin-top:12px; padding:25px 20px; gap:24px; }
 }
+.productCard{position:relative}
+.favoriteButton{position:absolute;z-index:4;right:12px;top:12px;display:grid;place-items:center;width:44px;height:44px;border:1px solid #d1c6b5;border-radius:50%;background:#fffbf3ee;color:#334c36;box-shadow:0 5px 17px #21180d24;transition:transform .2s,background .2s,color .2s}
+.favoriteButton:hover{transform:scale(1.06);background:#fff}
+.favoriteButton[aria-pressed=true]{background:#a4523c;border-color:#a4523c;color:#fff}
+.favoriteButton:focus-visible{outline:2px solid #344934;outline-offset:3px}
+@media(prefers-reduced-motion:reduce){.favoriteButton{transition:none}.favoriteButton:hover{transform:none}}

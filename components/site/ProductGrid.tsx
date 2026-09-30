@@ -8,6 +8,7 @@ import { useCart } from '@/lib/cart'
 import { useCartNotifications } from '@/lib/cart-notifications'
 import type { Product } from '@/types'
 import { productUseLabel } from '@/lib/shop-discovery'
+import FavoriteButton from './FavoriteButton'
 import styles from './Storefront.module.css'
 
 const weight = (grams: number) => grams >= 1000 ? `${grams / 1000} kg` : `${grams} g`
@@ -38,6 +39,7 @@ function ProductCard({ product }: { product: Product }) {
 
   return (
     <article className={styles.productCard}>
+      <FavoriteButton productId={product.id} productName={product.name} className={styles.favoriteButton} />
       <Link href={href} className={styles.productImage} aria-label={`Explore ${product.name}`}>
         {product.image_url ? <Image src={product.image_url} alt={product.name} fill sizes="(max-width: 639px) 50vw, (max-width: 1023px) 33vw, 25vw" className={styles.packImage} /> : <ShoppingBag size={64} aria-hidden="true" />}
         {soldOut && <span className={styles.productBadge}>Sold out</span>}

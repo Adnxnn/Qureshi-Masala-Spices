@@ -9,6 +9,7 @@ import { useCart } from '@/lib/cart'
 import { useCartNotifications } from '@/lib/cart-notifications'
 import type { Product } from '@/types'
 import { productUseLabel } from '@/lib/shop-discovery'
+import FavoriteButton from './FavoriteButton'
 import styles from './ProductDetail.module.css'
 
 const weight = (grams: number) => grams >= 1000 ? `${grams / 1000} kg` : `${grams} g`
@@ -50,6 +51,7 @@ export default function ProductDetailClient({ product, relatedRecipes = [] }: { 
       <div className={styles.layout}>
         <div className={styles.gallery}>
           <div className={styles.halo} aria-hidden="true" />
+          <FavoriteButton productId={product.id} productName={product.name} className={styles.favoriteButton} />
           {product.image_url ? <Image src={product.image_url} alt={`${product.name} pack`} fill priority sizes="(max-width: 767px) 90vw, 45vw" className={styles.pack} /> : <ShoppingBag size={72} aria-label="Product image unavailable" />}
           <span className={styles.galleryLabel}>QMS</span>
         </div>
