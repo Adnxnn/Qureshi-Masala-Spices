@@ -35,7 +35,7 @@ export default function SpiceToSupper({ pairs }: { pairs: SupperPair[] }) {
     if (pairs.length < 2 || !inView || reducedMotion) return
     const timer = window.setInterval(() => {
       if (!document.hidden) setActiveIndex(index => (index + 1) % pairs.length)
-    }, 1500)
+    }, 2000)
     return () => window.clearInterval(timer)
   }, [activeIndex, pairs.length, inView, reducedMotion])
   if (!pairs.length) return null
