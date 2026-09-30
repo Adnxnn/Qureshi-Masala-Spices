@@ -23,9 +23,10 @@ export default async function HomePage() {
   const selection = products.filter(product => product.is_active && product.stock_qty > 0 && product.variants.length > 0).slice(0, 4)
   const recipeSelection = [...recipes].sort((a, b) => Number(b.is_featured) - Number(a.is_featured)).slice(0, 3)
   const sortedRecipes = [...recipes].sort((a, b) => Number(b.is_featured) - Number(a.is_featured))
-  const supperPairs: SupperPair[] = products.filter(product => product.is_active && product.image_url).map(product => {
+  const supperPairs: SupperPair[] = products.filter(product => product.is_active && product.image_url).flatMap(product => {
     const recipe = sortedRecipes.find(item => item.thumbnail_url && item.recipe_products?.some(link => link.product_id === product.id || link.products?.slug === product.slug))
-    return { productName: product.name, productSlug: product.slug, productImage: product.image_url, productDescription: product.short_description || product.description, packSize: product.variants?.[0]?.weight_grams ?? null, recipeId: recipe?.id, recipeName: recipe?.name, recipeSlug: recipe?.slug, recipeImage: recipe?.thumbnail_url ?? null, recipeTime: recipe?.total_time ?? null }
+    if (!recipe?.thumbnail_url) return []
+    return [{ productName: product.name, productSlug: product.slug, productImage: product.image_url, packSize: product.variants?.[0]?.weight_grams ?? null, recipeId: recipe.id, recipeName: recipe.name, recipeSlug: recipe.slug, recipeImage: recipe.thumbnail_url, recipeTime: recipe.total_time }]
   })
 
   return <div className={`${styles.storefront} ${styles.home}`}>
