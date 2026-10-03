@@ -28,3 +28,14 @@ an SMS provider in Authentication → Providers. Existing email accounts must
 verify their number in **Account → Phone code sign-in** before using SMS login.
 The contact number typed during password registration is not a verified
 authentication factor.
+
+## Admin sign-in
+
+The small footer link opens `/admin/login`. Admins request a fresh code using
+the email of an existing `public.users.is_admin = true` account. The code is
+verified by Supabase Auth and the admin flag is checked again before access.
+The Magic Link template above must be installed to show a numeric code in the
+email; with the default template, the secure link can be used instead.
+"Reset / send new code" requests a new one-time code after the provider's
+rate limit. There is deliberately no fixed or reusable admin PIN in the
+repository or in the browser.

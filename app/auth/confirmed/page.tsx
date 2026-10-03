@@ -40,6 +40,12 @@ export default function EmailConfirmedPage() {
     const hash = new URLSearchParams(window.location.hash.replace(/^#/, ''))
     const recoveryLink = query.get('type') === 'recovery' || hash.get('type') === 'recovery'
     const otpLink = query.get('flow') === 'otp' || hash.get('type') === 'magiclink'
+    const adminLink = query.get('flow') === 'admin'
+    const completeAdmin = () => {
+      if (!active) return
+      router.replace('/admin')
+      router.refresh()
+    }
     const completeOtp = async () => {
       const result = await completeOtpSignIn()
       if (!active) return
@@ -54,11 +60,13 @@ export default function EmailConfirmedPage() {
     }
     const { data: { subscription } } = supabase.auth.onAuthStateChange((event: string, session: unknown) => {
       if (session && (event === 'PASSWORD_RECOVERY' || (recoveryLink && event === 'SIGNED_IN'))) completeRecovery()
+      else if (session && adminLink && event === 'SIGNED_IN') completeAdmin()
       else if (session && otpLink && event === 'SIGNED_IN') void completeOtp()
     })
     void supabase.auth.getSession().then(({ data }: { data: { session: unknown } }) => {
       if (!active) return
       if (recoveryLink && data.session) completeRecovery()
+      else if (adminLink && data.session) completeAdmin()
       else if (otpLink && data.session) void completeOtp()
       else setConfirmationState(readConfirmationState())
     }).catch(() => { if (active) setConfirmationState('failed') })

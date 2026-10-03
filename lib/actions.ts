@@ -480,26 +480,74 @@ export async function loginUser(formData: {
   return { success: true }
 }
 
-export async function adminLoginUser(formData: {
+async function isApprovedAdminEmail(email: string) {
+  const { data, error } = await createAdminSupabaseClient()
+    .from('users')
+    .select('id')
+    .eq('email', email)
+    .eq('is_admin', true)
+    .maybeSingle()
+  if (error) {
+    console.error('[admin OTP] admin lookup failed', error)
+    return false
+  }
+  return Boolean(data)
+}
+
+export async function requestAdminLoginCode(emailInput: string): Promise<AuthActionResult> {
+  const email = normaliseEmail(emailInput)
+  if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
+    return { success: false, error: 'Enter the email address of your admin account.' }
+  }
+
+  // Do not disclose whether an address has administrator access.
+  const response: AuthActionResult = { success: true }
+  try {
+    if (!(await isApprovedAdminEmail(email))) return response
+    const supabase = createServerSupabaseClient()
+    const { error } = await supabase.auth.signInWithOtp({
+      email,
+      options: {
+        shouldCreateUser: false,
+        emailRedirectTo: `${getEmailConfirmationUrl()}?flow=admin`,
+      },
+    })
+    if (error) console.error('[admin OTP] delivery failed', error.message)
+  } catch (error) {
+    console.error('[admin OTP] request failed', error)
+  }
+  return response
+}
+
+export async function verifyAdminLoginCode(formData: {
   email: string
-  password: string
+  code: string
 }): Promise<AuthActionResult> {
+  const email = normaliseEmail(formData.email)
+  const code = formData.code.trim()
+  if (!/^\d{6,8}$/.test(code)) {
+    return { success: false, error: 'Enter the code sent to your admin email.' }
+  }
   const supabase = createServerSupabaseClient()
-  const { data, error } = await supabase.auth.signInWithPassword({
-    email: normaliseEmail(formData.email),
-    password: formData.password,
+  const { data, error } = await supabase.auth.verifyOtp({
+    email,
+    token: code,
+    type: 'email',
   })
 
   if (error || !data.user) {
     return {
       success: false,
-      error: authErrorMessage(error?.message ?? 'Unable to sign in'),
+      error: 'That code is incorrect or has expired. Request a new code and try again.',
     }
   }
 
-  const profile = await ensureUserProfile(data.user)
-
-  if (!profile?.is_admin) {
+  const { data: profile, error: profileError } = await supabase
+    .from('users')
+    .select('is_admin')
+    .eq('id', data.user.id)
+    .single()
+  if (profileError || !profile?.is_admin || data.user.email?.toLowerCase() !== email) {
     await supabase.auth.signOut()
     return {
       success: false,
