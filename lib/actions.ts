@@ -287,14 +287,15 @@ async function ensureUserProfile(
   authUser: {
     id: string
     email?: string | null
+    phone?: string | null
     user_metadata?: Record<string, unknown>
   },
   details: ProfileDetails = {},
 ) {
   const adminSupabase = createAdminSupabaseClient()
   const metadata = authUser.user_metadata ?? {}
-  const email = normaliseEmail(authUser.email ?? '')
-  const fallbackName = email.split('@')[0] || 'Customer'
+  const email = normaliseEmail(authUser.email ?? '') || null
+  const fallbackName = email?.split('@')[0] || (authUser.phone ? `Customer ${authUser.phone.slice(-4)}` : 'Customer')
 
   const { data: existingProfile, error: existingProfileError } = await (
     adminSupabase as any
@@ -326,6 +327,7 @@ async function ensureUserProfile(
         fallbackName,
       phone:
         details.phone?.trim() ||
+        authUser.phone ||
         (typeof metadata.phone === 'string' ? metadata.phone.trim() : ''),
       address: details.address?.trim() || null,
       city: details.city?.trim() || null,
@@ -374,6 +376,16 @@ export async function getCurrentUser(): Promise<User | null> {
     console.error('Unexpected error in getCurrentUser:', err)
     return null
   }
+}
+
+export async function completeOtpSignIn(): Promise<AuthActionResult> {
+  const profile = await getCurrentUser()
+  if (!profile) {
+    return { success: false, error: 'Your code was accepted, but we could not load your account. Please try again.' }
+  }
+  revalidatePath('/')
+  revalidatePath('/account')
+  return { success: true }
 }
 
 export async function registerUser(formData: {

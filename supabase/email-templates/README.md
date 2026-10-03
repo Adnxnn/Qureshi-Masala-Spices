@@ -15,3 +15,16 @@ confirmation, which forwards a verified recovery session to `/forgot-password`.
 Ensure `https://www.qureshismasalaspices.com/auth/confirmed` is allowed in
 Supabase **Authentication → URL Configuration → Redirect URLs**. If customers
 also use another domain, allow its exact `/auth/confirmed` URL as well.
+# Passwordless sign-in and phone accounts
+
+To send numeric email sign-in codes, replace the **Magic Link** template in
+Supabase Dashboard → Authentication → Email Templates with `magic-link.html`.
+The default template sends a link only; this one includes `{{ .Token }}` as well.
+Keep the site's `/auth/confirmed` URL in the allowed redirect URLs.
+
+To enable phone registration and sign-in, run `006_phone_only_accounts.sql` in
+the Supabase SQL Editor, then enable the **Phone** auth provider and configure
+an SMS provider in Authentication → Providers. Existing email accounts must
+verify their number in **Account → Phone code sign-in** before using SMS login.
+The contact number typed during password registration is not a verified
+authentication factor.

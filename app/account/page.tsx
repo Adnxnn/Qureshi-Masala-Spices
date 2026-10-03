@@ -12,6 +12,8 @@ import {
   updateUserProfile,
 } from '@/lib/actions'
 import type { OrderWithItems, User } from '@/types'
+import { createClient } from '@/lib/supabaseClient'
+import { toE164Phone } from '@/lib/phone'
 
 type AccountTab = 'profile' | 'orders'
 
@@ -58,6 +60,11 @@ export default function AccountPage() {
   const [loading, setLoading] = useState(true)
   const [loggingOut, setLoggingOut] = useState(false)
   const [activeTab, setActiveTab] = useState<AccountTab>('profile')
+  const [verifiedPhone, setVerifiedPhone] = useState('')
+  const [phoneToVerify, setPhoneToVerify] = useState('')
+  const [phoneCode, setPhoneCode] = useState('')
+  const [phonePending, setPhonePending] = useState(false)
+  const [phoneBusy, setPhoneBusy] = useState(false)
   const {
     register,
     handleSubmit,
@@ -85,6 +92,8 @@ export default function AccountPage() {
 
         setUser(userData)
         if (!userData) return
+        const { data: { user: authUser } } = await createClient().auth.getUser()
+        if (!cancelled) setVerifiedPhone(authUser?.phone ?? '')
 
         reset({
           full_name: userData.full_name,
@@ -131,6 +140,30 @@ export default function AccountPage() {
   async function handleLogout() {
     setLoggingOut(true)
     await logoutUser()
+  }
+
+  async function requestPhoneVerification() {
+    const phone = toE164Phone(phoneToVerify || user?.phone || '')
+    if (!phone) { toast.error('Enter a valid phone number with country code.'); return }
+    setPhoneBusy(true)
+    const { error } = await createClient().auth.updateUser({ phone })
+    setPhoneBusy(false)
+    if (error) { toast.error(error.message); return }
+    setPhoneToVerify(phone)
+    setPhonePending(true)
+    toast.success('Verification code sent by SMS.')
+  }
+
+  async function confirmPhoneVerification() {
+    if (!/^\d{6,8}$/.test(phoneCode.trim())) { toast.error('Enter the code from the SMS.'); return }
+    setPhoneBusy(true)
+    const { error } = await createClient().auth.verifyOtp({ phone: phoneToVerify, token: phoneCode.trim(), type: 'phone_change' })
+    setPhoneBusy(false)
+    if (error) { toast.error(error.message); return }
+    setVerifiedPhone(phoneToVerify)
+    setPhonePending(false)
+    setPhoneCode('')
+    toast.success('Phone verified. You can now sign in with an SMS code.')
   }
 
   if (loading) {
@@ -287,10 +320,21 @@ export default function AccountPage() {
                 <input
                   id="account_email"
                   type="email"
-                  value={user.email}
+                  value={user.email ?? ''}
                   disabled
+                  placeholder="No email linked to this account"
                   className="royal-field cursor-not-allowed px-4 text-base text-white/45"
                 />
+              </div>
+
+              <div className="rounded-xl border border-gold/20 bg-gold/5 p-4 sm:p-5">
+                <h3 className="font-display text-2xl text-cream">Phone code sign-in</h3>
+                {verifiedPhone ? <p className="mt-1 text-sm text-white/70">Verified sign-in number: <strong className="text-white">{verifiedPhone}</strong></p> : <p className="mt-1 text-sm leading-6 text-white/70">Verify a number here once to sign in with an SMS code next time. Your saved contact number alone does not enable phone sign-in.</p>}
+                <div className="mt-4 flex flex-col gap-2 sm:flex-row">
+                  <input type="tel" inputMode="tel" aria-label="Phone number to verify" autoComplete="tel" value={phoneToVerify} onChange={(event) => setPhoneToVerify(event.target.value)} placeholder={user.phone || '+91 98765 43210'} className="royal-field min-w-0 flex-1 px-4 text-base" />
+                  <button type="button" disabled={phoneBusy} onClick={() => void requestPhoneVerification()} className="royal-button-secondary shrink-0 disabled:opacity-60">{phoneBusy ? 'Sending…' : verifiedPhone ? 'Change number' : 'Send SMS code'}</button>
+                </div>
+                {phonePending && <div className="mt-3 flex flex-col gap-2 sm:flex-row"><input type="text" inputMode="numeric" autoComplete="one-time-code" aria-label="SMS verification code" value={phoneCode} onChange={(event) => setPhoneCode(event.target.value.replace(/\D/g, '').slice(0, 8))} placeholder="6-digit code" className="royal-field min-w-0 flex-1 px-4 text-base" /><button type="button" disabled={phoneBusy} onClick={() => void confirmPhoneVerification()} className="royal-button shrink-0 disabled:opacity-60">Verify phone</button></div>}
               </div>
 
               <div>
@@ -414,4 +458,3 @@ export default function AccountPage() {
     </div>
   )
 }
-

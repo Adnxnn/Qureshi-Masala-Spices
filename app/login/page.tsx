@@ -142,6 +142,9 @@ export default function LoginPage() {
             </button>
           </form>
 
+          <div className="mt-6 flex items-center gap-3 text-xs uppercase tracking-widest text-white/40"><span className="h-px flex-1 bg-white/10" />or<span className="h-px flex-1 bg-white/10" /></div>
+          <Link href="/login/otp" className="royal-button-secondary mt-6 w-full">Sign in with email or phone code</Link>
+
           <div className="mt-7 border-t border-white/10 pt-6 text-center">
             <p className="text-sm text-white/65">
               New to QMS?{' '}

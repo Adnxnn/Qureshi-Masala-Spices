@@ -73,7 +73,7 @@ export type CartItem = {
 
 export type User = {
   id: string
-  email: string
+  email: string | null
   full_name: string
   phone: string
   address?: string
