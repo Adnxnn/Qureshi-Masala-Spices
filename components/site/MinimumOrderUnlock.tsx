@@ -3,6 +3,7 @@
 import { useEffect, useState } from 'react'
 import { Check, Sparkles } from 'lucide-react'
 import { useCart } from '@/lib/cart'
+import { useCartNotifications } from '@/lib/cart-notifications'
 import { calculateOrderTotal, MINIMUM_ORDER_AMOUNT } from '@/lib/utils'
 import styles from './MinimumOrderUnlock.module.css'
 
@@ -13,24 +14,49 @@ function orderTotal() {
 }
 
 export default function MinimumOrderUnlock() {
+  const { notifications } = useCartNotifications()
   const [visible, setVisible] = useState(false)
+  const [pending, setPending] = useState(false)
 
   useEffect(() => {
     let previous = orderTotal()
-    let timeout: ReturnType<typeof setTimeout> | undefined
     const unsubscribe = useCart.subscribe(() => {
       const current = orderTotal()
       // Hydration restores an old bag, not a new unlock. Celebrate only a real change.
       if (useCart.persist.hasHydrated() && previous < MINIMUM_ORDER_AMOUNT && current >= MINIMUM_ORDER_AMOUNT) {
-        setVisible(true)
-        clearTimeout(timeout)
-        timeout = setTimeout(() => setVisible(false), 2400)
+        setPending(true)
       }
       previous = current
     })
     const unsubscribeHydration = useCart.persist.onFinishHydration(() => { previous = orderTotal() })
-    return () => { unsubscribe(); unsubscribeHydration(); clearTimeout(timeout) }
+    return () => { unsubscribe(); unsubscribeHydration() }
   }, [])
+
+  // The product confirmation stays up for 3.8 seconds. Wait until it has
+  // actually left the notification queue, then allow its exit animation to end.
+  useEffect(() => {
+    if (!pending || notifications.length > 0) return
+    const timer = setTimeout(() => {
+      setVisible(true)
+      setPending(false)
+    }, 450)
+    return () => clearTimeout(timer)
+  }, [pending, notifications.length])
+
+  // If another product is added during the celebration, give that message
+  // priority and replay the unlock afterwards.
+  useEffect(() => {
+    if (visible && notifications.length > 0) {
+      setVisible(false)
+      setPending(true)
+    }
+  }, [visible, notifications.length])
+
+  useEffect(() => {
+    if (!visible) return
+    const timer = setTimeout(() => setVisible(false), 2400)
+    return () => clearTimeout(timer)
+  }, [visible])
 
   if (!visible) return null
   return <div className={styles.stage} role="status" aria-live="polite">
