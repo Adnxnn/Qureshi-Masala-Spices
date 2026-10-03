@@ -4,6 +4,7 @@ import { useEffect, useState } from 'react'
 import { usePathname } from 'next/navigation'
 import { CartNotificationsProvider } from '@/lib/cart-notifications'
 import PremiumCartNotification from '@/components/site/PremiumCartNotification'
+import MinimumOrderUnlock from '@/components/site/MinimumOrderUnlock'
 import { FavoritesFeedbackProvider } from '@/lib/favorites-feedback'
 import { getCurrentUser } from '@/lib/actions'
 import type { User as UserType } from '@/types'
@@ -45,6 +46,7 @@ export default function ClientLayout({
       </main>
 
       <PremiumCartNotification />
+      <MinimumOrderUnlock />
       <Footer />
       </FavoritesFeedbackProvider>
     </CartNotificationsProvider>

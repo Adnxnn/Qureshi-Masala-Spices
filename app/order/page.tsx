@@ -10,7 +10,7 @@ import toast from "react-hot-toast";
 import { ArrowLeft, ArrowRight, Check, CheckCircle2, Gift, MapPin, MessageCircle, Minus, Plus, ShieldCheck, ShoppingBag, Sparkles, Trash2 } from "lucide-react";
 import { useCart } from "@/lib/cart";
 import { getCurrentUser, placeOrder, updateUserProfile, validateAndApplyPromoCode } from "@/lib/actions";
-import { calculateOrderTotal } from "@/lib/utils";
+import { calculateOrderTotal, MINIMUM_ORDER_AMOUNT } from "@/lib/utils";
 import type { CartItem, PlaceOrderPayload, PromoCode, User } from "@/types";
 import styles from "./OrderPage.module.css";
 
@@ -133,6 +133,8 @@ export default function OrderPage() {
     subtotal,
     appliedPromoCode,
   ) as OrderTotals;
+  const amountRemaining = Math.max(0, Math.ceil(MINIMUM_ORDER_AMOUNT - currentTotals.total));
+  const minimumReached = amountRemaining === 0;
 
   const {
     register,
@@ -270,6 +272,11 @@ Please confirm this order.`,
       (total, item) => total + item.variant.price * item.quantity,
       0,
     );
+    const currentTotal = calculateOrderTotal(currentSubtotal, appliedPromoCode).total;
+    if (currentTotal < MINIMUM_ORDER_AMOUNT) {
+      toast.error(`Add ${money(Math.ceil(MINIMUM_ORDER_AMOUNT - currentTotal))} more to reach the ${money(MINIMUM_ORDER_AMOUNT)} minimum order.`);
+      return;
+    }
 
     try {
       if (user) {
@@ -370,6 +377,11 @@ Please confirm this order.`,
           <section className={styles.section} aria-labelledby="cart-heading">
             <div className={styles.sectionHead}><div><p className={styles.sectionIndex}>01 / YOUR SELECTION</p><h2 id="cart-heading">The good stuff</h2><p>{packCount} {packCount === 1 ? 'pack' : 'packs'} ready for your kitchen</p></div><button type="button" className={styles.clearTrigger} onClick={clearAllItems}><Trash2 size={16} /> Clear cart</button></div>
             <div className={styles.productList}>{items.map(item => <CartProductRow key={`${item.product.id}-${item.variant.weight_grams}`} item={item} updateQuantity={updateQty} removeProduct={removeItem} />)}</div>
+            <div className={`${styles.minimumCard} ${minimumReached ? styles.minimumUnlocked : ''}`} role="status" aria-live="polite">
+              <div className={styles.minimumTop}><span className={styles.minimumIcon}>{minimumReached ? <Check size={20} /> : <ShoppingBag size={20} />}</span><div><strong>{minimumReached ? 'Your order is ready to send' : `${money(amountRemaining)} away from checkout`}</strong><p>{minimumReached ? `You’ve reached the ${money(MINIMUM_ORDER_AMOUNT)} minimum order. Delivery is confirmed separately.` : `Add a little more flavour to reach the ${money(MINIMUM_ORDER_AMOUNT)} minimum order.`}</p></div><span className={styles.minimumValue}>{money(MINIMUM_ORDER_AMOUNT)}</span></div>
+              <div className={styles.minimumTrack} role="progressbar" aria-label="Minimum order progress" aria-valuemin={0} aria-valuemax={MINIMUM_ORDER_AMOUNT} aria-valuenow={Math.min(MINIMUM_ORDER_AMOUNT, Math.max(0, currentTotals.total))}><span style={{ width: `${Math.min(100, Math.max(0, currentTotals.total / MINIMUM_ORDER_AMOUNT * 100))}%` }} /></div>
+              {!minimumReached && <Link href="/shop" className={styles.minimumLink}>Explore more spices <ArrowRight size={15} /></Link>}
+            </div>
             <Link href="/shop" className={styles.addMore}><Plus size={17} /> Add another flavour <ArrowRight size={16} /></Link>
           </section>
           <section className={styles.section} aria-labelledby="delivery-heading">
@@ -396,7 +408,8 @@ Please confirm this order.`,
               <div className={styles.miniItems}>{items.map(item => <div key={`${item.product.id}-${item.variant.weight_grams}`}><span>{item.product.name} <small>{formatWeight(item.variant.weight_grams)} × {item.quantity}</small></span><strong>{money(item.variant.price * item.quantity)}</strong></div>)}</div>
               <div className={styles.promo}>{appliedPromoCode ? <div className={styles.applied}><span><Check size={16} /> {appliedPromoCode.code} applied</span><button type="button" onClick={handleRemovePromo}>Remove</button></div> : <><label htmlFor="promo-code">Have a promo code?</label><div className={styles.promoEntry}><input id="promo-code" value={promoInput} onKeyDown={event => { if (event.key === 'Enter') { event.preventDefault(); void handleApplyPromo() } }} onChange={event => { setPromoInput(event.target.value); setPromoError('') }} placeholder="Enter your code" /><button type="button" disabled={applyingPromo} onClick={handleApplyPromo}>{applyingPromo ? 'Checking…' : 'Apply'}</button></div>{promoError && <p role="alert" className={styles.error}>{promoError}</p>}</>}</div>
               <div className={styles.totals}><div><span>Spices subtotal</span><strong>{money(currentTotals.subtotal)}</strong></div>{currentTotals.discount > 0 && <div className={styles.discount}><span>Discount</span><strong>−{money(currentTotals.discount)}</strong></div>}<div className={styles.totalLine}><span>Product total</span><strong>{money(currentTotals.total)}</strong></div><p>Delivery charge is quoted separately on WhatsApp before you confirm.</p></div>
-              <button type="submit" disabled={isSubmitting} className={styles.submit}><MessageCircle size={19} /> {isSubmitting ? 'Sending your request…' : 'Send order request'} <ArrowRight size={18} /></button>
+              {!minimumReached && <p className={styles.minimumHint}>Minimum order {money(MINIMUM_ORDER_AMOUNT)} after discounts · add {money(amountRemaining)} more to continue.</p>}
+              <button type="submit" disabled={isSubmitting || !minimumReached} className={styles.submit}><MessageCircle size={19} /> {isSubmitting ? 'Sending your request…' : minimumReached ? 'Send order request' : `Add ${money(amountRemaining)} more`} <ArrowRight size={18} /></button>
               <p className={styles.paymentNote}><ShieldCheck size={16} /> No payment is collected on this website.</p>
             </div>
           </div>
@@ -404,6 +417,6 @@ Please confirm this order.`,
         </aside>
       </form>}
     </div>
-    {items.length > 0 && <div className={styles.mobileBar}><div><span>Product total <small>· delivery extra</small></span><strong>{money(currentTotals.total)}</strong></div><button type="submit" form="delivery-checkout-form" disabled={isSubmitting}>{isSubmitting ? 'Sending…' : 'Send request'} <ArrowRight size={17} /></button></div>}
+    {items.length > 0 && <div className={styles.mobileBar}><div><span>{minimumReached ? 'Ready to order' : `${money(amountRemaining)} to minimum`} <small>{minimumReached ? 'delivery extra' : `${money(MINIMUM_ORDER_AMOUNT)} minimum · after discounts`}</small></span><strong>{money(currentTotals.total)}</strong></div>{minimumReached ? <button type="submit" form="delivery-checkout-form" disabled={isSubmitting}>{isSubmitting ? 'Sending…' : 'Send request'} <ArrowRight size={17} /></button> : <Link href="/shop" className={styles.mobileShop}>Add spices <ArrowRight size={17} /></Link>}</div>}
   </div>;
 }

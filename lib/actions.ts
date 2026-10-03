@@ -4,7 +4,7 @@ import { redirect } from 'next/navigation'
 import { createClient } from '@supabase/supabase-js'
 import type { CartItem, User, OrderWithItems, PlaceOrderPayload, Product, ProductVariant, Database, PromoCode } from '@/types'
 import { createServerSupabaseClient } from './supabaseServer'
-import { calculateOrderTotal } from './utils'
+import { calculateOrderTotal, MINIMUM_ORDER_AMOUNT } from './utils'
 import { sendNewOrderWhatsAppAlert } from './whatsapp-server'
 import { sendOrderEmails } from './order-emails'
 
@@ -565,6 +565,42 @@ export async function placeOrder(
     const user = await getCurrentUser()
     adminSupabase = createAdminSupabaseClient()
 
+    if (!Array.isArray(formData.items) || formData.items.length === 0) {
+      return { success: false, error: 'Add some spices to your bag before ordering.' }
+    }
+
+    // Never use prices or product details supplied by the browser to decide eligibility.
+    const productIds = Array.from(new Set(formData.items.map(item => item.product.id)))
+    const { data: rawProducts, error: productsError } = await adminSupabase
+      .from('products')
+      .select('id, name, variants, stock_qty')
+      .in('id', productIds)
+    const products = rawProducts as unknown as Array<Pick<Product, 'id' | 'name' | 'variants' | 'stock_qty'>> | null
+    if (productsError || !products || products.length !== productIds.length) {
+      return { success: false, error: 'A product in your bag is no longer available. Please refresh your bag.' }
+    }
+    const byId = new Map(products.map(product => [product.id, product]))
+    const quantities = new Map<string, number>()
+    const rpcItems = [] as Array<{ product_id: string; product_name: string; variant_weight_grams: number; quantity: number; unit_price: number }>
+    const verifiedItems: CartItem[] = []
+    for (const item of formData.items) {
+      const product = byId.get(item.product.id)
+      const variant = product?.variants.find(v => v.weight_grams === item.variant.weight_grams)
+      if (!product || !variant || !Number.isInteger(item.quantity) || item.quantity < 1 || !Number.isFinite(variant.price) || variant.price < 0) {
+        return { success: false, error: 'An item in your bag has changed. Please refresh your bag and try again.' }
+      }
+      quantities.set(product.id, (quantities.get(product.id) ?? 0) + item.quantity)
+      rpcItems.push({ product_id: product.id, product_name: product.name, variant_weight_grams: variant.weight_grams, quantity: item.quantity, unit_price: variant.price })
+      verifiedItems.push({ ...item, product: { ...item.product, name: product.name }, variant })
+    }
+    if (products.some(product => (quantities.get(product.id) ?? 0) > product.stock_qty)) {
+      return { success: false, error: 'One or more items in your bag just sold out. Please update your bag.' }
+    }
+    const subtotal = rpcItems.reduce((sum, item) => sum + item.unit_price * item.quantity, 0)
+    if (subtotal < MINIMUM_ORDER_AMOUNT) {
+      return { success: false, error: `Minimum order is ₹${MINIMUM_ORDER_AMOUNT}. Add ₹${Math.ceil(MINIMUM_ORDER_AMOUNT - subtotal)} more in spices to continue.` }
+    }
+
     let verifiedPromoCode: PromoCode | null = null
 
     if (promoCode?.code) {
@@ -586,20 +622,16 @@ export async function placeOrder(
       verifiedPromoCode = redemption.promoCode
     }
 
-    const subtotal = formData.items.reduce((s, i) => s + i.variant.price * i.quantity, 0)
     const { total } = calculateOrderTotal(subtotal, verifiedPromoCode)
+    if (total < MINIMUM_ORDER_AMOUNT) {
+      await releasePromoCodeRedemption(adminSupabase, redeemedUsageId)
+      redeemedUsageId = null
+      return { success: false, error: `Minimum order is ₹${MINIMUM_ORDER_AMOUNT} after discounts. Add ₹${Math.ceil(MINIMUM_ORDER_AMOUNT - total)} more in spices to continue.` }
+    }
 
     // place_order is a single Postgres transaction: it inserts the order,
     // inserts the order items, and decrements product stock_qty atomically.
     // If stock is insufficient for any item, the whole thing rolls back.
-    const rpcItems = formData.items.map(item => ({
-      product_id: item.product.id,
-      product_name: item.product.name,
-      variant_weight_grams: item.variant.weight_grams,
-      quantity: item.quantity,
-      unit_price: item.variant.price
-    }))
-
     const { data: order, error: orderError } = await (adminSupabase as any)
       .rpc('place_order', {
         p_user_id: user?.id || null,
@@ -630,8 +662,8 @@ export async function placeOrder(
     // The order is already safely stored. A notification failure must never
     // fail checkout or create a duplicate order.
     const notificationResults = await Promise.allSettled([
-      sendNewOrderWhatsAppAlert({ order, formData }),
-      sendOrderEmails({ order, formData }),
+      sendNewOrderWhatsAppAlert({ order, formData: { ...formData, items: verifiedItems } }),
+      sendOrderEmails({ order, formData: { ...formData, items: verifiedItems } }),
     ])
 
     for (const result of notificationResults) {

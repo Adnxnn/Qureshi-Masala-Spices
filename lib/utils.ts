@@ -1,5 +1,8 @@
 import type { PromoCode } from '@/types'
 
+// Minimum merchandise total after discounts; delivery is quoted separately.
+export const MINIMUM_ORDER_AMOUNT = 399
+
 // Helper function to calculate discount amount from promo code
 export const calculateDiscount = (subtotal: number, promoCode: PromoCode | null): number => {
   if (!promoCode) return 0
