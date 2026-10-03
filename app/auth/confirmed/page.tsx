@@ -2,8 +2,10 @@
 
 import { useEffect, useState } from 'react'
 import Link from 'next/link'
+import { useRouter } from 'next/navigation'
 import { CheckCircle2, CircleAlert, LoaderCircle } from 'lucide-react'
 import AuthBackdrop from '@/components/site/AuthBackdrop'
+import { createClient } from '@/lib/supabaseClient'
 
 type ConfirmationState = 'checking' | 'confirmed' | 'expired' | 'failed'
 
@@ -26,16 +28,31 @@ function readConfirmationState(): ConfirmationState {
 }
 
 export default function EmailConfirmedPage() {
+  const router = useRouter()
+  const [supabase] = useState(() => createClient())
   const [confirmationState, setConfirmationState] =
     useState<ConfirmationState>('checking')
 
   useEffect(() => {
-    setConfirmationState(readConfirmationState())
-
-    if (window.location.search || window.location.hash) {
-      window.history.replaceState(null, '', window.location.pathname)
+    let active = true
+    const query = new URLSearchParams(window.location.search)
+    const hash = new URLSearchParams(window.location.hash.replace(/^#/, ''))
+    const recoveryLink = query.get('type') === 'recovery' || hash.get('type') === 'recovery'
+    const completeRecovery = () => {
+      if (!active) return
+      window.sessionStorage.setItem('qms-recovery-verified', '1')
+      router.replace('/forgot-password')
     }
-  }, [])
+    const { data: { subscription } } = supabase.auth.onAuthStateChange((event: string, session: unknown) => {
+      if (session && (event === 'PASSWORD_RECOVERY' || (recoveryLink && event === 'SIGNED_IN'))) completeRecovery()
+    })
+    void supabase.auth.getSession().then(({ data }: { data: { session: unknown } }) => {
+      if (!active) return
+      if (recoveryLink && data.session) completeRecovery()
+      else setConfirmationState(readConfirmationState())
+    }).catch(() => { if (active) setConfirmationState('failed') })
+    return () => { active = false; subscription.unsubscribe() }
+  }, [router, supabase])
 
   const hasError =
     confirmationState === 'expired' || confirmationState === 'failed'
